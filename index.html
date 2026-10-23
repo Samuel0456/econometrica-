@@ -1,520 +1,336 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-PE">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EconoMétrica PYME | MVP Completo</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js para el simulador gráfico -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        navy: { 800: '#1B365D', 900: '#0F2342' },
-                        emerald: { 400: '#34D399', 500: '#10B981', 600: '#059669' }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .tab-active { border-bottom: 3px solid #10B981; color: #1B365D; font-weight: 700; }
-        .tab-inactive { border-bottom: 3px solid transparent; color: #64748B; font-weight: 500; }
-        input[type=range] { accent-color: #10B981; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Econométrica PYME — Inteligencia comercial y rentabilidad</title>
+<style>
+:root{--navy:#0b2530;--green:#0b7a63;--green2:#14a37f;--mint:#e7f5f0;--gold:#f2b233;--bg:#f5f8f7;--card:#fff;--ink:#13232b;--muted:#66777d;--line:#dbe5e2;--red:#c74735;--shadow:0 12px 35px rgba(11,37,48,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+a{text-decoration:none;color:inherit}.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.sidebar{background:var(--navy);color:#dce9e7;padding:18px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}.logo{display:flex;gap:10px;align-items:center;color:#fff;font-weight:800;font-size:18px}.logo-mark{width:38px;height:38px;border-radius:11px;background:var(--green2);display:grid;place-items:center;color:#fff;font-weight:900}.logo small{display:block;color:var(--gold);font-size:9px;letter-spacing:.14em}.biz{padding:11px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:12px}.biz small{color:#8ca8a8;text-transform:uppercase;font-size:9px;letter-spacing:.12em}.biz b{display:block;color:#fff;margin-top:2px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#b7cdca;padding:10px 11px;border-radius:10px;text-align:left;display:flex;gap:10px;align-items:center}.nav button:hover,.nav button.active{background:#116b5c;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--gold)}.side-bottom{margin-top:auto;border:1px solid rgba(242,178,51,.25);background:rgba(242,178,51,.08);border-radius:12px;padding:12px;color:#e8e0c9}.side-bottom b{color:#fff}.side-bottom button{margin-top:8px;border:0;border-radius:8px;padding:7px 10px;background:var(--gold);font-weight:800}
+main{min-width:0}.top{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}.crumb{color:var(--muted);font-size:12px}.top h1{margin:2px 0 0;font-size:20px}.top-actions{display:flex;gap:8px}.content{padding:25px 28px 50px;max-width:1500px}.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 13px;font-weight:700;color:var(--ink)}.btn:hover{border-color:var(--green)}.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}.btn.danger{color:var(--red)}.btn.sm{padding:6px 9px;font-size:12px}
+.notice{padding:10px 13px;background:#fff7df;border:1px solid #f0d78b;border-radius:10px;margin-bottom:17px}.screen{display:grid;gap:17px}.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 1px 1px rgba(0,0,0,.01)}.card h2,.card h3{margin:0}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:13px}.muted{color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:var(--muted);font-weight:800}.kpi{min-height:122px}.kpi .value{font-size:26px;font-weight:900;margin:7px 0 2px}.delta{font-size:11px;font-weight:800}.up{color:var(--green)}.down{color:var(--red)}.pill{display:inline-flex;padding:4px 8px;border-radius:99px;background:var(--mint);color:var(--green);font-size:11px;font-weight:800}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px}table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#f6f9f8}td.num{text-align:right;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:0}.bar-list{display:grid;gap:12px}.bar-row{display:grid;grid-template-columns:145px 1fr 85px;gap:9px;align-items:center}.track{height:10px;background:#edf2f0;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--green);border-radius:99px}.chart{height:245px;width:100%;display:block}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:800}.field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}.field textarea{min-height:82px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.toolbar input,.toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff}.empty{padding:35px;text-align:center;color:var(--muted);border:1px dashed #b8cbc6;border-radius:12px}.insight{padding:12px;border-radius:11px;background:#f3f8f6;border-left:3px solid var(--green)}.insight.warn{background:#fff7e2;border-color:var(--gold)}.insight.red{background:#fff0ed;border-color:var(--red)}
+.hero{background:linear-gradient(135deg,#0b2530,#0b7a63);color:#fff;border-radius:18px;padding:34px;display:grid;grid-template-columns:1.15fr .85fr;gap:25px;align-items:center}.hero h2{font-size:clamp(28px,4vw,45px);line-height:1.05;margin:8px 0 12px}.hero p{color:#d6e7e4;max-width:650px;font-size:15px}.hero-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}.hero-visual{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13);border-radius:15px;padding:14px}.mini-dash{background:#fff;color:var(--ink);border-radius:11px;padding:14px}.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.mini-box{background:#f3f7f5;border-radius:8px;padding:9px}.mini-box b{display:block;font-size:16px}.feature{padding:20px}.feature b{display:block;margin-bottom:5px}.landing{display:grid;gap:17px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px}.step span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--mint);color:var(--green);font-weight:900;margin-bottom:10px}
+.modal{position:fixed;inset:0;background:rgba(5,24,31,.68);z-index:30;display:grid;place-items:center;padding:16px}.modal-card{background:#fff;width:min(700px,100%);max-height:92vh;overflow:auto;border-radius:17px;padding:22px;box-shadow:var(--shadow)}.modal-head{display:flex;justify-content:space-between;gap:10px}.close{border:0;background:#edf2f0;border-radius:8px;width:34px;height:34px}.mobile-nav{display:none}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(15px);background:var(--navy);color:#fff;padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:40}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1050px){.g4{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.wide{grid-template-columns:1fr}}
+@media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{display:none}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--navy);z-index:10;padding:6px;gap:4px}.mobile-nav button{flex:1;background:transparent;border:0;color:#b7cdca;font-size:10px;padding:7px 2px}.mobile-nav button.active{background:#116b5c;color:#fff}.content{padding:18px 15px 80px}.top{padding:0 15px}.g3,.g2{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.g4{grid-template-columns:1fr}.hero{padding:23px}.steps{grid-template-columns:1fr}.top-actions .btn:not(.primary){display:none}}
+
+    .demo-switcher{margin:14px 12px 16px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.045)}
+    .demo-switcher-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#9db0c8;font-weight:800;margin-bottom:8px}
+    .demo-switcher label{display:block;font-size:11px;color:#cbd5e1;margin-bottom:5px}
+    .demo-switcher select{width:100%;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:#10243d;color:#fff;padding:8px;font-size:12px;outline:none}
+    .demo-switcher select:focus{border-color:#36c98f}
+    .demo-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
+    .demo-card{border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--surface);cursor:pointer;transition:.18s}
+    .demo-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,23,42,.08)}
+    .demo-card.active{border-color:var(--green);box-shadow:0 0 0 2px rgba(54,201,143,.12)}
+    .demo-card h4{margin:0 0 5px;font-size:14px}
+    .demo-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+    @media(max-width:900px){.demo-cards{grid-template-columns:1fr 1fr}}
+    @media(max-width:620px){.demo-cards{grid-template-columns:1fr}}
+
+</style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+<body>
+<div id="app"></div>
+<div id="modal-root"></div>
+<div id="toast" class="toast"></div>
+<script>
+const KEY='econometrica-pyme-v2';
+const DEMO={
+ business:{name:'Tienda Andina',sector:'Comercio minorista',owner:'Ana Torres',email:'demo@econometrica.pe'},
+ products:[
+  {id:1,name:'Polo básico',sku:'POL-001',cat:'Ropa',price:49,cost:25,stock:32,status:'Activo'},
+  {id:2,name:'Jean clásico',sku:'JEA-002',cat:'Ropa',price:89,cost:48,stock:18,status:'Activo'},
+  {id:3,name:'Casaca urbana',sku:'CAS-003',cat:'Ropa',price:149,cost:88,stock:11,status:'Activo'},
+  {id:4,name:'Gorra',sku:'GOR-004',cat:'Accesorios',price:35,cost:14,stock:46,status:'Activo'}
+ ],
+ sales:[], expenses:[
+  {id:1,date:'2026-10-02',desc:'Alquiler del local',amount:1800,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
+  {id:2,date:'2026-10-05',desc:'Publicidad digital',amount:420,cat:'Marketing',type:'Operativo',freq:'Mensual',product:''},
+  {id:3,date:'2026-10-08',desc:'Transporte',amount:280,cat:'Transporte',type:'Variable',freq:'Recurrente',product:''},
+  {id:4,date:'2026-10-12',desc:'Servicios básicos',amount:310,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
+ ],
+ settings:{currency:'PEN',region:'Perú',demo:true}
+};
+function seedSales(){
+ const rows=[]; let id=1;
+ const dates=['2026-09-02','2026-09-04','2026-09-06','2026-09-08','2026-09-10','2026-09-12','2026-09-14','2026-09-16','2026-09-18','2026-09-20','2026-09-22','2026-09-24','2026-09-26','2026-09-28','2026-09-30','2026-10-02','2026-10-04','2026-10-06','2026-10-08','2026-10-10','2026-10-12','2026-10-14','2026-10-16','2026-10-18','2026-10-20','2026-10-22'];
+ dates.forEach((date,i)=>{const p=DEMO.products[i%4], qty=2+(i%4), price=p.price-(i%3===0?2:0);rows.push({id:id++,date,productId:p.id,qty,price,discount:0,channel:i%3===0?'Tienda':i%3===1?'WhatsApp':'Instagram',customer:'',notes:''})});
+ return rows;
+}
+if(!localStorage.getItem(KEY)){DEMO.sales=seedSales();localStorage.setItem(KEY,JSON.stringify(DEMO))}
+let db=JSON.parse(localStorage.getItem(KEY)); let state={screen:'inicio',search:'',period:'mes',productId:1,priceDelta:0,report:null};
+const nav=[
+ ['inicio','Inicio'],['ventas','Ventas'],['productos','Productos'],['gastos','Costos y gastos'],['inventario','Inventario'],['rentabilidad','Rentabilidad'],['pronosticos','Pronósticos'],['escenarios','¿Qué pasaría si...?'],['reportes','Reportes'],['planes','Membresía'],['config','Configuración']
+];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const money=n=>'S/ '+Number(n||0).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=n=>Number(n||0).toLocaleString('es-PE');
+const pct=n=>(Number(n||0)*100).toFixed(1)+' %';
+const save=()=>localStorage.setItem(KEY,JSON.stringify(db));
+const product=id=>db.products.find(p=>p.id==id);
+function totals(){
+ const sales=db.sales.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0);
+ const cogs=db.sales.reduce((a,s)=>a+s.qty*(product(s.productId)?.cost||0),0);
+ const exp=db.expenses.reduce((a,e)=>a+e.amount,0);
+ return {sales,cogs,exp,gross:sales-cogs,oper:sales-cogs-exp,margin:sales?(sales-cogs)/sales:0};
+}
+function periodSales(){
+ const now=new Date('2026-10-23T12:00:00'); const start=new Date(now); start.setDate(now.getDate()-(state.period==='semana'?7:state.period==='trimestre'?90:30));
+ return db.sales.filter(s=>new Date(s.date)>=start);
+}
+function navHTML(){return nav.map(([id,l])=>`<button class="${state.screen===id?'active':''}" data-nav="${id}"><span>${icon(id)}</span>${l}</button>`).join('')}
+function icon(id){const m={inicio:'⌂',ventas:'▣',productos:'◫',gastos:'↘',inventario:'▤',rentabilidad:'◔',pronosticos:'⌁',escenarios:'◇',reportes:'▤',planes:'★',config:'⚙'};return `<b style="width:18px;text-align:center">${m[id]||'•'}</b>`}
+function shell(){
+ document.getElementById('app').innerHTML=`<div class="app">
+ <aside class="sidebar">
+  <div class="logo"><div class="logo-mark">E</div><div>Econométrica<small>PYME</small></div></div>
+  <div class="biz"><small>Negocio</small><b>${esc(db.business.name)}</b><span class="muted" style="font-size:11px">${esc(db.business.sector)}</span></div>
+  <nav class="nav">${navHTML()}</nav>
+  <div class="side-bottom"><b>Datos de demostración</b><div style="font-size:12px;margin-top:3px">Puedes editar, importar y exportar información. Los resultados se calculan con tus datos.</div><button data-action="landing">Ver propuesta</button></div>
+ </aside>
+ <main>
+  <header class="top"><div><div class="crumb">Econométrica PYME / ${nav.find(x=>x[0]===state.screen)?.[1]||'Inicio'}</div><h1>${nav.find(x=>x[0]===state.screen)?.[1]||'Inicio'}</h1></div>
+   <div class="top-actions"><button class="btn" data-action="import">Importar CSV</button><button class="btn primary" data-action="report">Generar reporte</button></div>
+  </header>
+  <div class="content"><div class="notice"><b>Datos de demostración.</b> La información es ficticia y se guarda solo en este navegador. No representa resultados reales ni garantiza ganancias.</div><div id="screen"></div></div>
+ </main>
+ <nav class="mobile-nav">${nav.slice(0,5).map(([id,l])=>`<button class="${state.screen===id?'active':''}" data-nav="${id}">${icon(id)}<div>${l}</div></button>`).join('')}</nav>
+ </div>`;
+ render();
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){const el=$('#screen'); const f={inicio:home,ventas:sales,productos:products,gastos:expenses,inventario:inventory,rentabilidad:profit,pronosticos:forecast,escenarios:scenarios,reportes:reports,planes:plans,config:config}[state.screen]||home;el.innerHTML=f(); afterRender()}
+function home(){
+ const t=totals(), ps=periodSales(), top=db.products.map(p=>{const a=ps.filter(s=>s.productId==p.id);const rev=a.reduce((x,s)=>x+s.qty*s.price,0);const u=a.reduce((x,s)=>x+s.qty,0);return{p,rev,u,con:u*(p.price-p.cost)}}).sort((a,b)=>b.con-a.con);
+ return `<section class="screen">
+ <div class="hero"><div><span class="pill" style="background:rgba(255,255,255,.12);color:#fff">Inteligencia comercial para PYMES peruanas</span><h2>Conoce tus números. Mejora tus decisiones. Impulsa tu rentabilidad.</h2><p>Analiza ventas, controla gastos, descubre qué productos aportan más y prueba escenarios antes de tomar decisiones.</p><div class="hero-actions"><button class="btn gold" data-nav="ventas">Registrar venta</button><button class="btn" data-nav="rentabilidad">Ver rentabilidad</button></div></div>
+ <div class="hero-visual"><div class="mini-dash"><b>Vista ejecutiva</b><div class="mini-grid" style="margin-top:9px"><div class="mini-box"><small>Ventas</small><b>${money(t.sales)}</b></div><div class="mini-box"><small>Margen</small><b>${pct(t.margin)}</b></div><div class="mini-box"><small>Operativo</small><b>${money(t.oper)}</b></div></div><div style="margin-top:10px;height:95px;background:linear-gradient(180deg,#e9f6f1,#fff);border-radius:8px;position:relative;overflow:hidden"><svg viewBox="0 0 500 100" preserveAspectRatio="none" width="100%" height="100%"><polyline points="0,75 70,62 130,68 190,42 250,52 310,30 370,37 430,18 500,25" fill="none" stroke="#0b7a63" stroke-width="4"/></svg></div></div></div></div>
+ <div class="grid g4">${kpi('Ventas netas',money(t.sales),'Periodo seleccionado',t.sales>=0)}${kpi('Costo de ventas',money(t.cogs),'Productos vendidos',true)}${kpi('Utilidad bruta',money(t.gross),`Margen ${pct(t.margin)}`,t.gross>=0)}${kpi('Resultado operativo',money(t.oper),'Ventas − costos − gastos',t.oper>=0)}</div>
+ <div class="grid wide"><div class="card"><div class="card-head"><div><h3>Evolución de ventas</h3><span class="muted">Últimas operaciones registradas</span></div><select id="period"><option value="mes">Últimos 30 días</option><option value="semana">Últimos 7 días</option><option value="trimestre">Últimos 90 días</option></select></div>${svgSales()}</div>
+ <div class="card"><div class="card-head"><div><h3>¿Dónde prestar atención?</h3><span class="muted">Hallazgos calculados</span></div></div>${insights(top,t)}</div></div>
+ <div class="grid g2"><div class="card"><div class="card-head"><div><h3>Productos con mayor contribución</h3><span class="muted">Contribución = ventas netas − costos variables atribuibles</span></div></div><div class="bar-list">${top.map(x=>`<div class="bar-row"><span>${esc(x.p.name)}</span><div class="track"><div class="fill" style="width:${Math.min(100,x.con/(top[0]?.con||1)*100)}%"></div></div><b>${money(x.con)}</b></div>`).join('')}</div></div>
+ <div class="card"><div class="card-head"><div><h3>Acciones rápidas</h3><span class="muted">Continúa trabajando con tus datos</span></div></div><div class="grid g2">${quick('Nueva venta','ventas')} ${quick('Registrar gasto','gastos')} ${quick('Analizar márgenes','rentabilidad')} ${quick('Probar un escenario','escenarios')}</div></div></div>
+ </section>`
+}
+function kpi(a,b,c,good){return `<div class="card kpi"><span class="eyebrow">${a}</span><div class="value">${b}</div><div class="${good?'up':'down'} delta">${c}</div></div>`}
+function quick(t,n){return `<button class="btn" data-nav="${n}" style="padding:16px;text-align:left">${t}<br><span class="muted">Abrir módulo →</span></button>`}
+function svgSales(){const ps=periodSales(), days={};ps.forEach(s=>days[s.date]=(days[s.date]||0)+s.qty*s.price);const vals=Object.values(days);if(!vals.length)return `<div class="empty">Aún no hay ventas en este periodo.</div>`;const max=Math.max(...vals,1),w=700,h=210,p=25;const pts=Object.entries(days).map(([d,v],i)=>`${p+i*Math.max(1,(w-2*p)/(Object.keys(days).length-1||1))},${h-p-(v/max)*(h-2*p)}`).join(' ');return `<svg class="chart" viewBox="0 0 ${w} ${h}"><line x1="${p}" y1="${h-p}" x2="${w-p}" y2="${h-p}" stroke="#dbe5e2"/><polyline points="${pts}" fill="none" stroke="#0b7a63" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${Object.entries(days).map(([d,v],i)=>{const x=p+i*Math.max(1,(w-2*p)/(Object.keys(days).length-1||1));const y=h-p-(v/max)*(h-2*p);return `<circle cx="${x}" cy="${y}" r="4" fill="#f2b233"><title>${d}: ${money(v)}</title></circle>`}).join('')}</svg>`}
+function insights(top,t){let a=[];if(top[0])a.push(`"${esc(top[0].p.name)}" aporta aproximadamente ${money(top[0].con)} de contribución en el periodo visible.`);if(t.margin<.3)a.push(`El margen bruto calculado es ${pct(t.margin)}. Conviene revisar precios, costos unitarios y mezcla de productos.`);const big=db.expenses.slice().sort((a,b)=>b.amount-a.amount)[0];if(big)a.push(`El mayor egreso registrado es "${esc(big.desc)}" por ${money(big.amount)}. Un gasto elevado no se considera innecesario automáticamente.`);if(!db.sales.length)a.push('No hay ventas suficientes para generar hallazgos.');return a.map(x=>`<div class="insight" style="margin-bottom:8px">${x}</div>`).join('')}
+function sales(){
+ const rows=db.sales.filter(s=>!state.search||product(s.productId)?.name.toLowerCase().includes(state.search.toLowerCase())||s.date.includes(state.search));
+ return `<div class="grid wide"><div class="card"><div class="card-head"><div><h3>Registrar venta</h3><span class="muted">El importe se calcula automáticamente.</span></div></div>${saleForm()}</div><div class="card"><div class="card-head"><div><h3>Resumen</h3><span class="muted">${rows.length} operaciones visibles</span></div><button class="btn sm" data-action="export-sales">Exportar CSV</button></div><div class="grid g3"><div><span class="eyebrow">Ingresos</span><h2>${money(rows.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0))}</h2></div><div><span class="eyebrow">Unidades</span><h2>${num(rows.reduce((a,s)=>a+s.qty,0))}</h2></div><div><span class="eyebrow">Canal principal</span><h2>${channel(rows)}</h2></div></div></div></div>
+ <div class="card"><div class="card-head"><div><h3>Operaciones</h3><span class="muted">Busca, revisa y elimina registros.</span></div><input id="sales-search" placeholder="Buscar producto o fecha" value="${esc(state.search)}"></div>${salesTable(rows)}</div>`
+}
+function saleForm(){return `<form id="sale-form" class="form-grid"><div class="field"><label>Fecha</label><input name="date" type="date" value="2026-10-23" required></div><div class="field"><label>Producto</label><select name="productId">${db.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Cantidad</label><input name="qty" type="number" min="1" value="1" required></div><div class="field"><label>Precio unitario (S/)</label><input name="price" type="number" step=".01" min="0" value="${db.products[0]?.price||0}" required></div><div class="field"><label>Descuento (S/)</label><input name="discount" type="number" step=".01" min="0" value="0"></div><div class="field"><label>Canal</label><select name="channel"><option>Tienda</option><option>WhatsApp</option><option>Instagram</option><option>Marketplace</option><option>Otro</option></select></div><div class="field"><label>Cliente (opcional)</label><input name="customer"></div><div class="field"><label>Observaciones</label><input name="notes"></div><div class="field full"><button class="btn primary">Guardar venta</button></div></form>`}
+function salesTable(rows){if(!rows.length)return `<div class="empty">No hay registros que coincidan.</div>`;return `<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Producto</th><th>Canal</th><th class="num">Cantidad</th><th class="num">Precio</th><th class="num">Importe</th><th></th></tr></thead><tbody>${rows.slice().reverse().map(s=>`<tr><td>${s.date}</td><td>${esc(product(s.productId)?.name||'—')}</td><td>${esc(s.channel)}</td><td class="num">${s.qty}</td><td class="num">${money(s.price)}</td><td class="num">${money(s.qty*s.price-(s.discount||0))}</td><td><button class="btn sm danger" data-delete-sale="${s.id}">Eliminar</button></td></tr>`).join('')}</tbody></table></div>`}
+function channel(rows){const c={};rows.forEach(s=>c[s.channel]=(c[s.channel]||0)+1);return Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—'}
+function products(){return `<div class="card"><div class="card-head"><div><h3>Catálogo de productos</h3><span class="muted">Precios, costos, stock y categorías.</span></div><button class="btn primary" data-action="new-product">Nuevo producto</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>SKU</th><th>Categoría</th><th class="num">Precio</th><th class="num">Costo</th><th class="num">Stock</th><th>Estado</th><th></th></tr></thead><tbody>${db.products.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.sku)}</td><td>${esc(p.cat)}</td><td class="num">${money(p.price)}</td><td class="num">${money(p.cost)}</td><td class="num">${num(p.stock)}</td><td><span class="pill">${esc(p.status)}</span></td><td><button class="btn sm" data-edit-product="${p.id}">Editar</button></td></tr>`).join('')}</tbody></table></div></div>`}
+function expenses(){return `<div class="grid wide"><div class="card"><div class="card-head"><div><h3>Registrar costo o gasto</h3><span class="muted">La clasificación es editable según el negocio.</span></div></div><form id="expense-form" class="form-grid"><div class="field"><label>Fecha</label><input name="date" type="date" value="2026-10-23" required></div><div class="field"><label>Descripción</label><input name="desc" required></div><div class="field"><label>Importe (S/)</label><input name="amount" type="number" step=".01" min="0" required></div><div class="field"><label>Categoría</label><select name="cat"><option>Alquiler</option><option>Sueldos</option><option>Servicios</option><option>Transporte</option><option>Marketing</option><option>Comisiones</option><option>Mercadería</option><option>Materias primas</option><option>Mantenimiento</option><option>Impuestos</option><option>Otros</option></select></div><div class="field"><label>Tipo</label><select name="type"><option>Fijo</option><option>Variable</option><option>Directo</option><option>Operativo</option><option>Otro</option></select></div><div class="field"><label>Frecuencia</label><select name="freq"><option>Único</option><option>Mensual</option><option>Recurrente</option></select></div><div class="field full"><button class="btn primary">Guardar gasto</button></div></form></div><div class="card"><div class="card-head"><div><h3>Concentración de egresos</h3><span class="muted">No se interpreta automáticamente como gasto innecesario.</span></div></div>${expenseBars()}</div></div><div class="card"><div class="card-head"><div><h3>Registros</h3></div><button class="btn sm" data-action="export-expenses">Exportar CSV</button></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Tipo</th><th class="num">Importe</th><th></th></tr></thead><tbody>${db.expenses.slice().reverse().map(e=>`<tr><td>${e.date}</td><td>${esc(e.desc)}</td><td>${esc(e.cat)}</td><td>${esc(e.type)}</td><td class="num">${money(e.amount)}</td><td><button class="btn sm danger" data-delete-expense="${e.id}">Eliminar</button></td></tr>`).join('')}</tbody></table></div></div>`}
+function expenseBars(){const c={};db.expenses.forEach(e=>c[e.cat]=(c[e.cat]||0)+e.amount);const arr=Object.entries(c).sort((a,b)=>b[1]-a[1]);const mx=arr[0]?.[1]||1;return `<div class="bar-list">${arr.map(([k,v])=>`<div class="bar-row"><span>${esc(k)}</span><div class="track"><div class="fill" style="width:${v/mx*100}%"></div></div><b>${money(v)}</b></div>`).join('')}</div>`}
+function inventory(){const low=db.products.filter(p=>p.stock<=12);return `<div class="grid g3">${kpi('Unidades en stock',num(db.products.reduce((a,p)=>a+p.stock,0)),'Inventario actual',true)}${kpi('Productos con stock bajo',num(low.length),'Umbral demostrativo ≤ 12',low.length===0)}${kpi('Sin movimiento','0','Se requiere historial suficiente',true)}</div><div class="card"><div class="card-head"><div><h3>Inventario</h3><span class="muted">Vinculado a productos y ventas del prototipo.</span></div></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>Categoría</th><th class="num">Stock</th><th class="num">Ventas unidades</th><th>Estado</th></tr></thead><tbody>${db.products.map(p=>{const u=db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0);return `<tr><td>${esc(p.name)}</td><td>${esc(p.cat)}</td><td class="num">${p.stock}</td><td class="num">${u}</td><td>${p.stock<=12?'<span class="pill" style="background:#fff3d8;color:#8a6100">Revisar</span>':'<span class="pill">Normal</span>'}</td></tr>`}).join('')}</tbody></table></div><div class="insight warn" style="margin-top:12px">Las alertas de reposición son orientativas: no se recomienda comprar solo con ventas históricas si no se conocen inventario real, tiempos de reposición y cambios en la demanda.</div></div>`}
+function profit(){const rows=db.products.map(p=>{const ss=db.sales.filter(s=>s.productId==p.id),units=ss.reduce((a,s)=>a+s.qty,0),rev=ss.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0),cost=units*p.cost,gross=rev-cost;return{p,units,rev,cost,gross,margin:rev?gross/rev:0,share:0}});const total=rows.reduce((a,x)=>a+x.rev,0);rows.forEach(x=>x.share=total?x.rev/total:0);return `<div class="card"><div class="card-head"><div><h3>Rentabilidad de mi negocio</h3><span class="muted">Los cálculos usan ventas y costos unitarios registrados.</span></div><button class="btn" data-action="scenario-product">Simular precio</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th class="num">Unidades</th><th class="num">Ingresos</th><th class="num">Costos directos</th><th class="num">Margen bruto</th><th class="num">Margen %</th><th class="num">Participación</th></tr></thead><tbody>${rows.sort((a,b)=>b.gross-a.gross).map(x=>`<tr><td><b>${esc(x.p.name)}</b></td><td class="num">${num(x.units)}</td><td class="num">${money(x.rev)}</td><td class="num">${money(x.cost)}</td><td class="num">${money(x.gross)}</td><td class="num">${pct(x.margin)}</td><td class="num">${pct(x.share)}</td></tr>`).join('')}</tbody></table></div><div class="grid g2" style="margin-top:14px"><div class="insight"><b>Lectura:</b> la utilidad bruta es ingresos netos menos costo de productos vendidos. No equivale a utilidad neta porque aún pueden existir gastos operativos, impuestos y otros conceptos.</div><div class="insight warn"><b>Atención:</b> un producto puede tener ventas elevadas y una contribución reducida; revisa precio, costo y volumen conjuntamente.</div></div></div>`}
+function forecast(){const p=product(state.productId)||db.products[0];const ss=db.sales.filter(s=>s.productId==p.id).sort((a,b)=>a.date.localeCompare(b.date));const enough=ss.length>=8;const units=ss.reduce((a,s)=>a+s.qty,0);const avgU=ss.length?units/ss.length:0;let slope=0; if(enough){const ys=ss.map(s=>s.qty),xs=ys.map((_,i)=>i+1),mx=xs.reduce((a,b)=>a+b,0)/xs.length,my=avgU;let d=0,n=0;xs.forEach((x,i)=>{d+=(x-mx)**2;n+=(x-mx)*(ys[i]-my)});slope=d?n/d:0}const forecast=Math.max(0,avgU+slope*4);return `<div class="card"><div class="card-head"><div><h3>Pronóstico de demanda</h3><span class="muted">Método demostrativo de referencia; no es garantía de ventas.</span></div><select id="forecast-product">${db.products.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>${enough?`<div class="grid g3">${kpi('Observaciones',num(ss.length),'Ventas registradas',true)}${kpi('Promedio por operación',num(avgU),'Unidades',true)}${kpi('Referencia próxima',num(forecast),'Escenario de 4 operaciones',true)}</div><div class="insight warn">La referencia se obtiene de una tendencia lineal simple sobre las unidades por operación. Para un modelo econométrico fiable se necesita una estructura temporal adecuada, suficiente historial y variables explicativas; este prototipo no afirma causalidad ni precisión estadística.</div>`:`<div class="empty"><h3>Información insuficiente</h3><p>Se requieren al menos 8 observaciones del producto seleccionado para mostrar una referencia descriptiva. Con menos datos, el sistema evita inventar pronósticos.</p><button class="btn primary" data-nav="ventas">Registrar más ventas</button></div>`}</div>`}
+function scenarios(){const p=product(state.productId)||db.products[0],d=Number(state.priceDelta||0),price=p.price*(1+d/100),vol=db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0),baseC=vol*(p.price-p.cost),simC=vol*(price-p.cost);return `<div class="grid wide"><div class="card"><div class="card-head"><div><h3>¿Qué pasaría si...?</h3><span class="muted">Simulación editable; no es una predicción automática.</span></div><select id="scenario-product">${db.products.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div><div class="field"><label>Variación del precio: <b id="delta-label">${d>0?'+':''}${d}%</b></label><input id="price-range" type="range" min="-20" max="20" step="1" value="${d}"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>-20%</span><span>0%</span><span>+20%</span></div></div><div class="grid g3" style="margin-top:18px">${kpi('Precio simulado',money(price),'Supuesto editable',true)}${kpi('Contribución base',money(baseC),'Volumen histórico',true)}${kpi('Contribución simulada',money(simC),'Mismo volumen supuesto',simC>=0)}</div></div><div class="card"><h3>Supuestos visibles</h3><ul><li>El volumen se mantiene igual al histórico.</li><li>El costo unitario se mantiene en ${money(p.cost)}.</li><li>La variación de precio no implica una reacción estimada de clientes.</li><li>Para estimar elasticidad precio se requieren datos adecuados de precio y cantidad y un modelo especificado.</li></ul></div></div>`}
+function reports(){return `<div class="card"><div class="card-head"><div><h3>Reporte empresarial</h3><span class="muted">Resumen de ventas, costos, gastos, rentabilidad y alertas.</span></div><div class="toolbar"><button class="btn primary" data-action="generate-report">Generar</button><button class="btn" data-action="print-report">Imprimir / PDF</button></div></div>${state.report?`<div class="report-output">${state.report.map(x=>`<div class="insight" style="margin-bottom:9px">${x}</div>`).join('')}</div>`:`<div class="empty">Genera un reporte para convertir tus datos en un resumen ejecutivo. Las recomendaciones se basan en cálculos visibles.</div>`}</div>`}
+function plans(){const plans=[['Inicial','0',['Productos','Ventas y gastos manuales','Dashboard básico','Reportes limitados']],['Crecimiento','49',['Todo lo anterior','Importación CSV','Rentabilidad por producto','Reportes descargables','Escenarios básicos']],['Inteligencia','99',['Todo lo anterior','Pronósticos sujetos a datos','Sensibilidad de precios','Escenarios avanzados','Indicadores de calidad']]];return `<div class="grid g3">${plans.map((p,i)=>`<div class="card" style="${i===1?'border:2px solid var(--green)':''}"><span class="pill">${i===1?'Más elegido':'Plan'}</span><h2 style="margin:8px 0">${p[0]}</h2><div style="font-size:32px;font-weight:900">S/ ${p[1]}<small style="font-size:12px;color:var(--muted)"> / mes</small></div><ul>${p[2].map(x=>`<li>${x}</li>`).join('')}</ul><button class="btn ${i===1?'primary':''}" data-plan="${p[0]}">Elegir ${p[0]}</button></div>`).join('')}</div><div class="card"><h3>Facturación</h3><p class="muted">Los precios son propuestas iniciales del prototipo, no precios de mercado validados. Si no existe una pasarela conectada, cualquier suscripción se considera simulada.</p></div>`}
+function config(){return `<div class="grid g2"><div class="card"><div class="card-head"><div><h3>Negocio</h3><span class="muted">Configuración básica del perfil.</span></div></div><form id="config-form" class="form-grid"><div class="field"><label>Nombre del negocio</label><input name="name" value="${esc(db.business.name)}"></div><div class="field"><label>Sector</label><input name="sector" value="${esc(db.business.sector)}"></div><div class="field"><label>Responsable</label><input name="owner" value="${esc(db.business.owner)}"></div><div class="field"><label>Correo</label><input name="email" type="email" value="${esc(db.business.email)}"></div><div class="field"><label>Moneda</label><select name="currency"><option selected>PEN — S/</option></select></div><div class="field"><label>Región</label><select name="region"><option selected>Perú</option></select></div><div class="field full"><button class="btn primary">Guardar configuración</button></div></form></div><div class="card"><h3>Privacidad y datos</h3><p class="muted">Este archivo usa localStorage para persistir el prototipo en el navegador. No implementa autenticación, separación multiempresa en servidor, backend, pasarela de pagos ni almacenamiento cloud.</p><div class="toolbar" style="margin-top:14px"><button class="btn" data-action="export-json">Exportar datos JSON</button><button class="btn danger" data-action="reset">Restablecer demo</button></div></div></div>`}
+function landing(){document.getElementById('app').innerHTML=`<div class="content landing" style="max-width:1200px;margin:auto"><div class="logo" style="color:var(--navy)"><div class="logo-mark">E</div><div>Econométrica<small style="color:var(--green)">PYME</small></div></div><div class="hero"><div><span class="pill" style="background:rgba(255,255,255,.12);color:#fff">SaaS B2B · Perú</span><h2>Convierte los datos de tu negocio en decisiones más rentables.</h2><p>Ventas, costos, gastos, rentabilidad, escenarios y análisis de demanda en una sola plataforma.</p><div class="hero-actions"><button class="btn gold" data-action="enter">Explorar demo</button><button class="btn" data-action="modal-register">Crear cuenta</button></div></div><div class="hero-visual"><div class="mini-dash"><b>Panel ejecutivo</b><div class="mini-grid" style="margin-top:9px"><div class="mini-box"><small>Ventas</small><b>${money(totals().sales)}</b></div><div class="mini-box"><small>Margen bruto</small><b>${pct(totals().margin)}</b></div><div class="mini-box"><small>Productos</small><b>${db.products.length}</b></div></div></div></div></div><div class="grid g3">${['Analiza tus ventas','Descubre tus productos más rentables','Prueba escenarios de precio'].map((x,i)=>`<div class="card feature"><span class="pill">0${i+1}</span><b>${x}</b><span class="muted">${['Visualiza ingresos y evolución por periodo, producto y canal.','Compara ingresos, costos, márgenes y contribución.','Modifica precio, costo y volumen con supuestos visibles.'][i]}</span></div>`).join('')}</div><div class="steps">${['Registra tus datos','Importa o ingresa información','Analiza indicadores y gráficos','Toma decisiones con evidencia'].map((x,i)=>`<div class="step"><span>${i+1}</span><b>${x}</b><p class="muted">Flujo simple para una PYME.</p></div>`).join('')}</div></div>`}
+function openModal(title,body){$('#modal-root').innerHTML=`<div class="modal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow">Econométrica PYME</span><h2>${title}</h2></div><button class="close" data-action="close">×</button></div><div style="margin-top:16px">${body}</div></div></div>`}
+function afterRender(){
+ $('#period')?.addEventListener('change',e=>{state.period=e.target.value;render()});
+ $('#sales-search')?.addEventListener('input',e=>{state.search=e.target.value;render()});
+ $('#sale-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.sales.push({id:Date.now(),date:f.get('date'),productId:+f.get('productId'),qty:+f.get('qty'),price:+f.get('price'),discount:+f.get('discount'),channel:f.get('channel'),customer:f.get('customer'),notes:f.get('notes')});save();toast('Venta registrada');render()});
+ $('#expense-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.expenses.push({id:Date.now(),date:f.get('date'),desc:f.get('desc'),amount:+f.get('amount'),cat:f.get('cat'),type:f.get('type'),freq:f.get('freq'),product:''});save();toast('Gasto registrado');render()});
+ $('#config-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.business={name:f.get('name'),sector:f.get('sector'),owner:f.get('owner'),email:f.get('email')};save();toast('Configuración guardada');shell()});
+ $('#forecast-product')?.addEventListener('change',e=>{state.productId=+e.target.value;render()});
+ $('#scenario-product')?.addEventListener('change',e=>{state.productId=+e.target.value;render()});
+ $('#price-range')?.addEventListener('input',e=>{state.priceDelta=+e.target.value;const l=$('#delta-label');if(l)l.textContent=(state.priceDelta>0?'+':'')+state.priceDelta+'%';const p=product(state.productId);const price=p.price*(1+state.priceDelta/100),vol=db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0);const cards=$$('.kpi');if(cards[0])cards[0].querySelector('.value').textContent=money(price);if(cards[2])cards[2].querySelector('.value').textContent=money(vol*(price-p.cost))});
+}
+document.addEventListener('click',e=>{
+ const n=e.target.closest('[data-nav]');if(n){state.screen=n.dataset.nav;state.search='';shell();return}
+ const del=e.target.closest('[data-delete-sale]');if(del){db.sales=db.sales.filter(x=>x.id!=del.dataset.deleteSale);save();render();toast('Venta eliminada');return}
+ const de=e.target.closest('[data-delete-expense]');if(de){db.expenses=db.expenses.filter(x=>x.id!=de.dataset.deleteExpense);save();render();toast('Gasto eliminado');return}
+ const edit=e.target.closest('[data-edit-product]');if(edit){const p=product(edit.dataset.editProduct);openModal('Editar producto',productForm(p));return}
+ if(e.target.closest('[data-action="new-product"]')){openModal('Nuevo producto',productForm());return}
+ if(e.target.closest('[data-action="import"]')){openModal('Importar CSV',`<p class="muted">Carga un CSV de ventas con columnas: fecha, producto, cantidad, precio, descuento, canal. La importación es local al navegador.</p><input id="csv-file" type="file" accept=".csv" style="margin:12px 0"><button class="btn primary" data-action="do-import">Validar e importar</button>`);return}
+ if(e.target.closest('[data-action="do-import"]')){$('#csv-file')?.click();return}
+ if(e.target.closest('[data-action="report"]')){state.screen='reportes';shell();setTimeout(()=>generateReport(),0);return}
+ if(e.target.closest('[data-action="generate-report"]')){generateReport();return}
+ if(e.target.closest('[data-action="print-report"]')){window.print();return}
+ if(e.target.closest('[data-action="export-sales"]')){downloadCSV(db.sales.map(s=>({fecha:s.date,producto:product(s.productId)?.name||'',cantidad:s.qty,precio:s.price,descuento:s.discount,canal:s.channel})),'ventas.csv');return}
+ if(e.target.closest('[data-action="export-expenses"]')){downloadCSV(db.expenses.map(x=>({fecha:x.date,descripcion:x.desc,importe:x.amount,categoria:x.cat,tipo:x.type,frecuencia:x.freq})),'gastos.csv');return}
+ if(e.target.closest('[data-action="export-json"]')){downloadText(JSON.stringify(db,null,2),'econometrica-datos.json','application/json');return}
+ if(e.target.closest('[data-action="reset"]')){if(confirm('¿Restablecer los datos de demostración?')){localStorage.removeItem(KEY);location.reload()}return}
+ if(e.target.closest('[data-action="landing"]')){landing();return}
+ if(e.target.closest('[data-action="enter"]')){state.screen='inicio';shell();return}
+ if(e.target.closest('[data-action="modal-register"]')){openModal('Crear cuenta',`<form id="register-form" class="form-grid"><div class="field"><label>Nombre del negocio</label><input name="name" required></div><div class="field"><label>Sector</label><select name="sector"><option>Comercio minorista</option><option>Restaurantes y alimentos</option><option>Ropa y accesorios</option><option>Distribución</option><option>Manufactura</option><option>Servicios</option><option>Otros</option></select></div><div class="field"><label>Responsable</label><input name="owner" required></div><div class="field"><label>Correo</label><input name="email" type="email" required></div><div class="field full"><button class="btn primary">Crear cuenta de demostración</button></div></form>`);return}
+ if(e.target.closest('[data-action="close"]')){$('#modal-root').innerHTML='';return}
+ const plan=e.target.closest('[data-plan]');if(plan){toast('Selección simulada: '+plan.dataset.plan);return}
+});
+document.addEventListener('submit',e=>{
+ if(e.target.id==='register-form'){e.preventDefault();const f=new FormData(e.target);db.business={name:f.get('name'),sector:f.get('sector'),owner:f.get('owner'),email:f.get('email')};db.settings.demo=true;save();$('#modal-root').innerHTML='';state.screen='inicio';shell();toast('Cuenta de demostración creada')}
+ if(e.target.id==='product-form'){e.preventDefault();const f=new FormData(e.target);const id=+f.get('id')||Date.now();const p={id,name:f.get('name'),sku:f.get('sku'),cat:f.get('cat'),price:+f.get('price'),cost:+f.get('cost'),stock:+f.get('stock'),status:f.get('status')};const i=db.products.findIndex(x=>x.id===id);if(i>=0)db.products[i]=p;else db.products.push(p);save();$('#modal-root').innerHTML='';render();toast('Producto guardado')}
+});
+document.addEventListener('change',e=>{
+ if(e.target.id==='csv-file'&&e.target.files[0]) importCSV(e.target.files[0]);
+});
+function productForm(p={}){return `<form id="product-form" class="form-grid"><input type="hidden" name="id" value="${p.id||''}"><div class="field"><label>Nombre</label><input name="name" value="${esc(p.name||'')}" required></div><div class="field"><label>SKU</label><input name="sku" value="${esc(p.sku||'')}"></div><div class="field"><label>Categoría</label><input name="cat" value="${esc(p.cat||'Ropa')}" required></div><div class="field"><label>Precio de venta (S/)</label><input name="price" type="number" step=".01" value="${p.price||0}" required></div><div class="field"><label>Costo unitario (S/)</label><input name="cost" type="number" step=".01" value="${p.cost||0}" required></div><div class="field"><label>Stock</label><input name="stock" type="number" value="${p.stock||0}" required></div><div class="field"><label>Estado</label><select name="status"><option ${p.status==='Activo'?'selected':''}>Activo</option><option ${p.status==='Inactivo'?'selected':''}>Inactivo</option></select></div><div class="field full"><button class="btn primary">Guardar producto</button></div></form>`}
+function generateReport(){const t=totals(), top=db.products.map(p=>{const ss=db.sales.filter(s=>s.productId==p.id),u=ss.reduce((a,s)=>a+s.qty,0),r=ss.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0),g=r-u*p.cost;return{p,u,r,g}}).sort((a,b)=>b.g-a.g);state.report=[`Resumen ejecutivo: ventas netas ${money(t.sales)}, costos de productos ${money(t.cogs)}, gastos registrados ${money(t.exp)} y utilidad bruta ${money(t.gross)}.`,top[0]?`Producto con mayor contribución bruta estimada: ${esc(top[0].p.name)} con ${money(top[0].g)}.`:'No hay productos con ventas suficientes para comparar.',t.margin<.3?`El margen bruto calculado es ${pct(t.margin)}; conviene revisar precios y costos unitarios.`:`El margen bruto calculado es ${pct(t.margin)}.`,db.expenses.length?`La categoría de gasto con mayor concentración es ${Object.entries(db.expenses.reduce((a,e)=>(a[e.cat]=(a[e.cat]||0)+e.amount,a),{})).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—'}.`:'No hay gastos registrados.',`Nota metodológica: estos cálculos distinguen utilidad bruta de resultado operativo y no constituyen una predicción ni una garantía.`];render()}
+function importCSV(file){const r=new FileReader();r.onload=()=>{const lines=r.result.split(/\r?\n/).filter(Boolean);if(lines.length<2){toast('CSV vacío o inválido');return}const h=lines[0].split(',').map(x=>x.trim().toLowerCase());let ok=0;for(const line of lines.slice(1)){const c=line.split(',');const o={};h.forEach((k,i)=>o[k]=c[i]?.trim()||'');const p=db.products.find(x=>x.name.toLowerCase()===o.producto?.toLowerCase());if(!p||!o.fecha||!o.cantidad||!o.precio)continue;db.sales.push({id:Date.now()+ok,date:o.fecha,productId:p.id,qty:+o.cantidad,price:+o.precio,discount:+o.descuento||0,channel:o.canal||'Otro',customer:'',notes:''});ok++}save();$('#modal-root').innerHTML='';render();toast(`${ok} registros importados`) };r.readAsText(file)}
+function downloadCSV(rows,name){const h=Object.keys(rows[0]||{});const csv=[h.join(','),...rows.map(r=>h.map(k=>`"${String(r[k]??'').replaceAll('"','""')}"`).join(','))].join('\n');downloadText(csv,name,'text/csv')}
+function downloadText(txt,name,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function toast(t){const x=$('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+landing();
 
-    <!-- HEADER -->
-    <header class="bg-navy-800 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-emerald-500 p-1.5 rounded shadow-inner">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                    </svg>
-                </div>
-                <h1 class="text-xl font-extrabold tracking-tight">EconoMétrica <span class="text-emerald-400">PYME</span></h1>
-            </div>
-            
-            <!-- NAVEGACIÓN (TABS) -->
-            <nav class="hidden md:flex gap-6 overflow-x-auto">
-                <button onclick="switchTab('tab-upload')" id="nav-upload" class="tab-btn tab-active pb-1 text-sm transition-colors">1. Carga de Datos</button>
-                <button onclick="switchTab('tab-dashboard')" id="nav-dashboard" class="tab-btn tab-inactive pb-1 text-sm transition-colors">2. Panel & Reportes</button>
-                <button onclick="switchTab('tab-simulator')" id="nav-simulator" class="tab-btn tab-inactive pb-1 text-sm transition-colors">3. Simulador Predictivo</button>
-                <button onclick="switchTab('tab-plans')" id="nav-plans" class="tab-btn tab-inactive pb-1 text-sm transition-colors">4. Planes & Ayuda</button>
-            </nav>
-        </div>
-        <!-- Menú Móvil -->
-        <div class="md:hidden flex overflow-x-auto bg-navy-900 px-4 py-2 gap-4 text-xs whitespace-nowrap">
-            <button onclick="switchTab('tab-upload')" id="nav-upload-m" class="tab-btn tab-active">Carga</button>
-            <button onclick="switchTab('tab-dashboard')" id="nav-dashboard-m" class="tab-btn tab-inactive">Panel</button>
-            <button onclick="switchTab('tab-simulator')" id="nav-simulator-m" class="tab-btn tab-inactive">Simulador</button>
-            <button onclick="switchTab('tab-plans')" id="nav-plans-m" class="tab-btn tab-inactive">Soporte</button>
-        </div>
-    </header>
+    /* ==================== DEMOS MULTINEGOCIO ==================== */
+    const DEMO_BUSINESSES = {
+      ropa: {
+        business:{name:'Tienda Andina',sector:'Comercio minorista',owner:'Ana Torres',email:'demo@econometrica.pe'},
+        products:[
+          {id:1,sku:'POL-001',name:'Polo básico',category:'Prendas',price:49,cost:25,stock:32,minStock:8},
+          {id:2,sku:'JEA-002',name:'Jean clásico',category:'Prendas',price:89,cost:48,stock:18,minStock:6},
+          {id:3,sku:'CAS-003',name:'Casaca urbana',category:'Abrigos',price:149,cost:88,stock:11,minStock:4},
+          {id:4,sku:'GOR-004',name:'Gorra',category:'Accesorios',price:35,cost:14,stock:46,minStock:10}
+        ],
+        expenses:[
+          {id:1,date:'2026-10-02',category:'Alquiler',description:'Local comercial',amount:950},
+          {id:2,date:'2026-10-06',category:'Publicidad',description:'Campaña digital',amount:320},
+          {id:3,date:'2026-10-12',category:'Transporte',description:'Movilidad y entregas',amount:180},
+          {id:4,date:'2026-10-18',category:'Servicios',description:'Luz, internet y agua',amount:210}
+        ]
+      },
+      ferreteria: {
+        business:{name:'Ferretería El Constructor',sector:'Ferretería y materiales',owner:'Carlos Mendoza',email:'demo.ferreteria@econometrica.pe'},
+        products:[
+          {id:1,sku:'FER-001',name:'Taladro percutor 650W',category:'Herramientas eléctricas',price:219,cost:145,stock:9,minStock:3},
+          {id:2,sku:'FER-002',name:'Caja de tornillos 2"',category:'Fijaciones',price:18,cost:9,stock:75,minStock:20},
+          {id:3,sku:'FER-003',name:'Cemento 42.5 kg',category:'Materiales',price:32,cost:24,stock:60,minStock:15},
+          {id:4,sku:'FER-004',name:'Pintura látex 4 galones',category:'Pinturas',price:118,cost:79,stock:14,minStock:5},
+          {id:5,sku:'FER-005',name:'Juego de llaves mixtas',category:'Herramientas manuales',price:85,cost:52,stock:21,minStock:6}
+        ],
+        expenses:[
+          {id:1,date:'2026-10-02',category:'Alquiler',description:'Almacén y tienda',amount:1250},
+          {id:2,date:'2026-10-07',category:'Transporte',description:'Fletes y reparto',amount:410},
+          {id:3,date:'2026-10-14',category:'Publicidad',description:'Volantes y anuncios',amount:160},
+          {id:4,date:'2026-10-20',category:'Servicios',description:'Luz e internet',amount:290}
+        ]
+      },
+      libreria: {
+        business:{name:'Librería Horizonte',sector:'Librería y útiles',owner:'María Salazar',email:'demo.libreria@econometrica.pe'},
+        products:[
+          {id:1,sku:'LIB-001',name:'Novela juvenil',category:'Libros',price:42,cost:25,stock:24,minStock:6},
+          {id:2,sku:'LIB-002',name:'Cuaderno universitario',category:'Útiles',price:14,cost:8,stock:65,minStock:15},
+          {id:3,sku:'LIB-003',name:'Agenda 2027',category:'Papelería',price:29,cost:16,stock:38,minStock:10},
+          {id:4,sku:'LIB-004',name:'Pack resaltadores x6',category:'Útiles',price:18,cost:10,stock:43,minStock:12},
+          {id:5,sku:'LIB-005',name:'Diccionario escolar',category:'Libros',price:36,cost:21,stock:19,minStock:5}
+        ],
+        expenses:[
+          {id:1,date:'2026-10-03',category:'Alquiler',description:'Local',amount:820},
+          {id:2,date:'2026-10-09',category:'Servicios',description:'Luz e internet',amount:185},
+          {id:3,date:'2026-10-15',category:'Publicidad',description:'Campaña regreso a clases',amount:260},
+          {id:4,date:'2026-10-22',category:'Otros',description:'Empaques y bolsas',amount:95}
+        ]
+      },
+      jugueria: {
+        business:{name:'Juguería Frutal',sector:'Alimentos y bebidas',owner:'Lucía Ramos',email:'demo.jugueria@econometrica.pe'},
+        products:[
+          {id:1,sku:'JUG-001',name:'Jugo de papaya 500 ml',category:'Jugos',price:8,cost:3.2,stock:120,minStock:30},
+          {id:2,sku:'JUG-002',name:'Jugo surtido 500 ml',category:'Jugos',price:10,cost:4.1,stock:105,minStock:25},
+          {id:3,sku:'JUG-003',name:'Ensalada de frutas',category:'Desayunos',price:12,cost:5.3,stock:70,minStock:18},
+          {id:4,sku:'JUG-004',name:'Sándwich de pollo',category:'Desayunos',price:11,cost:5.4,stock:54,minStock:14},
+          {id:5,sku:'JUG-005',name:'Combo jugo + sándwich',category:'Combos',price:18,cost:8.5,stock:48,minStock:12}
+        ],
+        expenses:[
+          {id:1,date:'2026-10-01',category:'Alquiler',description:'Puesto y local',amount:650},
+          {id:2,date:'2026-10-05',category:'Servicios',description:'Agua, luz y gas',amount:230},
+          {id:3,date:'2026-10-11',category:'Insumos',description:'Frutas y perecibles',amount:540},
+          {id:4,date:'2026-10-19',category:'Publicidad',description:'Redes sociales',amount:120}
+        ]
+      }
+    };
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow">
+    function demoSales(productIds, baseDate='2026-10-01') {
+      const rows=[];
+      const start=new Date(baseDate+'T12:00:00');
+      for(let i=0;i<18;i++){
+        const d=new Date(start); d.setDate(start.getDate()+i);
+        const pid=productIds[i%productIds.length];
+        const qty=2+(i%5);
+        rows.push({
+          id:i+1,
+          date:d.toISOString().slice(0,10),
+          productId:pid,
+          qty,
+          price:null,
+          discount:i%6===0?5:0,
+          channel:['Tienda','WhatsApp','Delivery'][i%3]
+        });
+      }
+      return rows;
+    }
 
-        <!-- ================= PESTAÑA 1: CARGA DE DATOS ================= -->
-        <section id="tab-upload" class="tab-content fade-in block">
-            <div class="text-center max-w-2xl mx-auto mb-8">
-                <h2 class="text-2xl font-bold text-slate-900 mb-2">Ingresa tus datos para empezar</h2>
-                <p class="text-slate-600 text-sm">Sube tu archivo de ventas o descarga nuestra plantilla con el formato ideal.</p>
-            </div>
+    function buildDemoState(key){
+      const d=DEMO_BUSINESSES[key];
+      const sales=demoSales(d.products.map(p=>p.id));
+      sales.forEach(s=>{
+        const p=d.products.find(p=>p.id===s.productId);
+        s.price=p.price;
+      });
+      return {
+        business:{...d.business},
+        products:d.products.map(x=>({...x})),
+        expenses:d.expenses.map(x=>({...x})),
+        sales,
+        currentPage:'dashboard',
+        selectedProductId:d.products[0].id,
+        scenarioProductId:d.products[0].id
+      };
+    }
 
-            <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-10 text-center max-w-2xl mx-auto shadow-sm">
-                <div class="text-6xl mb-4">📁</div>
-                <h3 class="text-lg font-bold mb-4">Arrastra tu archivo Excel o CSV aquí</h3>
-                
-                <div class="flex flex-col sm:flex-row justify-center gap-3">
-                    <button class="px-5 py-2.5 bg-navy-800 text-white rounded-lg font-medium shadow" onclick="simulateUpload()">
-                        Seleccionar Archivo
-                    </button>
-                    <!-- BOTÓN DE DESCARGA DE PLANTILLA -->
-                    <button class="px-5 py-2.5 bg-slate-100 text-navy-800 border border-slate-300 rounded-lg font-medium hover:bg-slate-200" onclick="downloadCSVTemplate()">
-                        ⬇️ Descargar Plantilla CSV
-                    </button>
-                </div>
-            </div>
-            
-            <div class="max-w-2xl mx-auto mt-6 text-center">
-                <button class="text-emerald-600 font-semibold underline text-sm" onclick="switchTab('tab-dashboard')">
-                    👉 Omitir y ver panel de demostración
-                </button>
-            </div>
-        </section>
+    function switchDemoBusiness(key){
+      if(!DEMO_BUSINESSES[key]) return;
+      state = buildDemoState(key);
+      state.demoKey=key;
+      try{ localStorage.setItem('econometrica-pyme-v2', JSON.stringify(state)); }catch(e){}
+      document.querySelectorAll('[data-demo-card]').forEach(el=>el.classList.toggle('active',el.dataset.demoCard===key));
+      const sel=document.getElementById('demo-business'); if(sel) sel.value=key;
+      if(typeof render==='function') render();
+      if(typeof toast==='function') toast('Demo cargada: '+DEMO_BUSINESSES[key].business.name);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
 
+    function ensureDemoSelector(){
+      const key=state?.demoKey || 'ropa';
+      const sel=document.getElementById('demo-business');
+      if(sel) sel.value=key;
+      document.querySelectorAll('[data-demo-card]').forEach(el=>el.classList.toggle('active',el.dataset.demoCard===key));
+    }
 
-        <!-- ================= PESTAÑA 2: DASHBOARD Y REPORTES ================= -->
-        <section id="tab-dashboard" class="tab-content fade-in hidden">
-            <h2 class="text-2xl font-bold text-slate-900 mb-6">Resumen Operativo y Hallazgos</h2>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Panel Descriptivo de Productos -->
-                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-5 overflow-hidden">
-                    <h3 class="font-bold text-navy-800 mb-4 border-b pb-2">📊 Análisis de Productos Principales</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm whitespace-nowrap">
-                            <thead class="bg-slate-50 text-slate-600">
-                                <tr>
-                                    <th class="p-3 font-semibold rounded-tl-lg">Producto</th>
-                                    <th class="p-3 font-semibold">Precio / Costo</th>
-                                    <th class="p-3 font-semibold">Margen</th>
-                                    <th class="p-3 font-semibold">Ventas (Mes)</th>
-                                    <th class="p-3 font-semibold rounded-tr-lg">Sensibilidad (Elasticidad)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                <tr class="hover:bg-slate-50">
-                                    <td class="p-3 font-medium text-slate-900">Aceite Vegetal 1L</td>
-                                    <td class="p-3">S/ 8.50 <span class="text-slate-400">| S/ 6.00</span></td>
-                                    <td class="p-3 font-bold text-emerald-600">29.4%</td>
-                                    <td class="p-3">300 un. <span class="text-xs text-rose-500 bg-rose-50 px-1 rounded">▼ Baja</span></td>
-                                    <td class="p-3"><span class="px-2 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">Alta (Elástico)</span></td>
-                                </tr>
-                                <tr class="hover:bg-slate-50">
-                                    <td class="p-3 font-medium text-slate-900">Arroz Extra 5kg</td>
-                                    <td class="p-3">S/ 18.00 <span class="text-slate-400">| S/ 14.50</span></td>
-                                    <td class="p-3 font-bold text-emerald-600">19.4%</td>
-                                    <td class="p-3">150 un. <span class="text-xs text-emerald-600 bg-emerald-50 px-1 rounded">▲ Alta Quincena</span></td>
-                                    <td class="p-3"><span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">Media</span></td>
-                                </tr>
-                                <tr class="hover:bg-slate-50">
-                                    <td class="p-3 font-medium text-slate-900">Gaseosa 1.5L</td>
-                                    <td class="p-3">S/ 7.00 <span class="text-slate-400">| S/ 4.50</span></td>
-                                    <td class="p-3 font-bold text-emerald-600">35.7%</td>
-                                    <td class="p-3">500 un. <span class="text-xs text-blue-600 bg-blue-50 px-1 rounded">■ Pico Fin Semana</span></td>
-                                    <td class="p-3"><span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">Baja (Inelástico)</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    /* Extiende el render existente sin reemplazar su lógica. */
+    const __renderOriginal = typeof render==='function' ? render : null;
+    if(__renderOriginal){
+      render = function(){
+        __renderOriginal();
+        ensureDemoSelector();
+      };
+    }
 
-                <!-- Reportes y Automatización (WhatsApp) -->
-                <div class="space-y-6">
-                    <!-- Generador de Reporte Escrito -->
-                    <div class="bg-navy-800 text-white rounded-xl shadow-sm p-5">
-                        <h3 class="font-bold mb-2">📑 Reporte Ejecutivo</h3>
-                        <p class="text-xs text-slate-300 mb-4">Genera un documento con todos los hallazgos predictivos redactados en lenguaje natural.</p>
-                        <button onclick="generateWrittenReport()" class="w-full py-2 bg-emerald-500 hover:bg-emerald-600 rounded text-sm font-bold shadow transition-colors">
-                            Generar Reporte Completo
-                        </button>
-                    </div>
+    /* Si la aplicación cargó el estado antiguo, mantenemos el demo de ropa;
+       los nuevos negocios quedan disponibles desde el selector. */
 
-                    <!-- Módulo de WhatsApp -->
-                    <div class="bg-white border border-emerald-200 rounded-xl shadow-sm p-5 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-2 opacity-20 text-4xl">📱</div>
-                        <h3 class="font-bold text-emerald-800 mb-2">Notificaciones WhatsApp</h3>
-                        <p class="text-xs text-slate-500 mb-4">Recibe tus alertas de inventario y recomendaciones de precios cada lunes a las 8:00 AM.</p>
-                        <div class="flex gap-2">
-                            <input type="text" placeholder="+51 999 888 777" class="w-full text-sm p-2 border border-slate-300 rounded focus:outline-none focus:border-emerald-500">
-                            <button onclick="alert('¡WhatsApp configurado con éxito! Recibirás tu primer reporte el lunes.')" class="bg-emerald-100 text-emerald-800 px-3 rounded hover:bg-emerald-200 font-bold">
-                                Guardar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Modal para el Reporte Escrito (Oculto por defecto) -->
-            <div id="report-modal" class="hidden mt-6 bg-white border border-slate-200 rounded-xl p-6 shadow-lg">
-                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                    <h3 class="font-bold text-lg text-navy-800">Reporte Predictivo Semanal</h3>
-                    <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="text-slate-400 hover:text-rose-500">✖</button>
-                </div>
-                <div class="prose prose-sm text-slate-700 max-w-none" id="report-content">
-                    <!-- Contenido inyectado por JS -->
-                </div>
-            </div>
-        </section>
+</script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){
+    if(typeof ensureDemoSelector==='function') ensureDemoSelector();
+  }, 0);
+});
+</script>
 
-        <!-- ================= PESTAÑA 3: SIMULADOR INTERACTIVO ================= -->
-        <section id="tab-simulator" class="tab-content fade-in hidden">
-            <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900">Simulador de Escenarios</h2>
-                    <p class="text-slate-600 text-sm">Descubre qué pasa con tus ganancias si cambias los precios o si tus insumos suben.</p>
-                </div>
-                <select id="sim-product" onchange="updateSimulation()" class="p-2 border border-slate-300 rounded-lg shadow-sm font-semibold bg-white outline-none">
-                    <option value="0">Aceite Vegetal 1L (Elástico)</option>
-                    <option value="1">Arroz Extra 5kg (Medio)</option>
-                    <option value="2">Gaseosa 1.5L (Inelástico)</option>
-                </select>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <!-- Controles -->
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <h3 class="font-bold text-navy-800 mb-4">Ajustes del Mercado</h3>
-                        
-                        <!-- Slider Precio -->
-                        <div class="mb-6">
-                            <label class="flex justify-between text-sm font-semibold text-slate-700 mb-2">
-                                Cambio en tu Precio de Venta
-                                <span id="val-price" class="text-emerald-600 bg-emerald-50 px-2 rounded">0%</span>
-                            </label>
-                            <input type="range" id="slide-price" min="-30" max="30" value="0" step="1" class="w-full" oninput="updateSimulation()">
-                            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>-30%</span><span>Base</span><span>+30%</span></div>
-                        </div>
-
-                        <!-- Slider Costo Insumo -->
-                        <div>
-                            <label class="flex justify-between text-sm font-semibold text-slate-700 mb-2">
-                                Cambio en Costo de Proveedor
-                                <span id="val-cost" class="text-rose-600 bg-rose-50 px-2 rounded">0%</span>
-                            </label>
-                            <input type="range" id="slide-cost" min="-20" max="50" value="0" step="1" class="w-full" oninput="updateSimulation()">
-                            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>-20%</span><span>Base</span><span>+50%</span></div>
-                        </div>
-                    </div>
-
-                    <!-- Tarjetas de Resultado -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-navy-800 text-white p-4 rounded-xl shadow-sm">
-                            <p class="text-xs text-slate-300">Ventas Proyectadas</p>
-                            <p id="res-units" class="text-xl font-bold">300 unid.</p>
-                            <p id="var-units" class="text-xs mt-1 text-emerald-400">0%</p>
-                        </div>
-                        <div class="bg-emerald-500 text-white p-4 rounded-xl shadow-sm">
-                            <p class="text-xs text-emerald-100">Ganancia Neta (Utilidad)</p>
-                            <p id="res-profit" class="text-xl font-bold">S/ 750.00</p>
-                            <p id="var-profit" class="text-xs mt-1 text-emerald-900 font-medium">0%</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Gráfico Chart.js -->
-                <div class="lg:col-span-8 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                    <h3 class="font-bold text-navy-800 mb-4 text-center">Impacto en Ingresos y Ganancias</h3>
-                    <div class="relative h-64 sm:h-80 w-full">
-                        <canvas id="simChart"></canvas>
-                    </div>
-                    <p id="sim-insight" class="mt-4 text-sm text-center text-slate-600 bg-slate-50 p-2 rounded border border-slate-100">
-                        Modifica los deslizadores para ver recomendaciones automáticas aquí.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================= PESTAÑA 4: PLANES, FAQ Y FEEDBACK ================= -->
-        <section id="tab-plans" class="tab-content fade-in hidden">
-            <!-- Planes de Suscripción -->
-            <div class="text-center mb-10">
-                <h2 class="text-2xl font-bold text-slate-900">Planes Simples para PYMEs</h2>
-                <p class="text-slate-600 text-sm mt-2">Invierte menos de lo que cuesta un error de inventario.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-16">
-                <!-- Freemium -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
-                    <h3 class="font-bold text-lg text-slate-800">Básico</h3>
-                    <p class="text-3xl font-extrabold text-navy-800 my-4">Gratis</p>
-                    <ul class="text-sm text-slate-600 text-left space-y-3 mb-6">
-                        <li>✅ Análisis de 1 archivo al mes</li>
-                        <li>✅ Resumen de ventas descriptivo</li>
-                        <li>❌ Simulador predictivo</li>
-                        <li>❌ Alertas de WhatsApp</li>
-                    </ul>
-                    <button class="w-full py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-slate-200">Plan Actual</button>
-                </div>
-                <!-- Pro -->
-                <div class="bg-navy-800 p-6 rounded-2xl shadow-lg border-2 border-emerald-500 text-center relative transform md:-translate-y-4">
-                    <span class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">Más Popular</span>
-                    <h3 class="font-bold text-lg text-white">Pro</h3>
-                    <p class="text-3xl font-extrabold text-white my-4">S/ 49<span class="text-sm font-normal text-slate-300">/mes</span></p>
-                    <ul class="text-sm text-slate-200 text-left space-y-3 mb-6">
-                        <li>✅ Archivos ilimitados</li>
-                        <li>✅ Simulador de precios y demanda</li>
-                        <li>✅ Alertas semanales por WhatsApp</li>
-                        <li>✅ Soporte prioritario</li>
-                    </ul>
-                    <button class="w-full py-2 bg-emerald-500 text-white font-bold rounded-lg hover:bg-emerald-600 shadow-lg">Actualizar a Pro</button>
-                </div>
-                <!-- Avanzado -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
-                    <h3 class="font-bold text-lg text-slate-800">Multilocal</h3>
-                    <p class="text-3xl font-extrabold text-navy-800 my-4">S/ 120<span class="text-sm font-normal text-slate-500">/mes</span></p>
-                    <ul class="text-sm text-slate-600 text-left space-y-3 mb-6">
-                        <li>✅ Todo lo del plan Pro</li>
-                        <li>✅ Hasta 5 sucursales/tiendas</li>
-                        <li>✅ Conexión directa a tu sistema POS</li>
-                        <li>✅ Asesoría 1 a 1 mensual</li>
-                    </ul>
-                    <button class="w-full py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-slate-200">Contactar Ventas</button>
-                </div>
-            </div>
-
-            <!-- Feedback y Preguntas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto border-t border-slate-200 pt-10">
-                <div>
-                    <h3 class="font-bold text-xl text-navy-800 mb-4">¿Tienes dudas? Déjanos tu opinión</h3>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                        <textarea class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 mb-3" rows="4" placeholder="¿Qué función te gustaría que agreguemos? ¿Tuviste algún problema?"></textarea>
-                        <button onclick="alert('¡Gracias por tus comentarios! Nos ayudan a mejorar.')" class="bg-navy-800 text-white px-5 py-2 rounded-lg font-medium text-sm w-full">Enviar Feedback</button>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="font-bold text-xl text-navy-800 mb-4">Preguntas Frecuentes</h3>
-                    <div class="space-y-3 text-sm">
-                        <details class="bg-white p-3 rounded-lg border border-slate-200 cursor-pointer">
-                            <summary class="font-semibold text-slate-800 outline-none">¿Necesito saber matemáticas?</summary>
-                            <p class="mt-2 text-slate-600">No. EconoMétrica hace todos los cálculos por ti y te entrega instrucciones en texto simple.</p>
-                        </details>
-                        <details class="bg-white p-3 rounded-lg border border-slate-200 cursor-pointer">
-                            <summary class="font-semibold text-slate-800 outline-none">¿Cómo protege mis datos?</summary>
-                            <p class="mt-2 text-slate-600">Tu archivo se procesa en memoria y no compartimos tus ventas con terceros. Todo está encriptado.</p>
-                        </details>
-                        <details class="bg-white p-3 rounded-lg border border-slate-200 cursor-pointer">
-                            <summary class="font-semibold text-slate-800 outline-none">¿Funciona si solo uso cuaderno?</summary>
-                            <p class="mt-2 text-slate-600">Necesitarás pasar tus registros a nuestra plantilla de Excel/CSV para que el sistema pueda leerlos.</p>
-                        </details>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ================= LOGICA JAVASCRIPT ================= -->
-    <script>
-        // --- 1. NAVEGACIÓN POR PESTAÑAS ---
-        function switchTab(tabId) {
-            // Ocultar todos los contenidos
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            // Mostrar el seleccionado
-            document.getElementById(tabId).classList.remove('hidden');
-            
-            // Actualizar estilos botones Desktop
-            ['upload', 'dashboard', 'simulator', 'plans'].forEach(id => {
-                const btn = document.getElementById('nav-' + id);
-                if(btn) {
-                    if('tab-'+id === tabId) {
-                        btn.classList.replace('tab-inactive', 'tab-active');
-                    } else {
-                        btn.classList.replace('tab-active', 'tab-inactive');
-                    }
-                }
-            });
-            // Actualizar estilos botones Mobile
-            ['upload', 'dashboard', 'simulator', 'plans'].forEach(id => {
-                const btnM = document.getElementById('nav-' + id + '-m');
-                if(btnM) {
-                    if('tab-'+id === tabId) {
-                        btnM.classList.replace('tab-inactive', 'tab-active');
-                    } else {
-                        btnM.classList.replace('tab-active', 'tab-inactive');
-                    }
-                }
-            });
-
-            // Si es simulador, redibujar gráfico para evitar bugs de tamaño
-            if(tabId === 'tab-simulator') updateSimulation();
-        }
-
-        // --- 2. DESCARGA DE PLANTILLA CSV ---
-        function downloadCSVTemplate() {
-            const csvContent = "data:text/csv;charset=utf-8," 
-                + "Fecha,Codigo_Producto,Nombre_Producto,Categoria,Cantidad_Vendida,Precio_Unitario_Venta,Costo_Unitario_Insumo\n"
-                + "2026-10-01,PROD001,Aceite Vegetal 1L,Abarrotes,15,8.50,6.00\n"
-                + "2026-10-01,PROD002,Arroz Extra 5kg,Abarrotes,8,18.00,14.50\n"
-                + "2026-10-01,PROD003,Gaseosa 1.5L,Bebidas,25,7.00,4.50\n";
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "Plantilla_EconoMetrica.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Simular carga de archivo
-        function simulateUpload() {
-            alert("Archivo procesado exitosamente. Pasando al panel de resultados...");
-            switchTab('tab-dashboard');
-        }
-
-        // --- 3. GENERACIÓN DE REPORTE ESCRITO ---
-        function generateWrittenReport() {
-            const modal = document.getElementById('report-modal');
-            const content = document.getElementById('report-content');
-            const today = new Date().toLocaleDateString('es-ES');
-            
-            content.innerHTML = `
-                <p><strong>Fecha de Análisis:</strong> ${today}</p>
-                <p>Basado en el procesamiento econométrico de tus últimos 30 días, hemos detectado 3 hallazgos críticos:</p>
-                <ul class="list-disc pl-5 space-y-2 mt-3">
-                    <li><strong>Alerta de Inventario (Gaseosa 1.5L):</strong> Tu patrón de ventas indica un pico histórico los fines de semana. Tu stock actual no cubrirá la demanda del sábado. <em>Recomendación: Pedir 45 unidades adicionales a tu distribuidor hoy.</em></li>
-                    <li><strong>Oportunidad de Precio (Aceite Vegetal 1L):</strong> Este producto presenta alta elasticidad precio de la demanda (-1.5). Si aplicas un descuento del 5%, el incremento en volumen compensará la reducción de margen, elevando tu utilidad global en un 12%.</li>
-                    <li><strong>Alerta de Márgenes (Arroz Extra 5kg):</strong> Si tu proveedor sube el costo un 10%, no podrás absorberlo. Deberás trasladar al menos un 8% al precio final al consumidor para no operar a pérdida, dado que su demanda es inelástica (los clientes lo seguirán comprando).</li>
-                </ul>
-                <p class="mt-4 font-bold text-navy-800">Conclusión Directa:</p>
-                <p>Ejecuta la compra de Gaseosas para evitar quiebre de stock y prueba la oferta en el Aceite para atraer tráfico a la tienda.</p>
-            `;
-            modal.classList.remove('hidden');
-        }
-
-        // --- 4. SIMULADOR Y MOTOR ECONOMÉTRICO (CHART.JS) ---
-        // Datos base de los productos
-        const productsData = [
-            { name: "Aceite 1L", basePrice: 8.50, baseCost: 6.00, baseSales: 300, elasticity: -1.5 }, // Elástico (Muy sensible)
-            { name: "Arroz 5kg", basePrice: 18.00, baseCost: 14.50, baseSales: 150, elasticity: -0.8 }, // Medio
-            { name: "Gaseosa 1.5L", basePrice: 7.00, baseCost: 4.50, baseSales: 500, elasticity: -0.3 } // Inelástico (Poco sensible)
-        ];
-
-        let simChartInstance = null;
-
-        function updateSimulation() {
-            const prodIdx = document.getElementById('sim-product').value;
-            const pData = productsData[prodIdx];
-            
-            // Leer Sliders
-            const priceChangePct = parseFloat(document.getElementById('slide-price').value);
-            const costChangePct = parseFloat(document.getElementById('slide-cost').value);
-            
-            // Actualizar etiquetas visuales de los sliders
-            document.getElementById('val-price').textContent = (priceChangePct > 0 ? '+' : '') + priceChangePct + '%';
-            document.getElementById('val-cost').textContent = (costChangePct > 0 ? '+' : '') + costChangePct + '%';
-            document.getElementById('val-price').className = priceChangePct >= 0 ? "text-emerald-600 bg-emerald-50 px-2 rounded" : "text-rose-600 bg-rose-50 px-2 rounded";
-            
-            // --- MATEMÁTICA DEL MODELO ---
-            const currentPrice = pData.basePrice;
-            const currentCost = pData.baseCost;
-            const currentProfitUnit = currentPrice - currentCost;
-            const currentTotalProfit = currentProfitUnit * pData.baseSales;
-            const currentTotalRev = currentPrice * pData.baseSales;
-
-            // Escenario Proyectado
-            const newPrice = currentPrice * (1 + (priceChangePct / 100));
-            const newCost = currentCost * (1 + (costChangePct / 100));
-            
-            // Ecuación de demanda básica: Variación Demanda = Elasticidad * Variación Precio
-            const demandChangePct = (priceChangePct / 100) * pData.elasticity;
-            let newSales = Math.round(pData.baseSales * (1 + demandChangePct));
-            if (newSales < 0) newSales = 0;
-
-            const newProfitUnit = newPrice - newCost;
-            const newTotalProfit = newProfitUnit * newSales;
-            const newTotalRev = newPrice * newSales;
-
-            // --- ACTUALIZAR UI ---
-            document.getElementById('res-units').textContent = newSales + " unid.";
-            document.getElementById('res-profit').textContent = "S/ " + newTotalProfit.toFixed(2);
-            
-            // Variaciones %
-            const unitVar = (((newSales - pData.baseSales) / pData.baseSales) * 100).toFixed(1);
-            const profitVar = (((newTotalProfit - currentTotalProfit) / Math.abs(currentTotalProfit)) * 100).toFixed(1);
-            
-            const elUnitVar = document.getElementById('var-units');
-            elUnitVar.textContent = (unitVar >= 0 ? '▲ +' : '▼ ') + unitVar + '% vs actual';
-            elUnitVar.className = unitVar >= 0 ? "text-xs mt-1 text-emerald-400 font-medium" : "text-xs mt-1 text-rose-400 font-medium";
-
-            const elProfVar = document.getElementById('var-profit');
-            elProfVar.textContent = (profitVar >= 0 ? '▲ +' : '▼ ') + profitVar + '% vs actual';
-            elProfVar.className = profitVar >= 0 ? "text-xs mt-1 text-emerald-100 font-medium" : "text-xs mt-1 text-rose-200 font-medium";
-
-            // Insight Dinámico
-            const insightBox = document.getElementById('sim-insight');
-            if (newTotalProfit > currentTotalProfit) {
-                insightBox.innerHTML = `✅ <strong>Estrategia Rentable:</strong> Este escenario aumenta tu utilidad mensual. ¡Aplica este precio!`;
-                insightBox.className = "mt-4 text-sm text-center text-emerald-800 bg-emerald-50 p-2 rounded border border-emerald-200";
-            } else if (newTotalProfit < 0) {
-                insightBox.innerHTML = `🚨 <strong>Peligro:</strong> Estás vendiendo a pérdida. El costo superó a tu precio de venta.`;
-                insightBox.className = "mt-4 text-sm text-center text-rose-800 bg-rose-50 p-2 rounded border border-rose-200";
-            } else {
-                insightBox.innerHTML = `⚠️ <strong>Cuidado:</strong> Estás ganando menos dinero que con tus precios actuales.`;
-                insightBox.className = "mt-4 text-sm text-center text-amber-800 bg-amber-50 p-2 rounded border border-amber-200";
-            }
-
-            // --- ACTUALIZAR GRÁFICO ---
-            const ctx = document.getElementById('simChart').getContext('2d');
-            if (simChartInstance) simChartInstance.destroy(); // Limpiar viejo
-
-            simChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Situación Actual', 'Proyección (Simulador)'],
-                    datasets: [
-                        {
-                            label: 'Ingresos Totales (S/)',
-                            data: [currentTotalRev.toFixed(2), newTotalRev.toFixed(2)],
-                            backgroundColor: '#1B365D', // Navy
-                            borderRadius: 6
-                        },
-                        {
-                            label: 'Ganancia Neta (S/)',
-                            data: [currentTotalProfit.toFixed(2), newTotalProfit.toFixed(2)],
-                            backgroundColor: '#10B981', // Emerald
-                            borderRadius: 6
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
-        
-        // Inicializar el simulador gráfico la primera vez en segundo plano
-        setTimeout(updateSimulation, 500);
-    </script>
 </body>
 </html>
