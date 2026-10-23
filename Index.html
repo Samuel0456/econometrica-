@@ -1,548 +1,520 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EconoMétrica PYME | Tu Analista Financiero Virtual</title>
-    <!-- Tailwind CSS CDN -->
+    <title>EconoMétrica PYME | MVP Completo</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Chart.js para el simulador gráfico -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        navy: {
-                            800: '#1B365D',
-                            900: '#0F2342',
-                            950: '#091526',
-                        }
+                        navy: { 800: '#1B365D', 900: '#0F2342' },
+                        emerald: { 400: '#34D399', 500: '#10B981', 600: '#059669' }
                     }
                 }
             }
         }
     </script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F8FAFC;
-        }
-        .fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .drag-active {
-            border-color: #10B981 !important;
-            background-color: #ECFDF5 !important;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-active { border-bottom: 3px solid #10B981; color: #1B365D; font-weight: 700; }
+        .tab-inactive { border-bottom: 3px solid transparent; color: #64748B; font-weight: 500; }
+        input[type=range] { accent-color: #10B981; }
     </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- ================= HEADER ================= -->
+    <!-- HEADER -->
     <header class="bg-navy-800 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-emerald-500 p-2 rounded-lg shadow-inner">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-500 p-1.5 rounded shadow-inner">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                     </svg>
                 </div>
-                <div>
-                    <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight leading-none">EconoMétrica <span class="text-emerald-400 font-semibold">PYME</span></h1>
-                    <p class="text-xs sm:text-sm text-slate-300 mt-0.5">Tu analista financiero virtual en lenguaje sencillo</p>
-                </div>
+                <h1 class="text-xl font-extrabold tracking-tight">EconoMétrica <span class="text-emerald-400">PYME</span></h1>
             </div>
-            <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-navy-900 text-emerald-400 border border-emerald-500/30">
-                ● Motor Econométrico Activo
-            </span>
+            
+            <!-- NAVEGACIÓN (TABS) -->
+            <nav class="hidden md:flex gap-6 overflow-x-auto">
+                <button onclick="switchTab('tab-upload')" id="nav-upload" class="tab-btn tab-active pb-1 text-sm transition-colors">1. Carga de Datos</button>
+                <button onclick="switchTab('tab-dashboard')" id="nav-dashboard" class="tab-btn tab-inactive pb-1 text-sm transition-colors">2. Panel & Reportes</button>
+                <button onclick="switchTab('tab-simulator')" id="nav-simulator" class="tab-btn tab-inactive pb-1 text-sm transition-colors">3. Simulador Predictivo</button>
+                <button onclick="switchTab('tab-plans')" id="nav-plans" class="tab-btn tab-inactive pb-1 text-sm transition-colors">4. Planes & Ayuda</button>
+            </nav>
+        </div>
+        <!-- Menú Móvil -->
+        <div class="md:hidden flex overflow-x-auto bg-navy-900 px-4 py-2 gap-4 text-xs whitespace-nowrap">
+            <button onclick="switchTab('tab-upload')" id="nav-upload-m" class="tab-btn tab-active">Carga</button>
+            <button onclick="switchTab('tab-dashboard')" id="nav-dashboard-m" class="tab-btn tab-inactive">Panel</button>
+            <button onclick="switchTab('tab-simulator')" id="nav-simulator-m" class="tab-btn tab-inactive">Simulador</button>
+            <button onclick="switchTab('tab-plans')" id="nav-plans-m" class="tab-btn tab-inactive">Soporte</button>
         </div>
     </header>
 
-    <!-- ================= MAIN CONTENT ================= -->
-    <main class="max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow">
+    <!-- MAIN CONTENT -->
+    <main class="max-w-6xl w-full mx-auto px-4 py-8 flex-grow">
 
-        <!-- 1. SECCIÓN DE CARGA (INGESTA DE DATOS) -->
-        <section id="upload-section" class="fade-in">
+        <!-- ================= PESTAÑA 1: CARGA DE DATOS ================= -->
+        <section id="tab-upload" class="tab-content fade-in block">
             <div class="text-center max-w-2xl mx-auto mb-8">
-                <span class="inline-block px-3 py-1 bg-blue-100 text-navy-800 text-xs font-bold uppercase tracking-wider rounded-full mb-3">
-                    Sin fórmulas ni gráficos complicados
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">
-                    Descubre qué comprar y a qué precio vender esta semana
-                </h2>
-                <p class="text-slate-600 text-sm sm:text-base">
-                    Sube tu registro diario de ventas e inventario. Nuestro sistema analiza tus números en segundos y te entrega recomendaciones directas como si hablaras con un asesor de confianza.
-                </p>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Ingresa tus datos para empezar</h2>
+                <p class="text-slate-600 text-sm">Sube tu archivo de ventas o descarga nuestra plantilla con el formato ideal.</p>
             </div>
 
-            <!-- Zona Drag & Drop -->
-            <div id="drop-zone" class="bg-white border-2 border-dashed border-slate-300 hover:border-navy-800 rounded-2xl p-8 sm:p-12 text-center transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer max-w-2xl mx-auto">
-                <input type="file" id="file-input" accept=".csv, .xlsx, .xls" class="hidden" />
+            <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-10 text-center max-w-2xl mx-auto shadow-sm">
+                <div class="text-6xl mb-4">📁</div>
+                <h3 class="text-lg font-bold mb-4">Arrastra tu archivo Excel o CSV aquí</h3>
                 
-                <div class="w-16 h-16 bg-slate-100 text-navy-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                </div>
-
-                <h3 class="text-lg font-bold text-slate-800 mb-1">
-                    Arrastra y suelta tu archivo de ventas aquí
-                </h3>
-                <p class="text-sm text-slate-500 mb-6">
-                    Compatible con archivos <span class="font-semibold text-slate-700">CSV, Excel (.xlsx)</span> o reportes exportados de tu caja
-                </p>
-
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                    <button id="browse-btn" type="button" class="w-full sm:w-auto px-6 py-3 bg-navy-800 hover:bg-navy-900 text-white font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-200 text-sm flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                        </svg>
-                        Seleccionar archivo de mi dispositivo
+                <div class="flex flex-col sm:flex-row justify-center gap-3">
+                    <button class="px-5 py-2.5 bg-navy-800 text-white rounded-lg font-medium shadow" onclick="simulateUpload()">
+                        Seleccionar Archivo
                     </button>
-
-                    <button id="demo-btn" type="button" class="w-full sm:w-auto px-5 py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-semibold rounded-xl transition-all duration-200 text-sm flex items-center justify-center gap-2">
-                        <span>⚡</span> Probar con datos de demostración
+                    <!-- BOTÓN DE DESCARGA DE PLANTILLA -->
+                    <button class="px-5 py-2.5 bg-slate-100 text-navy-800 border border-slate-300 rounded-lg font-medium hover:bg-slate-200" onclick="downloadCSVTemplate()">
+                        ⬇️ Descargar Plantilla CSV
                     </button>
                 </div>
             </div>
-
-            <!-- Garantías de confianza -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mt-8 text-center sm:text-left">
-                <div class="bg-white p-4 rounded-xl border border-slate-200/80 flex items-center gap-3">
-                    <div class="text-emerald-600 bg-emerald-50 p-2 rounded-lg shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-800">100% Privado y Seguro</p>
-                        <p class="text-xs text-slate-500">Tus cuentas nunca se comparten.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-200/80 flex items-center gap-3">
-                    <div class="text-blue-600 bg-blue-50 p-2 rounded-lg shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-800">Ahorra 5 horas semanales</p>
-                        <p class="text-xs text-slate-500">Olvídate de cruzar tablas a mano.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-200/80 flex items-center gap-3">
-                    <div class="text-amber-600 bg-amber-50 p-2 rounded-lg shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-800">Lenguaje Claro</p>
-                        <p class="text-xs text-slate-500">Consejos listos para aplicar hoy.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. SIMULACIÓN DE PROCESAMIENTO (LA "CAJA NEGRA") -->
-        <section id="loading-section" class="hidden max-w-lg mx-auto my-12 bg-white p-8 sm:p-10 rounded-2xl shadow-lg border border-slate-100 text-center fade-in">
-            <!-- Spinner animado -->
-            <div class="relative w-20 h-20 mx-auto mb-6">
-                <div class="w-20 h-20 rounded-full border-4 border-slate-100"></div>
-                <div class="w-20 h-20 rounded-full border-4 border-navy-800 border-t-emerald-500 animate-spin absolute top-0 left-0"></div>
-            </div>
-
-            <h3 id="loading-status" class="text-lg sm:text-xl font-bold text-navy-800 mb-2">
-                Leyendo historial de ventas...
-            </h3>
-            <p id="loading-subtext" class="text-sm text-slate-500 mb-6">
-                Identificando columnas de productos, fechas, costos y márgenes unitarios
-            </p>
-
-            <!-- Barra de progreso -->
-            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-3">
-                <div id="progress-bar" class="bg-gradient-to-r from-navy-800 to-emerald-500 h-full rounded-full transition-all duration-300" style="width: 15%"></div>
-            </div>
-            <p id="file-name-display" class="text-xs font-medium text-slate-400 truncate"></p>
-        </section>
-
-        <!-- 3. PANEL DE RESULTADOS (DASHBOARD PRESCRIPTIVO) -->
-        <section id="results-section" class="hidden fade-in space-y-6">
             
-            <!-- Barra superior de confirmación y selector de giro -->
-            <div class="bg-navy-800 text-white p-5 rounded-2xl shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="flex items-start sm:items-center gap-3">
-                    <div class="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 p-2.5 rounded-xl shrink-0">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs uppercase tracking-wider font-bold text-emerald-400">Resumen Operativo</span>
-                            <span id="badge-file" class="text-xs bg-white/10 px-2 py-0.5 rounded text-slate-200">ventas_mensuales.csv</span>
-                        </div>
-                        <p id="operational-summary" class="text-sm sm:text-base font-semibold mt-0.5">
-                            Datos procesados: 30 días analizados, 1,200 transacciones leídas
-                        </p>
+            <div class="max-w-2xl mx-auto mt-6 text-center">
+                <button class="text-emerald-600 font-semibold underline text-sm" onclick="switchTab('tab-dashboard')">
+                    👉 Omitir y ver panel de demostración
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= PESTAÑA 2: DASHBOARD Y REPORTES ================= -->
+        <section id="tab-dashboard" class="tab-content fade-in hidden">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Resumen Operativo y Hallazgos</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Panel Descriptivo de Productos -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-5 overflow-hidden">
+                    <h3 class="font-bold text-navy-800 mb-4 border-b pb-2">📊 Análisis de Productos Principales</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-slate-50 text-slate-600">
+                                <tr>
+                                    <th class="p-3 font-semibold rounded-tl-lg">Producto</th>
+                                    <th class="p-3 font-semibold">Precio / Costo</th>
+                                    <th class="p-3 font-semibold">Margen</th>
+                                    <th class="p-3 font-semibold">Ventas (Mes)</th>
+                                    <th class="p-3 font-semibold rounded-tr-lg">Sensibilidad (Elasticidad)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-3 font-medium text-slate-900">Aceite Vegetal 1L</td>
+                                    <td class="p-3">S/ 8.50 <span class="text-slate-400">| S/ 6.00</span></td>
+                                    <td class="p-3 font-bold text-emerald-600">29.4%</td>
+                                    <td class="p-3">300 un. <span class="text-xs text-rose-500 bg-rose-50 px-1 rounded">▼ Baja</span></td>
+                                    <td class="p-3"><span class="px-2 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">Alta (Elástico)</span></td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-3 font-medium text-slate-900">Arroz Extra 5kg</td>
+                                    <td class="p-3">S/ 18.00 <span class="text-slate-400">| S/ 14.50</span></td>
+                                    <td class="p-3 font-bold text-emerald-600">19.4%</td>
+                                    <td class="p-3">150 un. <span class="text-xs text-emerald-600 bg-emerald-50 px-1 rounded">▲ Alta Quincena</span></td>
+                                    <td class="p-3"><span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold">Media</span></td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-3 font-medium text-slate-900">Gaseosa 1.5L</td>
+                                    <td class="p-3">S/ 7.00 <span class="text-slate-400">| S/ 4.50</span></td>
+                                    <td class="p-3 font-bold text-emerald-600">35.7%</td>
+                                    <td class="p-3">500 un. <span class="text-xs text-blue-600 bg-blue-50 px-1 rounded">■ Pico Fin Semana</span></td>
+                                    <td class="p-3"><span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold">Baja (Inelástico)</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!-- Selector rápido de rubro para enriquecer la demostración -->
-                <div class="flex items-center gap-2 self-end sm:self-center">
-                    <label for="business-type" class="text-xs text-slate-300 font-medium">Rubro:</label>
-                    <select id="business-type" class="bg-navy-900 text-white text-xs font-semibold px-3 py-2 rounded-lg border border-slate-600 focus:outline-none focus:border-emerald-400">
-                        <option value="minimarket">🛒 Minimarket / Bodega</option>
-                        <option value="restaurante">🍽️ Restaurante / Cafetería</option>
-                        <option value="boutique">👕 Tienda de Ropa / Retail</option>
-                    </select>
+                <!-- Reportes y Automatización (WhatsApp) -->
+                <div class="space-y-6">
+                    <!-- Generador de Reporte Escrito -->
+                    <div class="bg-navy-800 text-white rounded-xl shadow-sm p-5">
+                        <h3 class="font-bold mb-2">📑 Reporte Ejecutivo</h3>
+                        <p class="text-xs text-slate-300 mb-4">Genera un documento con todos los hallazgos predictivos redactados en lenguaje natural.</p>
+                        <button onclick="generateWrittenReport()" class="w-full py-2 bg-emerald-500 hover:bg-emerald-600 rounded text-sm font-bold shadow transition-colors">
+                            Generar Reporte Completo
+                        </button>
+                    </div>
+
+                    <!-- Módulo de WhatsApp -->
+                    <div class="bg-white border border-emerald-200 rounded-xl shadow-sm p-5 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2 opacity-20 text-4xl">📱</div>
+                        <h3 class="font-bold text-emerald-800 mb-2">Notificaciones WhatsApp</h3>
+                        <p class="text-xs text-slate-500 mb-4">Recibe tus alertas de inventario y recomendaciones de precios cada lunes a las 8:00 AM.</p>
+                        <div class="flex gap-2">
+                            <input type="text" placeholder="+51 999 888 777" class="w-full text-sm p-2 border border-slate-300 rounded focus:outline-none focus:border-emerald-500">
+                            <button onclick="alert('¡WhatsApp configurado con éxito! Recibirás tu primer reporte el lunes.')" class="bg-emerald-100 text-emerald-800 px-3 rounded hover:bg-emerald-200 font-bold">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
+            <!-- Modal para el Reporte Escrito (Oculto por defecto) -->
+            <div id="report-modal" class="hidden mt-6 bg-white border border-slate-200 rounded-xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h3 class="font-bold text-lg text-navy-800">Reporte Predictivo Semanal</h3>
+                    <button onclick="document.getElementById('report-modal').classList.add('hidden')" class="text-slate-400 hover:text-rose-500">✖</button>
+                </div>
+                <div class="prose prose-sm text-slate-700 max-w-none" id="report-content">
+                    <!-- Contenido inyectado por JS -->
+                </div>
+            </div>
+        </section>
 
-            <!-- Mensaje estilo asesor de confianza -->
-            <div class="bg-white border-l-4 border-navy-800 p-4 rounded-r-xl shadow-sm flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl">👋</span>
-                    <p class="text-sm text-slate-700">
-                        <strong class="text-slate-900">¡Hola! Ya revisé tus números de este mes.</strong> Aquí tienes las <span class="underline decoration-emerald-500 font-semibold">3 decisiones clave</span> que debes tomar hoy para cuidar tu liquidez y ganar más dinero:
+
+        <!-- ================= PESTAÑA 3: SIMULADOR INTERACTIVO ================= -->
+        <section id="tab-simulator" class="tab-content fade-in hidden">
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Simulador de Escenarios</h2>
+                    <p class="text-slate-600 text-sm">Descubre qué pasa con tus ganancias si cambias los precios o si tus insumos suben.</p>
+                </div>
+                <select id="sim-product" onchange="updateSimulation()" class="p-2 border border-slate-300 rounded-lg shadow-sm font-semibold bg-white outline-none">
+                    <option value="0">Aceite Vegetal 1L (Elástico)</option>
+                    <option value="1">Arroz Extra 5kg (Medio)</option>
+                    <option value="2">Gaseosa 1.5L (Inelástico)</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Controles -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-navy-800 mb-4">Ajustes del Mercado</h3>
+                        
+                        <!-- Slider Precio -->
+                        <div class="mb-6">
+                            <label class="flex justify-between text-sm font-semibold text-slate-700 mb-2">
+                                Cambio en tu Precio de Venta
+                                <span id="val-price" class="text-emerald-600 bg-emerald-50 px-2 rounded">0%</span>
+                            </label>
+                            <input type="range" id="slide-price" min="-30" max="30" value="0" step="1" class="w-full" oninput="updateSimulation()">
+                            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>-30%</span><span>Base</span><span>+30%</span></div>
+                        </div>
+
+                        <!-- Slider Costo Insumo -->
+                        <div>
+                            <label class="flex justify-between text-sm font-semibold text-slate-700 mb-2">
+                                Cambio en Costo de Proveedor
+                                <span id="val-cost" class="text-rose-600 bg-rose-50 px-2 rounded">0%</span>
+                            </label>
+                            <input type="range" id="slide-cost" min="-20" max="50" value="0" step="1" class="w-full" oninput="updateSimulation()">
+                            <div class="flex justify-between text-xs text-slate-400 mt-1"><span>-20%</span><span>Base</span><span>+50%</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Tarjetas de Resultado -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-navy-800 text-white p-4 rounded-xl shadow-sm">
+                            <p class="text-xs text-slate-300">Ventas Proyectadas</p>
+                            <p id="res-units" class="text-xl font-bold">300 unid.</p>
+                            <p id="var-units" class="text-xs mt-1 text-emerald-400">0%</p>
+                        </div>
+                        <div class="bg-emerald-500 text-white p-4 rounded-xl shadow-sm">
+                            <p class="text-xs text-emerald-100">Ganancia Neta (Utilidad)</p>
+                            <p id="res-profit" class="text-xl font-bold">S/ 750.00</p>
+                            <p id="var-profit" class="text-xs mt-1 text-emerald-900 font-medium">0%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico Chart.js -->
+                <div class="lg:col-span-8 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-navy-800 mb-4 text-center">Impacto en Ingresos y Ganancias</h3>
+                    <div class="relative h-64 sm:h-80 w-full">
+                        <canvas id="simChart"></canvas>
+                    </div>
+                    <p id="sim-insight" class="mt-4 text-sm text-center text-slate-600 bg-slate-50 p-2 rounded border border-slate-100">
+                        Modifica los deslizadores para ver recomendaciones automáticas aquí.
                     </p>
                 </div>
             </div>
+        </section>
 
-            <!-- Grid de Tarjetas Prescriptivas -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- MÓDULO 1: PRONÓSTICO DE DEMANDA (ALERTA STOCK) -->
-                <div class="bg-white rounded-2xl p-6 shadow-md border border-rose-100 flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -z-0"></div>
-                    
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
-                                <span class="w-2 h-2 rounded-full bg-rose-600 animate-ping"></span>
-                                Pronóstico de Demanda
-                            </span>
-                            <span class="text-xs font-semibold text-slate-400">Prioridad Alta</span>
-                        </div>
 
-                        <h3 id="demand-title" class="text-lg font-extrabold text-slate-900 mb-2">
-                            🚨 Stock Crítico para el Fin de Semana
-                        </h3>
-
-                        <!-- Burbuja tipo mensaje directo -->
-                        <div class="bg-rose-50/70 border border-rose-200/80 rounded-xl p-4 mb-4">
-                            <p id="demand-message" class="text-slate-800 text-sm sm:text-base font-medium leading-relaxed">
-                                "Stock Crítico: Compra <strong class="text-rose-700 underline">45 unidades de 'Pack Bebidas Gaseosas 1.5L'</strong> hoy para evitar quedarte sin inventario este fin de semana."
-                            </p>
-                        </div>
-
-                        <div class="space-y-2 text-xs text-slate-600 bg-slate-50 p-3.5 rounded-xl">
-                            <p class="flex items-center justify-between">
-                                <span>📈 <strong>Por qué te digo esto:</strong></span>
-                                <span id="demand-reason" class="font-semibold text-slate-800">Los viernes y sábados tu venta sube 65%</span>
-                            </p>
-                            <p class="flex items-center justify-between">
-                                <span>💸 <strong>Pérdida evitada si compras hoy:</strong></span>
-                                <span id="demand-saving" class="font-bold text-rose-600">S/ 420.00 en ventas perdidas</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span class="text-xs text-slate-500">Además: Evita comprar <em>Snacks Importados</em> (tienes stock para 28 días).</span>
-                    </div>
-                </div>
-
-                <!-- MÓDULO 2: ELASTICIDAD DE PRECIOS (OPORTUNIDAD MARGEN) -->
-                <div class="bg-white rounded-2xl p-6 shadow-md border border-emerald-100 flex flex-col justify-between relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -z-0"></div>
-
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
-                                <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-                                Elasticidad de Precios
-                            </span>
-                            <span class="text-xs font-semibold text-emerald-700">Oportunidad de Ganancia</span>
-                        </div>
-
-                        <h3 id="price-title" class="text-lg font-extrabold text-slate-900 mb-2">
-                            💡 Oportunidad de Margen Detectada
-                        </h3>
-
-                        <!-- Burbuja tipo mensaje directo -->
-                        <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-4 mb-4">
-                            <p id="price-message" class="text-slate-800 text-sm sm:text-base font-medium leading-relaxed">
-                                "Oportunidad de Margen: Tu demanda es altamente sensible. Si reduces el precio de <strong class="text-emerald-800 underline">'Aceite Vegetal 1L' un 5%</strong>, proyectamos un aumento del <strong class="text-emerald-700">12% en tu ganancia neta</strong> por volumen."
-                            </p>
-                        </div>
-
-                        <div class="space-y-2 text-xs text-slate-600 bg-slate-50 p-3.5 rounded-xl">
-                            <p class="flex items-center justify-between">
-                                <span>🎯 <strong>Reacción de tus clientes:</strong></span>
-                                <span id="price-reaction" class="font-semibold text-slate-800">Por cada sol menos, llevan 2 unidades más</span>
-                            </p>
-                            <p class="flex items-center justify-between">
-                                <span>💰 <strong>Ganancia extra proyectada:</strong></span>
-                                <span id="price-profit" class="font-bold text-emerald-600">+ S/ 680.00 libres este mes</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-                        <span id="price-extra-tip" class="text-xs text-slate-500">Tip extra: Puedes subir S/ 0.50 a <em>Detergente 500g</em> sin perder clientes.</span>
-                    </div>
-                </div>
-
+        <!-- ================= PESTAÑA 4: PLANES, FAQ Y FEEDBACK ================= -->
+        <section id="tab-plans" class="tab-content fade-in hidden">
+            <!-- Planes de Suscripción -->
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-bold text-slate-900">Planes Simples para PYMEs</h2>
+                <p class="text-slate-600 text-sm mt-2">Invierte menos de lo que cuesta un error de inventario.</p>
             </div>
-
-            <!-- Tarjeta Adicional: Alerta de Capital Inmovilizado (Sobrestock) -->
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-amber-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div class="flex items-start gap-3.5">
-                    <div class="bg-amber-100 text-amber-700 p-3 rounded-xl shrink-0 mt-0.5">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Cuidado con tu Liquidez (Sobrestock)</span>
-                        <h4 id="overstock-title" class="text-sm sm:text-base font-bold text-slate-900 mt-0.5">
-                            Tienes S/ 1,150 congelados en mercadería de baja rotación
-                        </h4>
-                        <p id="overstock-message" class="text-xs sm:text-sm text-slate-600 mt-1">
-                            No hagas caso al descuento por volumen del proveedor en <strong>Conservas Premium</strong>. Ármate un combo con arroz esta quincena para recuperar tu efectivo rápido.
-                        </p>
-                    </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-16">
+                <!-- Freemium -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                    <h3 class="font-bold text-lg text-slate-800">Básico</h3>
+                    <p class="text-3xl font-extrabold text-navy-800 my-4">Gratis</p>
+                    <ul class="text-sm text-slate-600 text-left space-y-3 mb-6">
+                        <li>✅ Análisis de 1 archivo al mes</li>
+                        <li>✅ Resumen de ventas descriptivo</li>
+                        <li>❌ Simulador predictivo</li>
+                        <li>❌ Alertas de WhatsApp</li>
+                    </ul>
+                    <button class="w-full py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-slate-200">Plan Actual</button>
+                </div>
+                <!-- Pro -->
+                <div class="bg-navy-800 p-6 rounded-2xl shadow-lg border-2 border-emerald-500 text-center relative transform md:-translate-y-4">
+                    <span class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">Más Popular</span>
+                    <h3 class="font-bold text-lg text-white">Pro</h3>
+                    <p class="text-3xl font-extrabold text-white my-4">S/ 49<span class="text-sm font-normal text-slate-300">/mes</span></p>
+                    <ul class="text-sm text-slate-200 text-left space-y-3 mb-6">
+                        <li>✅ Archivos ilimitados</li>
+                        <li>✅ Simulador de precios y demanda</li>
+                        <li>✅ Alertas semanales por WhatsApp</li>
+                        <li>✅ Soporte prioritario</li>
+                    </ul>
+                    <button class="w-full py-2 bg-emerald-500 text-white font-bold rounded-lg hover:bg-emerald-600 shadow-lg">Actualizar a Pro</button>
+                </div>
+                <!-- Avanzado -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center">
+                    <h3 class="font-bold text-lg text-slate-800">Multilocal</h3>
+                    <p class="text-3xl font-extrabold text-navy-800 my-4">S/ 120<span class="text-sm font-normal text-slate-500">/mes</span></p>
+                    <ul class="text-sm text-slate-600 text-left space-y-3 mb-6">
+                        <li>✅ Todo lo del plan Pro</li>
+                        <li>✅ Hasta 5 sucursales/tiendas</li>
+                        <li>✅ Conexión directa a tu sistema POS</li>
+                        <li>✅ Asesoría 1 a 1 mensual</li>
+                    </ul>
+                    <button class="w-full py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-slate-200">Contactar Ventas</button>
                 </div>
             </div>
 
-            <!-- Botón de Reinicio ("Subir otro reporte") -->
-            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button id="reset-btn" type="button" class="w-full sm:w-auto px-8 py-3.5 bg-navy-800 hover:bg-navy-900 text-white font-semibold rounded-xl shadow hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                    </svg>
-                    Subir otro reporte
-                </button>
+            <!-- Feedback y Preguntas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto border-t border-slate-200 pt-10">
+                <div>
+                    <h3 class="font-bold text-xl text-navy-800 mb-4">¿Tienes dudas? Déjanos tu opinión</h3>
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                        <textarea class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-emerald-500 mb-3" rows="4" placeholder="¿Qué función te gustaría que agreguemos? ¿Tuviste algún problema?"></textarea>
+                        <button onclick="alert('¡Gracias por tus comentarios! Nos ayudan a mejorar.')" class="bg-navy-800 text-white px-5 py-2 rounded-lg font-medium text-sm w-full">Enviar Feedback</button>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl text-navy-800 mb-4">Preguntas Frecuentes</h3>
+                    <div class="space-y-3 text-sm">
+                        <details class="bg-white p-3 rounded-lg border border-slate-200 cursor-pointer">
+                            <summary class="font-semibold text-slate-800 outline-none">¿Necesito saber matemáticas?</summary>
+                            <p class="mt-2 text-slate-600">No. EconoMétrica hace todos los cálculos por ti y te entrega instrucciones en texto simple.</p>
+                        </details>
+                        <details class="bg-white p-3 rounded-lg border border-slate-200 cursor-pointer">
+                            <summary class="font-semibold text-slate-800 outline-none">¿Cómo protege mis datos?</summary>
+                            <p class="mt-2 text-slate-600">Tu archivo se procesa en memoria y no compartimos tus ventas con terceros. Todo está encriptado.</p>
+                        </details>
+                        <details class="bg-white p-3 rounded-lg border border-slate-200 cursor-pointer">
+                            <summary class="font-semibold text-slate-800 outline-none">¿Funciona si solo uso cuaderno?</summary>
+                            <p class="mt-2 text-slate-600">Necesitarás pasar tus registros a nuestra plantilla de Excel/CSV para que el sistema pueda leerlos.</p>
+                        </details>
+                    </div>
+                </div>
             </div>
-
         </section>
 
     </main>
 
-    <!-- ================= FOOTER ================= -->
-    <footer class="bg-white border-t border-slate-200 py-5 mt-12">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
-            <p><strong>EconoMétrica PYME</strong> — Plataforma SaaS de Inteligencia Financiera y Econométrica.</p>
-            <p>Desarrollado para decisiones rápidas sin fricción técnica.</p>
-        </div>
-    </footer>
-
-    <!-- ================= LÓGICA JAVASCRIPT ================= -->
+    <!-- ================= LOGICA JAVASCRIPT ================= -->
     <script>
-        // Referencias del DOM
-        const uploadSection = document.getElementById('upload-section');
-        const loadingSection = document.getElementById('loading-section');
-        const resultsSection = document.getElementById('results-section');
-        
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const browseBtn = document.getElementById('browse-btn');
-        const demoBtn = document.getElementById('demo-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        
-        const loadingStatus = document.getElementById('loading-status');
-        const loadingSubtext = document.getElementById('loading-subtext');
-        const progressBar = document.getElementById('progress-bar');
-        const fileNameDisplay = document.getElementById('file-name-display');
-        
-        const badgeFile = document.getElementById('badge-file');
-        const operationalSummary = document.getElementById('operational-summary');
-        const businessTypeSelect = document.getElementById('business-type');
-
-        // Escenarios simulados (Mock Data) adaptados al lenguaje natural
-        const scenarios = {
-            minimarket: {
-                summary: "Datos procesados: 30 días analizados, 1,200 transacciones leídas",
-                demandMsg: "\"Stock Crítico: Compra <strong class='text-rose-700 underline'>45 unidades de 'Producto X (Bebidas 1.5L)'</strong> hoy para evitar quedarte sin inventario este fin de semana.\"",
-                demandReason: "Los viernes y sábados tu rotación sube 65%",
-                demandSaving: "S/ 420.00 en ventas perdidas",
-                priceMsg: "\"Oportunidad de Margen: Tu demanda es altamente sensible. Si reduces el precio de <strong class='text-emerald-800 underline'>'Producto Y (Aceite 1L)' un 5%</strong>, proyectamos un aumento del <strong class='text-emerald-700'>12% en tu ganancia neta</strong> por volumen.\"",
-                priceReaction: "Atrae compradores de toda la cuadra sin sacrificar utilidad",
-                priceProfit: "+ S/ 680.00 libres este mes",
-                priceExtra: "Tip extra: Puedes subir S/ 0.50 en Snacks y Confitería sin perder clientes.",
-                overstockTitle: "Tienes S/ 1,150 congelados en mercadería de baja rotación",
-                overstockMsg: "Evita comprar más lotes grandes de Conservas Importadas. Arma una oferta cruzada esta quincena para recuperar tu efectivo."
-            },
-            restaurante: {
-                summary: "Datos procesados: 30 días analizados, 850 comandas registradas",
-                demandMsg: "\"Stock Crítico: Abastece <strong class='text-rose-700 underline'>18 kg adicionales de 'Insumo Principal (Lomo/Pollo)'</strong> antes del jueves para cubrir el pico de pedidos del domingo.\"",
-                demandReason: "La demanda de almuerzos familiares crecerá 40% esta semana",
-                demandSaving: "S/ 750.00 en mesas no atendidas",
-                priceMsg: "\"Oportunidad de Margen: Tu demanda es altamente sensible al mediodía. Si reduces el precio de tu <strong class='text-emerald-800 underline'>'Combo Ejecutivo' un 5%</strong>, proyectamos un aumento del <strong class='text-emerald-700'>12% en tu ganancia neta</strong> por rotación de mesas.\"",
-                priceReaction: "Llenas mesas vacías entre la 1:00 PM y 2:30 PM",
-                priceProfit: "+ S/ 920.00 libres este mes",
-                priceExtra: "Tip extra: Tus bebidas naturales permiten un ajuste de +S/ 1.00 sin bajar pedidos.",
-                overstockTitle: "Merma detectada: S/ 480 en insumos perecibles los lunes y martes",
-                overstockMsg: "Reduce tu compra de verduras frescas e insumos de carta nocturna en un 25% al inicio de semana."
-            },
-            boutique: {
-                summary: "Datos procesados: 30 días analizados, 410 tickets de venta leídos",
-                demandMsg: "\"Stock Crítico: Repón <strong class='text-rose-700 underline'>25 unidades de 'Prenda Básica Talla M'</strong> hoy para no perder ventas en quincena.\"",
-                demandReason: "Es la talla que se agota 3 veces más rápido que S y L",
-                demandSaving: "S/ 1,100.00 en clientes que se van sin comprar",
-                priceMsg: "\"Oportunidad de Margen: No hagas liquidaciones de 30%. Si aplicas solo un <strong class='text-emerald-800 underline'>8% de descuento en 'Colección de Temporada'</strong>, proyectamos un aumento del <strong class='text-emerald-700'>15% en tu ganancia neta</strong> sin destruir tu margen.\"",
-                priceReaction: "Rotas el inventario rápido cuidando el costo de reposición",
-                priceProfit: "+ S/ 1,350.00 libres este mes",
-                priceExtra: "Tip extra: Los accesorios en caja tienen demanda inelástica; mantén su precio lleno.",
-                overstockTitle: "Tienes S/ 2,400 inmovilizados en tallas extremas y colores de baja salida",
-                overstockMsg: "Frena pedidos de temporada pasada y ofrece un 2x1 selectivo solo este fin de semana."
-            }
-        };
-
-        // Función para actualizar las tarjetas según el rubro
-        function renderScenario(type, customRowCount = null) {
-            const data = scenarios[type];
-            if (customRowCount) {
-                operationalSummary.textContent = `Datos procesados: 30 días analizados, ${customRowCount} transacciones leídas`;
-            } else {
-                operationalSummary.textContent = data.summary;
-            }
-            document.getElementById('demand-message').innerHTML = data.demandMsg;
-            document.getElementById('demand-reason').textContent = data.demandReason;
-            document.getElementById('demand-saving').textContent = data.demandSaving;
+        // --- 1. NAVEGACIÓN POR PESTAÑAS ---
+        function switchTab(tabId) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Mostrar el seleccionado
+            document.getElementById(tabId).classList.remove('hidden');
             
-            document.getElementById('price-message').innerHTML = data.priceMsg;
-            document.getElementById('price-reaction').textContent = data.priceReaction;
-            document.getElementById('price-profit').textContent = data.priceProfit;
-            document.getElementById('price-extra-tip').textContent = data.priceExtra;
+            // Actualizar estilos botones Desktop
+            ['upload', 'dashboard', 'simulator', 'plans'].forEach(id => {
+                const btn = document.getElementById('nav-' + id);
+                if(btn) {
+                    if('tab-'+id === tabId) {
+                        btn.classList.replace('tab-inactive', 'tab-active');
+                    } else {
+                        btn.classList.replace('tab-active', 'tab-inactive');
+                    }
+                }
+            });
+            // Actualizar estilos botones Mobile
+            ['upload', 'dashboard', 'simulator', 'plans'].forEach(id => {
+                const btnM = document.getElementById('nav-' + id + '-m');
+                if(btnM) {
+                    if('tab-'+id === tabId) {
+                        btnM.classList.replace('tab-inactive', 'tab-active');
+                    } else {
+                        btnM.classList.replace('tab-active', 'tab-inactive');
+                    }
+                }
+            });
 
-            document.getElementById('overstock-title').textContent = data.overstockTitle;
-            document.getElementById('overstock-message').textContent = data.overstockMsg;
+            // Si es simulador, redibujar gráfico para evitar bugs de tamaño
+            if(tabId === 'tab-simulator') updateSimulation();
         }
 
-        // Simulación de los 3 segundos de procesamiento ("La Caja Negra")
-        function startProcessingSimulation(fileName, rowCount = null) {
-            uploadSection.classList.add('hidden');
-            resultsSection.classList.add('hidden');
-            loadingSection.classList.remove('hidden');
-
-            fileNameDisplay.textContent = `Archivo cargado: ${fileName}`;
-            badgeFile.textContent = fileName;
-
-            // Paso 1 (0ms - 1000ms)
-            loadingStatus.textContent = "Leyendo historial de ventas...";
-            loadingSubtext.textContent = "Verificando registros diarios de ingresos, costos e inventario";
-            progressBar.style.width = "28%";
-
-            // Paso 2 (1000ms - 2000ms)
-            setTimeout(() => {
-                loadingStatus.textContent = "Calculando estacionalidad...";
-                loadingSubtext.textContent = "Detectando días pico, rotación de stock y quiebres de inventario";
-                progressBar.style.width = "65%";
-            }, 1000);
-
-            // Paso 3 (2000ms - 3000ms)
-            setTimeout(() => {
-                loadingStatus.textContent = "Aplicando modelos econométricos...";
-                loadingSubtext.textContent = "Calculando elasticidad de precios y traduciendo a recomendaciones simples";
-                progressBar.style.width = "95%";
-            }, 2000);
-
-            // Mostrar Dashboard Prescriptivo a los 3000ms
-            setTimeout(() => {
-                progressBar.style.width = "100%";
-                loadingSection.classList.add('hidden');
-                renderScenario(businessTypeSelect.value, rowCount);
-                resultsSection.classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 3000);
+        // --- 2. DESCARGA DE PLANTILLA CSV ---
+        function downloadCSVTemplate() {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + "Fecha,Codigo_Producto,Nombre_Producto,Categoria,Cantidad_Vendida,Precio_Unitario_Venta,Costo_Unitario_Insumo\n"
+                + "2026-10-01,PROD001,Aceite Vegetal 1L,Abarrotes,15,8.50,6.00\n"
+                + "2026-10-01,PROD002,Arroz Extra 5kg,Abarrotes,8,18.00,14.50\n"
+                + "2026-10-01,PROD003,Gaseosa 1.5L,Bebidas,25,7.00,4.50\n";
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Plantilla_EconoMetrica.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
-        // Procesar archivo subido por el usuario
-        function handleFile(file) {
-            if (!file) return;
-            // Si es CSV, podemos contar cuántas filas reales tiene para hacerlo aún más realista
-            if (file.name.endsWith('.csv')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const text = e.target.result;
-                    const lines = text.split('\n').filter(line => line.trim() !== '');
-                    const count = lines.length > 1 ? (lines.length - 1).toLocaleString() : '1,200';
-                    startProcessingSimulation(file.name, count);
-                };
-                reader.readAsText(file);
+        // Simular carga de archivo
+        function simulateUpload() {
+            alert("Archivo procesado exitosamente. Pasando al panel de resultados...");
+            switchTab('tab-dashboard');
+        }
+
+        // --- 3. GENERACIÓN DE REPORTE ESCRITO ---
+        function generateWrittenReport() {
+            const modal = document.getElementById('report-modal');
+            const content = document.getElementById('report-content');
+            const today = new Date().toLocaleDateString('es-ES');
+            
+            content.innerHTML = `
+                <p><strong>Fecha de Análisis:</strong> ${today}</p>
+                <p>Basado en el procesamiento econométrico de tus últimos 30 días, hemos detectado 3 hallazgos críticos:</p>
+                <ul class="list-disc pl-5 space-y-2 mt-3">
+                    <li><strong>Alerta de Inventario (Gaseosa 1.5L):</strong> Tu patrón de ventas indica un pico histórico los fines de semana. Tu stock actual no cubrirá la demanda del sábado. <em>Recomendación: Pedir 45 unidades adicionales a tu distribuidor hoy.</em></li>
+                    <li><strong>Oportunidad de Precio (Aceite Vegetal 1L):</strong> Este producto presenta alta elasticidad precio de la demanda (-1.5). Si aplicas un descuento del 5%, el incremento en volumen compensará la reducción de margen, elevando tu utilidad global en un 12%.</li>
+                    <li><strong>Alerta de Márgenes (Arroz Extra 5kg):</strong> Si tu proveedor sube el costo un 10%, no podrás absorberlo. Deberás trasladar al menos un 8% al precio final al consumidor para no operar a pérdida, dado que su demanda es inelástica (los clientes lo seguirán comprando).</li>
+                </ul>
+                <p class="mt-4 font-bold text-navy-800">Conclusión Directa:</p>
+                <p>Ejecuta la compra de Gaseosas para evitar quiebre de stock y prueba la oferta en el Aceite para atraer tráfico a la tienda.</p>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        // --- 4. SIMULADOR Y MOTOR ECONOMÉTRICO (CHART.JS) ---
+        // Datos base de los productos
+        const productsData = [
+            { name: "Aceite 1L", basePrice: 8.50, baseCost: 6.00, baseSales: 300, elasticity: -1.5 }, // Elástico (Muy sensible)
+            { name: "Arroz 5kg", basePrice: 18.00, baseCost: 14.50, baseSales: 150, elasticity: -0.8 }, // Medio
+            { name: "Gaseosa 1.5L", basePrice: 7.00, baseCost: 4.50, baseSales: 500, elasticity: -0.3 } // Inelástico (Poco sensible)
+        ];
+
+        let simChartInstance = null;
+
+        function updateSimulation() {
+            const prodIdx = document.getElementById('sim-product').value;
+            const pData = productsData[prodIdx];
+            
+            // Leer Sliders
+            const priceChangePct = parseFloat(document.getElementById('slide-price').value);
+            const costChangePct = parseFloat(document.getElementById('slide-cost').value);
+            
+            // Actualizar etiquetas visuales de los sliders
+            document.getElementById('val-price').textContent = (priceChangePct > 0 ? '+' : '') + priceChangePct + '%';
+            document.getElementById('val-cost').textContent = (costChangePct > 0 ? '+' : '') + costChangePct + '%';
+            document.getElementById('val-price').className = priceChangePct >= 0 ? "text-emerald-600 bg-emerald-50 px-2 rounded" : "text-rose-600 bg-rose-50 px-2 rounded";
+            
+            // --- MATEMÁTICA DEL MODELO ---
+            const currentPrice = pData.basePrice;
+            const currentCost = pData.baseCost;
+            const currentProfitUnit = currentPrice - currentCost;
+            const currentTotalProfit = currentProfitUnit * pData.baseSales;
+            const currentTotalRev = currentPrice * pData.baseSales;
+
+            // Escenario Proyectado
+            const newPrice = currentPrice * (1 + (priceChangePct / 100));
+            const newCost = currentCost * (1 + (costChangePct / 100));
+            
+            // Ecuación de demanda básica: Variación Demanda = Elasticidad * Variación Precio
+            const demandChangePct = (priceChangePct / 100) * pData.elasticity;
+            let newSales = Math.round(pData.baseSales * (1 + demandChangePct));
+            if (newSales < 0) newSales = 0;
+
+            const newProfitUnit = newPrice - newCost;
+            const newTotalProfit = newProfitUnit * newSales;
+            const newTotalRev = newPrice * newSales;
+
+            // --- ACTUALIZAR UI ---
+            document.getElementById('res-units').textContent = newSales + " unid.";
+            document.getElementById('res-profit').textContent = "S/ " + newTotalProfit.toFixed(2);
+            
+            // Variaciones %
+            const unitVar = (((newSales - pData.baseSales) / pData.baseSales) * 100).toFixed(1);
+            const profitVar = (((newTotalProfit - currentTotalProfit) / Math.abs(currentTotalProfit)) * 100).toFixed(1);
+            
+            const elUnitVar = document.getElementById('var-units');
+            elUnitVar.textContent = (unitVar >= 0 ? '▲ +' : '▼ ') + unitVar + '% vs actual';
+            elUnitVar.className = unitVar >= 0 ? "text-xs mt-1 text-emerald-400 font-medium" : "text-xs mt-1 text-rose-400 font-medium";
+
+            const elProfVar = document.getElementById('var-profit');
+            elProfVar.textContent = (profitVar >= 0 ? '▲ +' : '▼ ') + profitVar + '% vs actual';
+            elProfVar.className = profitVar >= 0 ? "text-xs mt-1 text-emerald-100 font-medium" : "text-xs mt-1 text-rose-200 font-medium";
+
+            // Insight Dinámico
+            const insightBox = document.getElementById('sim-insight');
+            if (newTotalProfit > currentTotalProfit) {
+                insightBox.innerHTML = `✅ <strong>Estrategia Rentable:</strong> Este escenario aumenta tu utilidad mensual. ¡Aplica este precio!`;
+                insightBox.className = "mt-4 text-sm text-center text-emerald-800 bg-emerald-50 p-2 rounded border border-emerald-200";
+            } else if (newTotalProfit < 0) {
+                insightBox.innerHTML = `🚨 <strong>Peligro:</strong> Estás vendiendo a pérdida. El costo superó a tu precio de venta.`;
+                insightBox.className = "mt-4 text-sm text-center text-rose-800 bg-rose-50 p-2 rounded border border-rose-200";
             } else {
-                startProcessingSimulation(file.name);
+                insightBox.innerHTML = `⚠️ <strong>Cuidado:</strong> Estás ganando menos dinero que con tus precios actuales.`;
+                insightBox.className = "mt-4 text-sm text-center text-amber-800 bg-amber-50 p-2 rounded border border-amber-200";
             }
+
+            // --- ACTUALIZAR GRÁFICO ---
+            const ctx = document.getElementById('simChart').getContext('2d');
+            if (simChartInstance) simChartInstance.destroy(); // Limpiar viejo
+
+            simChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Situación Actual', 'Proyección (Simulador)'],
+                    datasets: [
+                        {
+                            label: 'Ingresos Totales (S/)',
+                            data: [currentTotalRev.toFixed(2), newTotalRev.toFixed(2)],
+                            backgroundColor: '#1B365D', // Navy
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Ganancia Neta (S/)',
+                            data: [currentTotalProfit.toFixed(2), newTotalProfit.toFixed(2)],
+                            backgroundColor: '#10B981', // Emerald
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
         }
-
-        // Eventos de botones e inputs
-        browseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            fileInput.click();
-        });
-
-        dropZone.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
-            }
-        });
-
-        // Botón de demostración rápida (Ideal para presentar desde tablet o celular)
-        demoBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            startProcessingSimulation('reporte_ventas_octubre.csv', '1,200');
-        });
-
-        // Eventos Drag & Drop
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dropZone.classList.add('drag-active');
-            }, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                dropZone.classList.remove('drag-active');
-            }, false);
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
-            }
-        });
-
-        // Cambio de rubro en vivo dentro del panel de resultados
-        businessTypeSelect.addEventListener('change', (e) => {
-            renderScenario(e.target.value);
-        });
-
-        // Reiniciar el flujo ("Subir otro reporte")
-        resetBtn.addEventListener('click', () => {
-            fileInput.value = '';
-            progressBar.style.width = '15%';
-            resultsSection.classList.add('hidden');
-            uploadSection.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        
+        // Inicializar el simulador gráfico la primera vez en segundo plano
+        setTimeout(updateSimulation, 500);
     </script>
 </body>
 </html>
