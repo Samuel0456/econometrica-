@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Econométrica PYME — Inteligencia comercial y rentabilidad</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{--navy:#0b2530;--green:#0b7a63;--green2:#14a37f;--mint:#e7f5f0;--gold:#f2b233;--bg:#f5f8f7;--card:#fff;--ink:#13232b;--muted:#66777d;--line:#dbe5e2;--red:#c74735;--shadow:0 12px 35px rgba(11,37,48,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
@@ -23,14 +24,15 @@ main{min-width:0}.top{height:70px;background:#fff;border-bottom:1px solid var(--
     .demo-switcher select{width:100%;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:#10243d;color:#fff;padding:8px;font-size:12px;outline:none}
     .demo-switcher select:focus{border-color:#36c98f}
     .demo-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
-    .demo-card{border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--surface);cursor:pointer;transition:.18s}
+    .demo-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--card);cursor:pointer;transition:.18s}
     .demo-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,23,42,.08)}
     .demo-card.active{border-color:var(--green);box-shadow:0 0 0 2px rgba(54,201,143,.12)}
     .demo-card h4{margin:0 0 5px;font-size:14px}
     .demo-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
     @media(max-width:900px){.demo-cards{grid-template-columns:1fr 1fr}}
     @media(max-width:620px){.demo-cards{grid-template-columns:1fr}}
-
+    
+    .chart-container { position: relative; height: 300px; width: 100%; margin-top: 15px;}
 </style>
 </head>
 <body>
@@ -39,30 +41,103 @@ main{min-width:0}.top{height:70px;background:#fff;border-bottom:1px solid var(--
 <div id="toast" class="toast"></div>
 <script>
 const KEY='econometrica-pyme-v2';
-const DEMO={
- business:{name:'Tienda Andina',sector:'Comercio minorista',owner:'Ana Torres',email:'demo@econometrica.pe'},
- products:[
-  {id:1,name:'Polo básico',sku:'POL-001',cat:'Ropa',price:49,cost:25,stock:32,status:'Activo'},
-  {id:2,name:'Jean clásico',sku:'JEA-002',cat:'Ropa',price:89,cost:48,stock:18,status:'Activo'},
-  {id:3,name:'Casaca urbana',sku:'CAS-003',cat:'Ropa',price:149,cost:88,stock:11,status:'Activo'},
-  {id:4,name:'Gorra',sku:'GOR-004',cat:'Accesorios',price:35,cost:14,stock:46,status:'Activo'}
- ],
- sales:[], expenses:[
-  {id:1,date:'2026-10-02',desc:'Alquiler del local',amount:1800,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
-  {id:2,date:'2026-10-05',desc:'Publicidad digital',amount:420,cat:'Marketing',type:'Operativo',freq:'Mensual',product:''},
-  {id:3,date:'2026-10-08',desc:'Transporte',amount:280,cat:'Transporte',type:'Variable',freq:'Recurrente',product:''},
-  {id:4,date:'2026-10-12',desc:'Servicios básicos',amount:310,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
- ],
- settings:{currency:'PEN',region:'Perú',demo:true}
+
+/* ==================== DEMOS MULTINEGOCIO ==================== */
+const DEMO_BUSINESSES = {
+  ropa: {
+    business:{name:'Tienda Andina',sector:'Ropa y Accesorios',owner:'Ana Torres',email:'demo@econometrica.pe'},
+    products:[
+      {id:1,name:'Polo básico',sku:'POL-001',cat:'Ropa',price:49,cost:25,stock:32,status:'Activo', elasticity: -2.0, baseSales: 300},
+      {id:2,name:'Jean clásico',sku:'JEA-002',cat:'Ropa',price:89,cost:48,stock:18,status:'Activo', elasticity: -0.5, baseSales: 150},
+      {id:3,name:'Casaca urbana',sku:'CAS-003',cat:'Ropa',price:149,cost:88,stock:11,status:'Activo', elasticity: -2.2, baseSales: 80},
+      {id:4,name:'Gorra',sku:'GOR-004',cat:'Accesorios',price:35,cost:14,stock:46,status:'Activo', elasticity: -1.6, baseSales: 130}
+    ],
+    expenses:[
+      {id:1,date:'2026-10-02',desc:'Alquiler del local',amount:1800,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
+      {id:2,date:'2026-10-05',desc:'Publicidad digital',amount:420,cat:'Marketing',type:'Operativo',freq:'Mensual',product:''},
+      {id:3,date:'2026-10-08',desc:'Transporte',amount:280,cat:'Transporte',type:'Variable',freq:'Recurrente',product:''},
+      {id:4,date:'2026-10-12',desc:'Servicios básicos',amount:310,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
+    ]
+  },
+  ferreteria: {
+    business:{name:'Ferretería El Constructor',sector:'Ferretería',owner:'Carlos Mendoza',email:'demo.ferreteria@econometrica.pe'},
+    products:[
+      {id:1,name:'Taladro percutor 650W',sku:'FER-001',cat:'Herramientas',price:219,cost:145,stock:9,status:'Activo', elasticity: -1.2, baseSales: 40},
+      {id:2,name:'Caja de tornillos 2"',sku:'FER-002',cat:'Fijaciones',price:18,cost:9,stock:75,status:'Activo', elasticity: -0.3, baseSales: 350},
+      {id:3,name:'Cemento 42.5 kg',sku:'FER-003',cat:'Materiales',price:32,cost:24,stock:60,status:'Activo', elasticity: -0.8, baseSales: 200},
+      {id:4,name:'Pintura látex 4 gal',sku:'FER-004',cat:'Pinturas',price:118,cost:79,stock:14,status:'Activo', elasticity: -1.5, baseSales: 60}
+    ],
+    expenses:[
+      {id:1,date:'2026-10-02',desc:'Alquiler Almacén',amount:1250,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
+      {id:2,date:'2026-10-07',desc:'Fletes y reparto',amount:410,cat:'Transporte',type:'Variable',freq:'Recurrente',product:''},
+      {id:3,date:'2026-10-14',desc:'Volantes',amount:160,cat:'Marketing',type:'Operativo',freq:'Único',product:''},
+      {id:4,date:'2026-10-20',desc:'Luz e internet',amount:290,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
+    ]
+  },
+  farmacia: {
+    business:{name:'Botica Salud y Vida',sector:'Farmacia',owner:'Luis Gómez',email:'demo.farmacia@econometrica.pe'},
+    products:[
+      {id:1,name:'Paracetamol 500mg (Caja)',sku:'FAR-001',cat:'Medicamentos',price:8,cost:3,stock:120,status:'Activo', elasticity: -0.2, baseSales: 400},
+      {id:2,name:'Vitamina C + Zinc',sku:'FAR-002',cat:'Suplementos',price:45,cost:22,stock:35,status:'Activo', elasticity: -1.8, baseSales: 90},
+      {id:3,name:'Pañales Adulto (Paquete)',sku:'FAR-003',cat:'Cuidado Personal',price:55,cost:38,stock:20,status:'Activo', elasticity: -0.4, baseSales: 60},
+      {id:4,name:'Bloqueador Solar 50 FPS',sku:'FAR-004',cat:'Dermatología',price:65,cost:35,stock:15,status:'Activo', elasticity: -2.1, baseSales: 45}
+    ],
+    expenses:[
+      {id:1,date:'2026-10-01',desc:'Alquiler Local',amount:1500,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
+      {id:2,date:'2026-10-05',desc:'Químico Farmacéutico',amount:2500,cat:'Sueldos',type:'Fijo',freq:'Mensual',product:''},
+      {id:3,date:'2026-10-10',desc:'Empaques',amount:120,cat:'Otros',type:'Variable',freq:'Recurrente',product:''},
+      {id:4,date:'2026-10-15',desc:'Servicios (Agua/Luz)',amount:350,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
+    ]
+  }
 };
-function seedSales(){
- const rows=[]; let id=1;
- const dates=['2026-09-02','2026-09-04','2026-09-06','2026-09-08','2026-09-10','2026-09-12','2026-09-14','2026-09-16','2026-09-18','2026-09-20','2026-09-22','2026-09-24','2026-09-26','2026-09-28','2026-09-30','2026-10-02','2026-10-04','2026-10-06','2026-10-08','2026-10-10','2026-10-12','2026-10-14','2026-10-16','2026-10-18','2026-10-20','2026-10-22'];
- dates.forEach((date,i)=>{const p=DEMO.products[i%4], qty=2+(i%4), price=p.price-(i%3===0?2:0);rows.push({id:id++,date,productId:p.id,qty,price,discount:0,channel:i%3===0?'Tienda':i%3===1?'WhatsApp':'Instagram',customer:'',notes:''})});
- return rows;
+
+function demoSales(productIds, baseDate='2026-10-01') {
+  const rows=[];
+  const start=new Date(baseDate+'T12:00:00');
+  let id=1;
+  for(let i=0;i<26;i++){
+    const d=new Date(start); d.setDate(start.getDate()+(i*2));
+    const pid=productIds[i%productIds.length];
+    const qty=2+(i%4);
+    rows.push({
+      id:id++,
+      date:d.toISOString().slice(0,10),
+      productId:pid,
+      qty,
+      price:null,
+      discount:0,
+      channel:['Tienda','WhatsApp','Delivery'][i%3]
+    });
+  }
+  return rows;
 }
-if(!localStorage.getItem(KEY)){DEMO.sales=seedSales();localStorage.setItem(KEY,JSON.stringify(DEMO))}
-let db=JSON.parse(localStorage.getItem(KEY)); let state={screen:'inicio',search:'',period:'mes',productId:1,priceDelta:0,report:null};
+
+function buildDemoState(key){
+  const d=DEMO_BUSINESSES[key];
+  const sales=demoSales(d.products.map(p=>p.id));
+  sales.forEach(s=>{
+    const p=d.products.find(p=>p.id===s.productId);
+    s.price=p.price - (s.id%3===0?2:0); // variabilidad
+  });
+  return {
+    business:{...d.business},
+    products:d.products.map(x=>({...x})),
+    expenses:d.expenses.map(x=>({...x})),
+    sales,
+    settings:{currency:'PEN',region:'Perú',demo:true},
+    demoKey: key
+  };
+}
+
+let db = JSON.parse(localStorage.getItem(KEY));
+if(!db) {
+  db = buildDemoState('ropa');
+  localStorage.setItem(KEY,JSON.stringify(db));
+}
+
+let state={screen:'inicio',search:'',period:'mes',productId:db.products[0]?.id||1,priceDelta:0,report:null};
+let scenarioChart = null;
+
 const nav=[
  ['inicio','Inicio'],['ventas','Ventas'],['productos','Productos'],['gastos','Costos y gastos'],['inventario','Inventario'],['rentabilidad','Rentabilidad'],['pronosticos','Pronósticos'],['escenarios','¿Qué pasaría si...?'],['reportes','Reportes'],['planes','Membresía'],['config','Configuración']
 ];
@@ -88,15 +163,27 @@ function shell(){
  document.getElementById('app').innerHTML=`<div class="app">
  <aside class="sidebar">
   <div class="logo"><div class="logo-mark">E</div><div>Econométrica<small>PYME</small></div></div>
+  <div class="demo-switcher">
+    <div class="demo-switcher-title">Cambiar Demo</div>
+    <select id="demo-selector" onchange="switchDemoBusiness(this.value)">
+      <option value="ropa" ${db.demoKey==='ropa'?'selected':''}>👗 Tienda de Ropa</option>
+      <option value="ferreteria" ${db.demoKey==='ferreteria'?'selected':''}>🛠️ Ferretería</option>
+      <option value="farmacia" ${db.demoKey==='farmacia'?'selected':''}>💊 Farmacia</option>
+    </select>
+  </div>
   <div class="biz"><small>Negocio</small><b>${esc(db.business.name)}</b><span class="muted" style="font-size:11px">${esc(db.business.sector)}</span></div>
   <nav class="nav">${navHTML()}</nav>
-  <div class="side-bottom"><b>Datos de demostración</b><div style="font-size:12px;margin-top:3px">Puedes editar, importar y exportar información. Los resultados se calculan con tus datos.</div><button data-action="landing">Ver propuesta</button></div>
+  <div class="side-bottom"><b>Datos de demostración</b><div style="font-size:12px;margin-top:3px">Puedes editar, importar y exportar información.</div><button data-action="landing">Ver propuesta</button></div>
  </aside>
  <main>
   <header class="top"><div><div class="crumb">Econométrica PYME / ${nav.find(x=>x[0]===state.screen)?.[1]||'Inicio'}</div><h1>${nav.find(x=>x[0]===state.screen)?.[1]||'Inicio'}</h1></div>
-   <div class="top-actions"><button class="btn" data-action="import">Importar CSV</button><button class="btn primary" data-action="report">Generar reporte</button></div>
+   <div class="top-actions">
+     <button class="btn" data-action="download-template">Plantilla CSV</button>
+     <button class="btn" data-action="import">Importar CSV</button>
+     <button class="btn primary" data-action="report">Generar reporte</button>
+   </div>
   </header>
-  <div class="content"><div class="notice"><b>Datos de demostración.</b> La información es ficticia y se guarda solo en este navegador. No representa resultados reales ni garantiza ganancias.</div><div id="screen"></div></div>
+  <div class="content"><div class="notice"><b>Datos de demostración.</b> La información es ficticia y se guarda solo en este navegador.</div><div id="screen"></div></div>
  </main>
  <nav class="mobile-nav">${nav.slice(0,5).map(([id,l])=>`<button class="${state.screen===id?'active':''}" data-nav="${id}">${icon(id)}<div>${l}</div></button>`).join('')}</nav>
  </div>`;
@@ -132,14 +219,96 @@ function products(){return `<div class="card"><div class="card-head"><div><h3>Ca
 function expenses(){return `<div class="grid wide"><div class="card"><div class="card-head"><div><h3>Registrar costo o gasto</h3><span class="muted">La clasificación es editable según el negocio.</span></div></div><form id="expense-form" class="form-grid"><div class="field"><label>Fecha</label><input name="date" type="date" value="2026-10-23" required></div><div class="field"><label>Descripción</label><input name="desc" required></div><div class="field"><label>Importe (S/)</label><input name="amount" type="number" step=".01" min="0" required></div><div class="field"><label>Categoría</label><select name="cat"><option>Alquiler</option><option>Sueldos</option><option>Servicios</option><option>Transporte</option><option>Marketing</option><option>Comisiones</option><option>Mercadería</option><option>Materias primas</option><option>Mantenimiento</option><option>Impuestos</option><option>Otros</option></select></div><div class="field"><label>Tipo</label><select name="type"><option>Fijo</option><option>Variable</option><option>Directo</option><option>Operativo</option><option>Otro</option></select></div><div class="field"><label>Frecuencia</label><select name="freq"><option>Único</option><option>Mensual</option><option>Recurrente</option></select></div><div class="field full"><button class="btn primary">Guardar gasto</button></div></form></div><div class="card"><div class="card-head"><div><h3>Concentración de egresos</h3><span class="muted">No se interpreta automáticamente como gasto innecesario.</span></div></div>${expenseBars()}</div></div><div class="card"><div class="card-head"><div><h3>Registros</h3></div><button class="btn sm" data-action="export-expenses">Exportar CSV</button></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Tipo</th><th class="num">Importe</th><th></th></tr></thead><tbody>${db.expenses.slice().reverse().map(e=>`<tr><td>${e.date}</td><td>${esc(e.desc)}</td><td>${esc(e.cat)}</td><td>${esc(e.type)}</td><td class="num">${money(e.amount)}</td><td><button class="btn sm danger" data-delete-expense="${e.id}">Eliminar</button></td></tr>`).join('')}</tbody></table></div></div>`}
 function expenseBars(){const c={};db.expenses.forEach(e=>c[e.cat]=(c[e.cat]||0)+e.amount);const arr=Object.entries(c).sort((a,b)=>b[1]-a[1]);const mx=arr[0]?.[1]||1;return `<div class="bar-list">${arr.map(([k,v])=>`<div class="bar-row"><span>${esc(k)}</span><div class="track"><div class="fill" style="width:${v/mx*100}%"></div></div><b>${money(v)}</b></div>`).join('')}</div>`}
 function inventory(){const low=db.products.filter(p=>p.stock<=12);return `<div class="grid g3">${kpi('Unidades en stock',num(db.products.reduce((a,p)=>a+p.stock,0)),'Inventario actual',true)}${kpi('Productos con stock bajo',num(low.length),'Umbral demostrativo ≤ 12',low.length===0)}${kpi('Sin movimiento','0','Se requiere historial suficiente',true)}</div><div class="card"><div class="card-head"><div><h3>Inventario</h3><span class="muted">Vinculado a productos y ventas del prototipo.</span></div></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>Categoría</th><th class="num">Stock</th><th class="num">Ventas unidades</th><th>Estado</th></tr></thead><tbody>${db.products.map(p=>{const u=db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0);return `<tr><td>${esc(p.name)}</td><td>${esc(p.cat)}</td><td class="num">${p.stock}</td><td class="num">${u}</td><td>${p.stock<=12?'<span class="pill" style="background:#fff3d8;color:#8a6100">Revisar</span>':'<span class="pill">Normal</span>'}</td></tr>`}).join('')}</tbody></table></div><div class="insight warn" style="margin-top:12px">Las alertas de reposición son orientativas: no se recomienda comprar solo con ventas históricas si no se conocen inventario real, tiempos de reposición y cambios en la demanda.</div></div>`}
-function profit(){const rows=db.products.map(p=>{const ss=db.sales.filter(s=>s.productId==p.id),units=ss.reduce((a,s)=>a+s.qty,0),rev=ss.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0),cost=units*p.cost,gross=rev-cost;return{p,units,rev,cost,gross,margin:rev?gross/rev:0,share:0}});const total=rows.reduce((a,x)=>a+x.rev,0);rows.forEach(x=>x.share=total?x.rev/total:0);return `<div class="card"><div class="card-head"><div><h3>Rentabilidad de mi negocio</h3><span class="muted">Los cálculos usan ventas y costos unitarios registrados.</span></div><button class="btn" data-action="scenario-product">Simular precio</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th class="num">Unidades</th><th class="num">Ingresos</th><th class="num">Costos directos</th><th class="num">Margen bruto</th><th class="num">Margen %</th><th class="num">Participación</th></tr></thead><tbody>${rows.sort((a,b)=>b.gross-a.gross).map(x=>`<tr><td><b>${esc(x.p.name)}</b></td><td class="num">${num(x.units)}</td><td class="num">${money(x.rev)}</td><td class="num">${money(x.cost)}</td><td class="num">${money(x.gross)}</td><td class="num">${pct(x.margin)}</td><td class="num">${pct(x.share)}</td></tr>`).join('')}</tbody></table></div><div class="grid g2" style="margin-top:14px"><div class="insight"><b>Lectura:</b> la utilidad bruta es ingresos netos menos costo de productos vendidos. No equivale a utilidad neta porque aún pueden existir gastos operativos, impuestos y otros conceptos.</div><div class="insight warn"><b>Atención:</b> un producto puede tener ventas elevadas y una contribución reducida; revisa precio, costo y volumen conjuntamente.</div></div></div>`}
+function profit(){const rows=db.products.map(p=>{const ss=db.sales.filter(s=>s.productId==p.id),units=ss.reduce((a,s)=>a+s.qty,0),rev=ss.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0),cost=units*p.cost,gross=rev-cost;return{p,units,rev,cost,gross,margin:rev?gross/rev:0,share:0}});const total=rows.reduce((a,x)=>a+x.rev,0);rows.forEach(x=>x.share=total?x.rev/total:0);return `<div class="card"><div class="card-head"><div><h3>Rentabilidad de mi negocio</h3><span class="muted">Los cálculos usan ventas y costos unitarios registrados.</span></div><button class="btn" data-nav="escenarios">Simular precio</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th class="num">Unidades</th><th class="num">Ingresos</th><th class="num">Costos directos</th><th class="num">Margen bruto</th><th class="num">Margen %</th><th class="num">Participación</th></tr></thead><tbody>${rows.sort((a,b)=>b.gross-a.gross).map(x=>`<tr><td><b>${esc(x.p.name)}</b></td><td class="num">${num(x.units)}</td><td class="num">${money(x.rev)}</td><td class="num">${money(x.cost)}</td><td class="num">${money(x.gross)}</td><td class="num">${pct(x.margin)}</td><td class="num">${pct(x.share)}</td></tr>`).join('')}</tbody></table></div><div class="grid g2" style="margin-top:14px"><div class="insight"><b>Lectura:</b> la utilidad bruta es ingresos netos menos costo de productos vendidos. No equivale a utilidad neta porque aún pueden existir gastos operativos, impuestos y otros conceptos.</div><div class="insight warn"><b>Atención:</b> un producto puede tener ventas elevadas y una contribución reducida; revisa precio, costo y volumen conjuntamente.</div></div></div>`}
 function forecast(){const p=product(state.productId)||db.products[0];const ss=db.sales.filter(s=>s.productId==p.id).sort((a,b)=>a.date.localeCompare(b.date));const enough=ss.length>=8;const units=ss.reduce((a,s)=>a+s.qty,0);const avgU=ss.length?units/ss.length:0;let slope=0; if(enough){const ys=ss.map(s=>s.qty),xs=ys.map((_,i)=>i+1),mx=xs.reduce((a,b)=>a+b,0)/xs.length,my=avgU;let d=0,n=0;xs.forEach((x,i)=>{d+=(x-mx)**2;n+=(x-mx)*(ys[i]-my)});slope=d?n/d:0}const forecast=Math.max(0,avgU+slope*4);return `<div class="card"><div class="card-head"><div><h3>Pronóstico de demanda</h3><span class="muted">Método demostrativo de referencia; no es garantía de ventas.</span></div><select id="forecast-product">${db.products.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>${enough?`<div class="grid g3">${kpi('Observaciones',num(ss.length),'Ventas registradas',true)}${kpi('Promedio por operación',num(avgU),'Unidades',true)}${kpi('Referencia próxima',num(forecast),'Escenario de 4 operaciones',true)}</div><div class="insight warn">La referencia se obtiene de una tendencia lineal simple sobre las unidades por operación. Para un modelo econométrico fiable se necesita una estructura temporal adecuada, suficiente historial y variables explicativas; este prototipo no afirma causalidad ni precisión estadística.</div>`:`<div class="empty"><h3>Información insuficiente</h3><p>Se requieren al menos 8 observaciones del producto seleccionado para mostrar una referencia descriptiva. Con menos datos, el sistema evita inventar pronósticos.</p><button class="btn primary" data-nav="ventas">Registrar más ventas</button></div>`}</div>`}
-function scenarios(){const p=product(state.productId)||db.products[0],d=Number(state.priceDelta||0),price=p.price*(1+d/100),vol=db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0),baseC=vol*(p.price-p.cost),simC=vol*(price-p.cost);return `<div class="grid wide"><div class="card"><div class="card-head"><div><h3>¿Qué pasaría si...?</h3><span class="muted">Simulación editable; no es una predicción automática.</span></div><select id="scenario-product">${db.products.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div><div class="field"><label>Variación del precio: <b id="delta-label">${d>0?'+':''}${d}%</b></label><input id="price-range" type="range" min="-20" max="20" step="1" value="${d}"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>-20%</span><span>0%</span><span>+20%</span></div></div><div class="grid g3" style="margin-top:18px">${kpi('Precio simulado',money(price),'Supuesto editable',true)}${kpi('Contribución base',money(baseC),'Volumen histórico',true)}${kpi('Contribución simulada',money(simC),'Mismo volumen supuesto',simC>=0)}</div></div><div class="card"><h3>Supuestos visibles</h3><ul><li>El volumen se mantiene igual al histórico.</li><li>El costo unitario se mantiene en ${money(p.cost)}.</li><li>La variación de precio no implica una reacción estimada de clientes.</li><li>Para estimar elasticidad precio se requieren datos adecuados de precio y cantidad y un modelo especificado.</li></ul></div></div>`}
+
+function scenarios(){
+ const p=product(state.productId)||db.products[0];
+ const d=Number(state.priceDelta||0);
+ 
+ // Lógica mejorada del simulador
+ const currentPrice = p.price;
+ const currentCost = p.cost;
+ const baseUnits = p.baseSales || db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0) || 100;
+ const elasticity = p.elasticity || -1.0;
+ 
+ const newPrice = currentPrice * (1 + d/100);
+ const demandChange = (d/100) * elasticity;
+ let simUnits = Math.round(baseUnits * (1 + demandChange));
+ if(simUnits < 0) simUnits = 0;
+ 
+ const baseRev = baseUnits * currentPrice;
+ const baseTotalCost = baseUnits * currentCost;
+ const baseProfit = baseRev - baseTotalCost;
+ 
+ const simRev = simUnits * newPrice;
+ const simTotalCost = simUnits * currentCost;
+ const simProfit = simRev - simTotalCost;
+ 
+ const profitDiff = simProfit - baseProfit;
+ const marginPct = simRev > 0 ? (simProfit/simRev)*100 : 0;
+ 
+ let alertHtml = '';
+ if (simProfit < 0) {
+    alertHtml = `<div class="insight red"><b>🚨 Peligro de Pérdidas:</b> Estás vendiendo por debajo de tu costo total. Modifica el precio urgentemente.</div>`;
+ } else if (profitDiff < 0) {
+    alertHtml = `<div class="insight warn"><b>⚠️ Alerta de Canibalización:</b> Vendes mercadería, pero estás perdiendo ${money(Math.abs(profitDiff))} en ganancias respecto al escenario base.</div>`;
+ } else if (profitDiff > 0) {
+    alertHtml = `<div class="insight" style="background:#e6f4ea; border-color:#34a853"><b>✅ Estrategia Rentable:</b> Este escenario aumenta tus ganancias en ${money(profitDiff)}.</div>`;
+ }
+
+ return `<div class="grid wide">
+   <div class="card">
+     <div class="card-head">
+       <div>
+         <h3>Simulador Econométrico</h3>
+         <span class="muted">¿Qué pasaría si cambias tus precios? (Incluye Elasticidad)</span>
+       </div>
+       <select id="scenario-product">${db.products.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>
+     </div>
+     <div class="field">
+       <label>Variación del precio de venta: <b id="delta-label" style="color:var(--green)">${d>0?'+':''}${d}%</b></label>
+       <input id="price-range" type="range" min="-30" max="30" step="1" value="${d}">
+       <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>-30%</span><span>Precio Actual</span><span>+30%</span></div>
+     </div>
+     
+     <div class="grid g2" style="margin-top:20px">
+        <div style="border:1px solid var(--line); padding:15px; border-radius:10px;">
+           <span class="eyebrow">Escenario Actual (Base)</span>
+           <div style="margin-top:10px; display:grid; gap:8px;">
+             <div style="display:flex; justify-content:space-between"><span>Precio:</span> <b>${money(currentPrice)}</b></div>
+             <div style="display:flex; justify-content:space-between"><span>Unidades (mes):</span> <b>${num(baseUnits)}</b></div>
+             <div style="display:flex; justify-content:space-between"><span>Ingresos:</span> <b>${money(baseRev)}</b></div>
+             <div style="display:flex; justify-content:space-between; color:var(--green); font-size:16px;"><span>Ganancia Neta:</span> <b>${money(baseProfit)}</b></div>
+           </div>
+        </div>
+        <div style="border:1px solid ${profitDiff<0?'var(--red)':'var(--green)'}; padding:15px; border-radius:10px; background:${profitDiff<0?'#fff0ed':'#f3f8f6'}">
+           <span class="eyebrow">Escenario Simulado</span>
+           <div style="margin-top:10px; display:grid; gap:8px;">
+             <div style="display:flex; justify-content:space-between"><span>Nuevo Precio:</span> <b>${money(newPrice)}</b></div>
+             <div style="display:flex; justify-content:space-between"><span>Unidades est.:</span> <b>${num(simUnits)}</b></div>
+             <div style="display:flex; justify-content:space-between"><span>Nuevos Ingresos:</span> <b>${money(simRev)}</b></div>
+             <div style="display:flex; justify-content:space-between; color:${profitDiff<0?'var(--red)':'var(--green)'}; font-size:16px;"><span>Ganancia Neta:</span> <b>${money(simProfit)}</b></div>
+           </div>
+        </div>
+     </div>
+     <div style="margin-top:15px">${alertHtml}</div>
+   </div>
+   <div class="card">
+     <h3>Impacto en Ganancias y Ventas</h3>
+     <div class="chart-container">
+        <canvas id="scenarioChart"></canvas>
+     </div>
+   </div>
+ </div>`;
+}
+
 function reports(){return `<div class="card"><div class="card-head"><div><h3>Reporte empresarial</h3><span class="muted">Resumen de ventas, costos, gastos, rentabilidad y alertas.</span></div><div class="toolbar"><button class="btn primary" data-action="generate-report">Generar</button><button class="btn" data-action="print-report">Imprimir / PDF</button></div></div>${state.report?`<div class="report-output">${state.report.map(x=>`<div class="insight" style="margin-bottom:9px">${x}</div>`).join('')}</div>`:`<div class="empty">Genera un reporte para convertir tus datos en un resumen ejecutivo. Las recomendaciones se basan en cálculos visibles.</div>`}</div>`}
-function plans(){const plans=[['Inicial','0',['Productos','Ventas y gastos manuales','Dashboard básico','Reportes limitados']],['Crecimiento','49',['Todo lo anterior','Importación CSV','Rentabilidad por producto','Reportes descargables','Escenarios básicos']],['Inteligencia','99',['Todo lo anterior','Pronósticos sujetos a datos','Sensibilidad de precios','Escenarios avanzados','Indicadores de calidad']]];return `<div class="grid g3">${plans.map((p,i)=>`<div class="card" style="${i===1?'border:2px solid var(--green)':''}"><span class="pill">${i===1?'Más elegido':'Plan'}</span><h2 style="margin:8px 0">${p[0]}</h2><div style="font-size:32px;font-weight:900">S/ ${p[1]}<small style="font-size:12px;color:var(--muted)"> / mes</small></div><ul>${p[2].map(x=>`<li>${x}</li>`).join('')}</ul><button class="btn ${i===1?'primary':''}" data-plan="${p[0]}">Elegir ${p[0]}</button></div>`).join('')}</div><div class="card"><h3>Facturación</h3><p class="muted">Los precios son propuestas iniciales del prototipo, no precios de mercado validados. Si no existe una pasarela conectada, cualquier suscripción se considera simulada.</p></div>`}
+function plans(){const plans=[['Inicial','0',['Productos','Ventas y gastos manuales','Dashboard básico','Reportes limitados']],['Crecimiento','49',['Todo lo anterior','Importación CSV','Rentabilidad por producto','Reportes descargables','Escenarios básicos']],['Inteligencia','99',['Todo lo anterior','Pronósticos sujetos a datos','Sensibilidad de precios','Escenarios avanzados','Indicadores de calidad']]];return `<div class="grid g3">${plans.map((p,i)=>`<div class="card" style="${i===1?'border:2px solid var(--green)':''}"><span class="pill">${i===1?'Más elegido':'Plan'}</span><h2 style="margin:8px 0">${p[0]}</h2><div style="font-size:32px;font-weight:900">S/ ${p[1]}<small style="font-size:12px;color:var(--muted)"> / mes</small></div><ul>${p[2].map(x=>`<li>${x}</li>`).join('')}</ul><button class="btn ${i===1?'primary':''}" data-plan="${p[0]}">Elegir ${p[0]}</button></div>`).join('')}</div><div class="card"><h3>Facturación</h3><p class="muted">Los precios son propuestas iniciales del prototipo, no precios de mercado validados.</p></div>`}
 function config(){return `<div class="grid g2"><div class="card"><div class="card-head"><div><h3>Negocio</h3><span class="muted">Configuración básica del perfil.</span></div></div><form id="config-form" class="form-grid"><div class="field"><label>Nombre del negocio</label><input name="name" value="${esc(db.business.name)}"></div><div class="field"><label>Sector</label><input name="sector" value="${esc(db.business.sector)}"></div><div class="field"><label>Responsable</label><input name="owner" value="${esc(db.business.owner)}"></div><div class="field"><label>Correo</label><input name="email" type="email" value="${esc(db.business.email)}"></div><div class="field"><label>Moneda</label><select name="currency"><option selected>PEN — S/</option></select></div><div class="field"><label>Región</label><select name="region"><option selected>Perú</option></select></div><div class="field full"><button class="btn primary">Guardar configuración</button></div></form></div><div class="card"><h3>Privacidad y datos</h3><p class="muted">Este archivo usa localStorage para persistir el prototipo en el navegador. No implementa autenticación, separación multiempresa en servidor, backend, pasarela de pagos ni almacenamiento cloud.</p><div class="toolbar" style="margin-top:14px"><button class="btn" data-action="export-json">Exportar datos JSON</button><button class="btn danger" data-action="reset">Restablecer demo</button></div></div></div>`}
 function landing(){document.getElementById('app').innerHTML=`<div class="content landing" style="max-width:1200px;margin:auto"><div class="logo" style="color:var(--navy)"><div class="logo-mark">E</div><div>Econométrica<small style="color:var(--green)">PYME</small></div></div><div class="hero"><div><span class="pill" style="background:rgba(255,255,255,.12);color:#fff">SaaS B2B · Perú</span><h2>Convierte los datos de tu negocio en decisiones más rentables.</h2><p>Ventas, costos, gastos, rentabilidad, escenarios y análisis de demanda en una sola plataforma.</p><div class="hero-actions"><button class="btn gold" data-action="enter">Explorar demo</button><button class="btn" data-action="modal-register">Crear cuenta</button></div></div><div class="hero-visual"><div class="mini-dash"><b>Panel ejecutivo</b><div class="mini-grid" style="margin-top:9px"><div class="mini-box"><small>Ventas</small><b>${money(totals().sales)}</b></div><div class="mini-box"><small>Margen bruto</small><b>${pct(totals().margin)}</b></div><div class="mini-box"><small>Productos</small><b>${db.products.length}</b></div></div></div></div></div><div class="grid g3">${['Analiza tus ventas','Descubre tus productos más rentables','Prueba escenarios de precio'].map((x,i)=>`<div class="card feature"><span class="pill">0${i+1}</span><b>${x}</b><span class="muted">${['Visualiza ingresos y evolución por periodo, producto y canal.','Compara ingresos, costos, márgenes y contribución.','Modifica precio, costo y volumen con supuestos visibles.'][i]}</span></div>`).join('')}</div><div class="steps">${['Registra tus datos','Importa o ingresa información','Analiza indicadores y gráficos','Toma decisiones con evidencia'].map((x,i)=>`<div class="step"><span>${i+1}</span><b>${x}</b><p class="muted">Flujo simple para una PYME.</p></div>`).join('')}</div></div>`}
 function openModal(title,body){$('#modal-root').innerHTML=`<div class="modal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow">Econométrica PYME</span><h2>${title}</h2></div><button class="close" data-action="close">×</button></div><div style="margin-top:16px">${body}</div></div></div>`}
+
 function afterRender(){
  $('#period')?.addEventListener('change',e=>{state.period=e.target.value;render()});
  $('#sales-search')?.addEventListener('input',e=>{state.search=e.target.value;render()});
@@ -147,16 +316,74 @@ function afterRender(){
  $('#expense-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.expenses.push({id:Date.now(),date:f.get('date'),desc:f.get('desc'),amount:+f.get('amount'),cat:f.get('cat'),type:f.get('type'),freq:f.get('freq'),product:''});save();toast('Gasto registrado');render()});
  $('#config-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.business={name:f.get('name'),sector:f.get('sector'),owner:f.get('owner'),email:f.get('email')};save();toast('Configuración guardada');shell()});
  $('#forecast-product')?.addEventListener('change',e=>{state.productId=+e.target.value;render()});
- $('#scenario-product')?.addEventListener('change',e=>{state.productId=+e.target.value;render()});
- $('#price-range')?.addEventListener('input',e=>{state.priceDelta=+e.target.value;const l=$('#delta-label');if(l)l.textContent=(state.priceDelta>0?'+':'')+state.priceDelta+'%';const p=product(state.productId);const price=p.price*(1+state.priceDelta/100),vol=db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0);const cards=$$('.kpi');if(cards[0])cards[0].querySelector('.value').textContent=money(price);if(cards[2])cards[2].querySelector('.value').textContent=money(vol*(price-p.cost))});
+ $('#scenario-product')?.addEventListener('change',e=>{
+    state.productId=+e.target.value;
+    state.priceDelta=0; // reset delta when changing product
+    render();
+ });
+ 
+ $('#price-range')?.addEventListener('input',e=>{
+    state.priceDelta=+e.target.value;
+    render(); // Re-render to update calculations and charts
+ });
+ 
+ if(state.screen === 'escenarios'){
+    drawScenarioChart();
+ }
 }
+
+function drawScenarioChart(){
+    const ctx = document.getElementById('scenarioChart');
+    if(!ctx) return;
+    
+    const p=product(state.productId)||db.products[0];
+    const currentPrice = p.price;
+    const currentCost = p.cost;
+    const baseUnits = p.baseSales || db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0) || 100;
+    const elasticity = p.elasticity || -1.0;
+    
+    const d = Number(state.priceDelta||0);
+    const newPrice = currentPrice * (1 + d/100);
+    const demandChange = (d/100) * elasticity;
+    let simUnits = Math.round(baseUnits * (1 + demandChange));
+    if(simUnits < 0) simUnits = 0;
+    
+    const baseProfit = (currentPrice - currentCost) * baseUnits;
+    const simProfit = (newPrice - currentCost) * simUnits;
+    
+    if(scenarioChart) {
+        scenarioChart.destroy();
+    }
+    
+    scenarioChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Base', 'Simulado'],
+            datasets: [
+                {
+                    label: 'Ganancia Neta (S/)',
+                    data: [baseProfit, simProfit],
+                    backgroundColor: ['#dbe5e2', simProfit < 0 ? '#c74735' : (simProfit > baseProfit ? '#14a37f' : '#f2b233')],
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+}
+
 document.addEventListener('click',e=>{
  const n=e.target.closest('[data-nav]');if(n){state.screen=n.dataset.nav;state.search='';shell();return}
  const del=e.target.closest('[data-delete-sale]');if(del){db.sales=db.sales.filter(x=>x.id!=del.dataset.deleteSale);save();render();toast('Venta eliminada');return}
  const de=e.target.closest('[data-delete-expense]');if(de){db.expenses=db.expenses.filter(x=>x.id!=de.dataset.deleteExpense);save();render();toast('Gasto eliminado');return}
  const edit=e.target.closest('[data-edit-product]');if(edit){const p=product(edit.dataset.editProduct);openModal('Editar producto',productForm(p));return}
  if(e.target.closest('[data-action="new-product"]')){openModal('Nuevo producto',productForm());return}
- if(e.target.closest('[data-action="import"]')){openModal('Importar CSV',`<p class="muted">Carga un CSV de ventas con columnas: fecha, producto, cantidad, precio, descuento, canal. La importación es local al navegador.</p><input id="csv-file" type="file" accept=".csv" style="margin:12px 0"><button class="btn primary" data-action="do-import">Validar e importar</button>`);return}
+ if(e.target.closest('[data-action="import"]')){openModal('Importar CSV',`<p class="muted">Carga un CSV de ventas. La importación es local al navegador.</p><input id="csv-file" type="file" accept=".csv" style="margin:12px 0"><button class="btn primary" data-action="do-import">Validar e importar</button>`);return}
  if(e.target.closest('[data-action="do-import"]')){$('#csv-file')?.click();return}
  if(e.target.closest('[data-action="report"]')){state.screen='reportes';shell();setTimeout(()=>generateReport(),0);return}
  if(e.target.closest('[data-action="generate-report"]')){generateReport();return}
@@ -164,6 +391,12 @@ document.addEventListener('click',e=>{
  if(e.target.closest('[data-action="export-sales"]')){downloadCSV(db.sales.map(s=>({fecha:s.date,producto:product(s.productId)?.name||'',cantidad:s.qty,precio:s.price,descuento:s.discount,canal:s.channel})),'ventas.csv');return}
  if(e.target.closest('[data-action="export-expenses"]')){downloadCSV(db.expenses.map(x=>({fecha:x.date,descripcion:x.desc,importe:x.amount,categoria:x.cat,tipo:x.type,frecuencia:x.freq})),'gastos.csv');return}
  if(e.target.closest('[data-action="export-json"]')){downloadText(JSON.stringify(db,null,2),'econometrica-datos.json','application/json');return}
+ if(e.target.closest('[data-action="download-template"]')){
+     const csvContent = "Fecha,Producto,Cantidad,Precio,Descuento,Canal\n2026-10-01,Producto Ejemplo,2,50.00,0,Tienda";
+     downloadText(csvContent, 'Plantilla_Ventas_Econometrica.csv', 'text/csv');
+     toast('Plantilla descargada');
+     return;
+ }
  if(e.target.closest('[data-action="reset"]')){if(confirm('¿Restablecer los datos de demostración?')){localStorage.removeItem(KEY);location.reload()}return}
  if(e.target.closest('[data-action="landing"]')){landing();return}
  if(e.target.closest('[data-action="enter"]')){state.screen='inicio';shell();return}
@@ -172,7 +405,7 @@ document.addEventListener('click',e=>{
  const plan=e.target.closest('[data-plan]');if(plan){toast('Selección simulada: '+plan.dataset.plan);return}
 });
 document.addEventListener('submit',e=>{
- if(e.target.id==='register-form'){e.preventDefault();const f=new FormData(e.target);db.business={name:f.get('name'),sector:f.get('sector'),owner:f.get('owner'),email:f.get('email')};db.settings.demo=true;save();$('#modal-root').innerHTML='';state.screen='inicio';shell();toast('Cuenta de demostración creada')}
+ if(e.target.id==='register-form'){e.preventDefault();const f=new FormData(e.target);db.business={name:f.get('name'),sector:f.get('sector'),owner:f.get('owner'),email:f.get('email')};db.settings={demo:true};save();$('#modal-root').innerHTML='';state.screen='inicio';shell();toast('Cuenta de demostración creada')}
  if(e.target.id==='product-form'){e.preventDefault();const f=new FormData(e.target);const id=+f.get('id')||Date.now();const p={id,name:f.get('name'),sku:f.get('sku'),cat:f.get('cat'),price:+f.get('price'),cost:+f.get('cost'),stock:+f.get('stock'),status:f.get('status')};const i=db.products.findIndex(x=>x.id===id);if(i>=0)db.products[i]=p;else db.products.push(p);save();$('#modal-root').innerHTML='';render();toast('Producto guardado')}
 });
 document.addEventListener('change',e=>{
@@ -184,153 +417,19 @@ function importCSV(file){const r=new FileReader();r.onload=()=>{const lines=r.re
 function downloadCSV(rows,name){const h=Object.keys(rows[0]||{});const csv=[h.join(','),...rows.map(r=>h.map(k=>`"${String(r[k]??'').replaceAll('"','""')}"`).join(','))].join('\n');downloadText(csv,name,'text/csv')}
 function downloadText(txt,name,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function toast(t){const x=$('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+
+function switchDemoBusiness(key){
+  if(!DEMO_BUSINESSES[key]) return;
+  db = buildDemoState(key);
+  save();
+  state.productId = db.products[0]?.id || 1;
+  state.priceDelta = 0;
+  shell();
+  toast('Demo cargada: '+DEMO_BUSINESSES[key].business.name);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 landing();
-
-    /* ==================== DEMOS MULTINEGOCIO ==================== */
-    const DEMO_BUSINESSES = {
-      ropa: {
-        business:{name:'Tienda Andina',sector:'Comercio minorista',owner:'Ana Torres',email:'demo@econometrica.pe'},
-        products:[
-          {id:1,sku:'POL-001',name:'Polo básico',category:'Prendas',price:49,cost:25,stock:32,minStock:8},
-          {id:2,sku:'JEA-002',name:'Jean clásico',category:'Prendas',price:89,cost:48,stock:18,minStock:6},
-          {id:3,sku:'CAS-003',name:'Casaca urbana',category:'Abrigos',price:149,cost:88,stock:11,minStock:4},
-          {id:4,sku:'GOR-004',name:'Gorra',category:'Accesorios',price:35,cost:14,stock:46,minStock:10}
-        ],
-        expenses:[
-          {id:1,date:'2026-10-02',category:'Alquiler',description:'Local comercial',amount:950},
-          {id:2,date:'2026-10-06',category:'Publicidad',description:'Campaña digital',amount:320},
-          {id:3,date:'2026-10-12',category:'Transporte',description:'Movilidad y entregas',amount:180},
-          {id:4,date:'2026-10-18',category:'Servicios',description:'Luz, internet y agua',amount:210}
-        ]
-      },
-      ferreteria: {
-        business:{name:'Ferretería El Constructor',sector:'Ferretería y materiales',owner:'Carlos Mendoza',email:'demo.ferreteria@econometrica.pe'},
-        products:[
-          {id:1,sku:'FER-001',name:'Taladro percutor 650W',category:'Herramientas eléctricas',price:219,cost:145,stock:9,minStock:3},
-          {id:2,sku:'FER-002',name:'Caja de tornillos 2"',category:'Fijaciones',price:18,cost:9,stock:75,minStock:20},
-          {id:3,sku:'FER-003',name:'Cemento 42.5 kg',category:'Materiales',price:32,cost:24,stock:60,minStock:15},
-          {id:4,sku:'FER-004',name:'Pintura látex 4 galones',category:'Pinturas',price:118,cost:79,stock:14,minStock:5},
-          {id:5,sku:'FER-005',name:'Juego de llaves mixtas',category:'Herramientas manuales',price:85,cost:52,stock:21,minStock:6}
-        ],
-        expenses:[
-          {id:1,date:'2026-10-02',category:'Alquiler',description:'Almacén y tienda',amount:1250},
-          {id:2,date:'2026-10-07',category:'Transporte',description:'Fletes y reparto',amount:410},
-          {id:3,date:'2026-10-14',category:'Publicidad',description:'Volantes y anuncios',amount:160},
-          {id:4,date:'2026-10-20',category:'Servicios',description:'Luz e internet',amount:290}
-        ]
-      },
-      libreria: {
-        business:{name:'Librería Horizonte',sector:'Librería y útiles',owner:'María Salazar',email:'demo.libreria@econometrica.pe'},
-        products:[
-          {id:1,sku:'LIB-001',name:'Novela juvenil',category:'Libros',price:42,cost:25,stock:24,minStock:6},
-          {id:2,sku:'LIB-002',name:'Cuaderno universitario',category:'Útiles',price:14,cost:8,stock:65,minStock:15},
-          {id:3,sku:'LIB-003',name:'Agenda 2027',category:'Papelería',price:29,cost:16,stock:38,minStock:10},
-          {id:4,sku:'LIB-004',name:'Pack resaltadores x6',category:'Útiles',price:18,cost:10,stock:43,minStock:12},
-          {id:5,sku:'LIB-005',name:'Diccionario escolar',category:'Libros',price:36,cost:21,stock:19,minStock:5}
-        ],
-        expenses:[
-          {id:1,date:'2026-10-03',category:'Alquiler',description:'Local',amount:820},
-          {id:2,date:'2026-10-09',category:'Servicios',description:'Luz e internet',amount:185},
-          {id:3,date:'2026-10-15',category:'Publicidad',description:'Campaña regreso a clases',amount:260},
-          {id:4,date:'2026-10-22',category:'Otros',description:'Empaques y bolsas',amount:95}
-        ]
-      },
-      jugueria: {
-        business:{name:'Juguería Frutal',sector:'Alimentos y bebidas',owner:'Lucía Ramos',email:'demo.jugueria@econometrica.pe'},
-        products:[
-          {id:1,sku:'JUG-001',name:'Jugo de papaya 500 ml',category:'Jugos',price:8,cost:3.2,stock:120,minStock:30},
-          {id:2,sku:'JUG-002',name:'Jugo surtido 500 ml',category:'Jugos',price:10,cost:4.1,stock:105,minStock:25},
-          {id:3,sku:'JUG-003',name:'Ensalada de frutas',category:'Desayunos',price:12,cost:5.3,stock:70,minStock:18},
-          {id:4,sku:'JUG-004',name:'Sándwich de pollo',category:'Desayunos',price:11,cost:5.4,stock:54,minStock:14},
-          {id:5,sku:'JUG-005',name:'Combo jugo + sándwich',category:'Combos',price:18,cost:8.5,stock:48,minStock:12}
-        ],
-        expenses:[
-          {id:1,date:'2026-10-01',category:'Alquiler',description:'Puesto y local',amount:650},
-          {id:2,date:'2026-10-05',category:'Servicios',description:'Agua, luz y gas',amount:230},
-          {id:3,date:'2026-10-11',category:'Insumos',description:'Frutas y perecibles',amount:540},
-          {id:4,date:'2026-10-19',category:'Publicidad',description:'Redes sociales',amount:120}
-        ]
-      }
-    };
-
-    function demoSales(productIds, baseDate='2026-10-01') {
-      const rows=[];
-      const start=new Date(baseDate+'T12:00:00');
-      for(let i=0;i<18;i++){
-        const d=new Date(start); d.setDate(start.getDate()+i);
-        const pid=productIds[i%productIds.length];
-        const qty=2+(i%5);
-        rows.push({
-          id:i+1,
-          date:d.toISOString().slice(0,10),
-          productId:pid,
-          qty,
-          price:null,
-          discount:i%6===0?5:0,
-          channel:['Tienda','WhatsApp','Delivery'][i%3]
-        });
-      }
-      return rows;
-    }
-
-    function buildDemoState(key){
-      const d=DEMO_BUSINESSES[key];
-      const sales=demoSales(d.products.map(p=>p.id));
-      sales.forEach(s=>{
-        const p=d.products.find(p=>p.id===s.productId);
-        s.price=p.price;
-      });
-      return {
-        business:{...d.business},
-        products:d.products.map(x=>({...x})),
-        expenses:d.expenses.map(x=>({...x})),
-        sales,
-        currentPage:'dashboard',
-        selectedProductId:d.products[0].id,
-        scenarioProductId:d.products[0].id
-      };
-    }
-
-    function switchDemoBusiness(key){
-      if(!DEMO_BUSINESSES[key]) return;
-      state = buildDemoState(key);
-      state.demoKey=key;
-      try{ localStorage.setItem('econometrica-pyme-v2', JSON.stringify(state)); }catch(e){}
-      document.querySelectorAll('[data-demo-card]').forEach(el=>el.classList.toggle('active',el.dataset.demoCard===key));
-      const sel=document.getElementById('demo-business'); if(sel) sel.value=key;
-      if(typeof render==='function') render();
-      if(typeof toast==='function') toast('Demo cargada: '+DEMO_BUSINESSES[key].business.name);
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-
-    function ensureDemoSelector(){
-      const key=state?.demoKey || 'ropa';
-      const sel=document.getElementById('demo-business');
-      if(sel) sel.value=key;
-      document.querySelectorAll('[data-demo-card]').forEach(el=>el.classList.toggle('active',el.dataset.demoCard===key));
-    }
-
-    /* Extiende el render existente sin reemplazar su lógica. */
-    const __renderOriginal = typeof render==='function' ? render : null;
-    if(__renderOriginal){
-      render = function(){
-        __renderOriginal();
-        ensureDemoSelector();
-      };
-    }
-
-    /* Si la aplicación cargó el estado antiguo, mantenemos el demo de ropa;
-       los nuevos negocios quedan disponibles desde el selector. */
-
 </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  setTimeout(function(){
-    if(typeof ensureDemoSelector==='function') ensureDemoSelector();
-  }, 0);
-});
-</script>
-
 </body>
 </html>
