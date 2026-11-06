@@ -3,430 +3,1969 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Econométrica PYME — Inteligencia comercial y rentabilidad</title>
+<title>Econométrica PYME — Inteligencia comercial y analista financiero virtual</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root{--navy:#0b2530;--green:#0b7a63;--green2:#14a37f;--mint:#e7f5f0;--gold:#f2b233;--bg:#f5f8f7;--card:#fff;--ink:#13232b;--muted:#66777d;--line:#dbe5e2;--red:#c74735;--shadow:0 12px 35px rgba(11,37,48,.08)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
-a{text-decoration:none;color:inherit}.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.sidebar{background:var(--navy);color:#dce9e7;padding:18px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:0;height:100vh}.logo{display:flex;gap:10px;align-items:center;color:#fff;font-weight:800;font-size:18px}.logo-mark{width:38px;height:38px;border-radius:11px;background:var(--green2);display:grid;place-items:center;color:#fff;font-weight:900}.logo small{display:block;color:var(--gold);font-size:9px;letter-spacing:.14em}.biz{padding:11px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:12px}.biz small{color:#8ca8a8;text-transform:uppercase;font-size:9px;letter-spacing:.12em}.biz b{display:block;color:#fff;margin-top:2px}.nav{display:grid;gap:4px}.nav button{border:0;background:transparent;color:#b7cdca;padding:10px 11px;border-radius:10px;text-align:left;display:flex;gap:10px;align-items:center}.nav button:hover,.nav button.active{background:#116b5c;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--gold)}.side-bottom{margin-top:auto;border:1px solid rgba(242,178,51,.25);background:rgba(242,178,51,.08);border-radius:12px;padding:12px;color:#e8e0c9}.side-bottom b{color:#fff}.side-bottom button{margin-top:8px;border:0;border-radius:8px;padding:7px 10px;background:var(--gold);font-weight:800}
-main{min-width:0}.top{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}.crumb{color:var(--muted);font-size:12px}.top h1{margin:2px 0 0;font-size:20px}.top-actions{display:flex;gap:8px}.content{padding:25px 28px 50px;max-width:1500px}.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 13px;font-weight:700;color:var(--ink)}.btn:hover{border-color:var(--green)}.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}.btn.danger{color:var(--red)}.btn.sm{padding:6px 9px;font-size:12px}
-.notice{padding:10px 13px;background:#fff7df;border:1px solid #f0d78b;border-radius:10px;margin-bottom:17px}.screen{display:grid;gap:17px}.grid{display:grid;gap:16px}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr)}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 1px 1px rgba(0,0,0,.01)}.card h2,.card h3{margin:0}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:13px}.muted{color:var(--muted)}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:var(--muted);font-weight:800}.kpi{min-height:122px}.kpi .value{font-size:26px;font-weight:900;margin:7px 0 2px}.delta{font-size:11px;font-weight:800}.up{color:var(--green)}.down{color:var(--red)}.pill{display:inline-flex;padding:4px 8px;border-radius:99px;background:var(--mint);color:var(--green);font-size:11px;font-weight:800}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px}table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#f6f9f8}td.num{text-align:right;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:0}.bar-list{display:grid;gap:12px}.bar-row{display:grid;grid-template-columns:145px 1fr 85px;gap:9px;align-items:center}.track{height:10px;background:#edf2f0;border-radius:99px;overflow:hidden}.fill{height:100%;background:var(--green);border-radius:99px}.chart{height:245px;width:100%;display:block}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:800}.field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}.field textarea{min-height:82px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.toolbar input,.toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff}.empty{padding:35px;text-align:center;color:var(--muted);border:1px dashed #b8cbc6;border-radius:12px}.insight{padding:12px;border-radius:11px;background:#f3f8f6;border-left:3px solid var(--green)}.insight.warn{background:#fff7e2;border-color:var(--gold)}.insight.red{background:#fff0ed;border-color:var(--red)}
-.hero{background:linear-gradient(135deg,#0b2530,#0b7a63);color:#fff;border-radius:18px;padding:34px;display:grid;grid-template-columns:1.15fr .85fr;gap:25px;align-items:center}.hero h2{font-size:clamp(28px,4vw,45px);line-height:1.05;margin:8px 0 12px}.hero p{color:#d6e7e4;max-width:650px;font-size:15px}.hero-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}.hero-visual{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13);border-radius:15px;padding:14px}.mini-dash{background:#fff;color:var(--ink);border-radius:11px;padding:14px}.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.mini-box{background:#f3f7f5;border-radius:8px;padding:9px}.mini-box b{display:block;font-size:16px}.feature{padding:20px}.feature b{display:block;margin-bottom:5px}.landing{display:grid;gap:17px}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px}.step span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--mint);color:var(--green);font-weight:900;margin-bottom:10px}
-.modal{position:fixed;inset:0;background:rgba(5,24,31,.68);z-index:30;display:grid;place-items:center;padding:16px}.modal-card{background:#fff;width:min(700px,100%);max-height:92vh;overflow:auto;border-radius:17px;padding:22px;box-shadow:var(--shadow)}.modal-head{display:flex;justify-content:space-between;gap:10px}.close{border:0;background:#edf2f0;border-radius:8px;width:34px;height:34px}.mobile-nav{display:none}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(15px);background:var(--navy);color:#fff;padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:40}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:1050px){.g4{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.wide{grid-template-columns:1fr}}
-@media(max-width:820px){.app{grid-template-columns:1fr}.sidebar{display:none}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--navy);z-index:10;padding:6px;gap:4px}.mobile-nav button{flex:1;background:transparent;border:0;color:#b7cdca;font-size:10px;padding:7px 2px}.mobile-nav button.active{background:#116b5c;color:#fff}.content{padding:18px 15px 80px}.top{padding:0 15px}.g3,.g2{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}}
-@media(max-width:520px){.g4{grid-template-columns:1fr}.hero{padding:23px}.steps{grid-template-columns:1fr}.top-actions .btn:not(.primary){display:none}}
+:root{
+  --navy:#0b2530;--navy2:#123747;--green:#0b7a63;--green2:#14a37f;--mint:#e7f5f0;
+  --gold:#f2b233;--bg:#f4f7f6;--card:#ffffff;--ink:#13232b;--muted:#607278;
+  --line:#dbe5e2;--red:#c74735;--amber:#d97706;--shadow:0 12px 35px rgba(11,37,48,.08)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;transition:.15s ease}
+.hidden{display:none!important}
+a{text-decoration:none;color:inherit}
 
-    .demo-switcher{margin:14px 12px 16px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.045)}
-    .demo-switcher-title{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#9db0c8;font-weight:800;margin-bottom:8px}
-    .demo-switcher label{display:block;font-size:11px;color:#cbd5e1;margin-bottom:5px}
-    .demo-switcher select{width:100%;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:#10243d;color:#fff;padding:8px;font-size:12px;outline:none}
-    .demo-switcher select:focus{border-color:#36c98f}
-    .demo-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}
-    .demo-card{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--card);cursor:pointer;transition:.18s}
-    .demo-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,23,42,.08)}
-    .demo-card.active{border-color:var(--green);box-shadow:0 0 0 2px rgba(54,201,143,.12)}
-    .demo-card h4{margin:0 0 5px;font-size:14px}
-    .demo-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
-    @media(max-width:900px){.demo-cards{grid-template-columns:1fr 1fr}}
-    @media(max-width:620px){.demo-cards{grid-template-columns:1fr}}
-    
-    .chart-container { position: relative; height: 300px; width: 100%; margin-top: 15px;}
+/* LAYOUT PRINCIPAL Y SIDEBAR CORREGIDO */
+.app{display:grid;grid-template-columns:265px 1fr;min-height:100vh}
+.sidebar{
+  background:var(--navy);color:#dce9e7;padding:16px 14px;
+  display:flex;flex-direction:column;gap:12px;
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent;
+  z-index:20;
+}
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:99px}
+
+.logo{display:flex;gap:10px;align-items:center;color:#fff;font-weight:800;font-size:18px;flex-shrink:0}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:var(--green2);display:grid;place-items:center;color:#fff;font-weight:900;flex-shrink:0}
+.logo small{display:block;color:var(--gold);font-size:9px;letter-spacing:.14em}
+
+.demo-switcher{padding:10px 12px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05);flex-shrink:0}
+.demo-switcher-title{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);font-weight:800;margin-bottom:6px}
+.demo-switcher select{width:100%;border:1px solid rgba(255,255,255,.18);border-radius:8px;background:#081b24;color:#fff;padding:7px 8px;font-size:12px;font-weight:600;outline:none}
+.demo-switcher select:focus{border-color:var(--green2)}
+
+.biz{padding:10px 12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:12px;flex-shrink:0}
+.biz small{color:#8ca8a8;text-transform:uppercase;font-size:9px;letter-spacing:.12em}
+.biz b{display:block;color:#fff;margin-top:2px;font-size:13px}
+
+.nav{display:grid;gap:3px;flex-shrink:0}
+.nav button{border:0;background:transparent;color:#b7cdca;padding:8px 11px;border-radius:9px;text-align:left;display:flex;gap:10px;align-items:center;font-size:13px;font-weight:500}
+.nav button:hover,.nav button.active{background:#116b5c;color:#fff}
+.nav button.active{box-shadow:inset 3px 0 var(--gold);font-weight:700}
+
+.side-bottom{margin-top:auto;border:1px solid rgba(242,178,51,.25);background:rgba(242,178,51,.08);border-radius:12px;padding:11px;color:#e8e0c9;flex-shrink:0;font-size:12px}
+.side-bottom b{color:#fff;display:block;margin-bottom:2px}
+.side-bottom button{margin-top:8px;border:0;border-radius:8px;padding:7px 10px;background:var(--gold);color:var(--navy);font-weight:800;width:100%;font-size:12px}
+
+main{min-width:0;display:flex;flex-direction:column}
+.top{min-height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:10px 24px;position:sticky;top:0;z-index:15;gap:12px;flex-wrap:wrap}
+.crumb{color:var(--muted);font-size:11px}
+.top h1{margin:1px 0 0;font-size:19px}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.content{padding:22px 24px 60px;max-width:1480px;width:100%;margin:0 auto}
+
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 12px;font-weight:700;color:var(--ink);font-size:13px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--green);background:#f9fbfa}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff}
+.btn.primary:hover{background:#096350}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn.whatsapp{background:#128C7E;border-color:#128C7E;color:#fff}
+.btn.whatsapp:hover{background:#075E54}
+.btn.danger{color:var(--red);border-color:#f3c6c0}
+.btn.sm{padding:5px 9px;font-size:12px}
+
+.notice{padding:10px 14px;background:#fff8e6;border:1px solid #f0d78b;border-radius:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px}
+.screen{display:grid;gap:16px}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.wide{grid-template-columns:minmax(0,1.65fr) minmax(300px,1fr)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 2px 6px rgba(11,37,48,.02)}
+.card h2,.card h3{margin:0}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.muted{color:var(--muted)}
+.eyebrow{text-transform:uppercase;letter-spacing:.11em;font-size:10px;color:var(--muted);font-weight:800;display:block}
+.kpi{min-height:116px;display:flex;flex-direction:column;justify-content:space-between}
+.kpi .value{font-size:25px;font-weight:900;margin:6px 0 2px}
+.delta{font-size:11px;font-weight:800}
+.up{color:var(--green)}
+.down{color:var(--red)}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:99px;background:var(--mint);color:var(--green);font-size:11px;font-weight:800}
+.pill.warn{background:#fff3d8;color:#946200}
+.pill.red{background:#ffe8e5;color:var(--red)}
+.pill.blue{background:#e0f2fe;color:#0369a1}
+
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:11px;max-height:460px}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;font-size:13px}
+th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#f6f9f8;position:sticky;top:0;z-index:2}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:#fafcfb}
+
+.bar-list{display:grid;gap:11px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 90px;gap:10px;align-items:center;font-size:13px}
+.track{height:10px;background:#edf2f0;border-radius:99px;overflow:hidden}
+.fill{height:100%;background:var(--green);border-radius:99px}
+.chart{height:235px;width:100%;display:block}
+.chart-container{position:relative;height:270px;width:100%;margin-top:10px}
+
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:grid;gap:5px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.field input,.field select,.field textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+.field input[type="range"]{padding:0;accent-color:var(--green);cursor:pointer}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toolbar input,.toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.empty{padding:32px;text-align:center;color:var(--muted);border:1px dashed #b8cbc6;border-radius:12px}
+
+.insight{padding:12px 14px;border-radius:11px;background:#f3f8f6;border-left:4px solid var(--green);font-size:13px;line-height:1.45}
+.insight.warn{background:#fff8e6;border-color:var(--gold)}
+.insight.red{background:#fff0ed;border-color:var(--red)}
+
+/* HERO & LANDING */
+.hero{background:linear-gradient(135deg,#0b2530 0%,#0b7a63 100%);color:#fff;border-radius:18px;padding:30px;display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center}
+.hero h2{font-size:clamp(26px,3.5vw,40px);line-height:1.08;margin:8px 0 12px}
+.hero p{color:#d6e7e4;max-width:640px;font-size:15px;margin:0}
+.hero-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
+.hero-visual{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);border-radius:15px;padding:14px}
+.mini-dash{background:#fff;color:var(--ink);border-radius:11px;padding:14px}
+.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.mini-box{background:#f3f7f5;border-radius:8px;padding:9px}
+.mini-box b{display:block;font-size:15px}
+.landing{display:grid;gap:22px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.step{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px}
+.step span{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--mint);color:var(--green);font-weight:900;margin-bottom:10px}
+
+/* VIDEO INTERACTIVO SIMULADO */
+.video-player{background:var(--navy);color:#fff;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow)}
+.video-top{padding:12px 18px;background:rgba(0,0,0,.25);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap;gap:8px}
+.video-dots{display:flex;gap:6px;align-items:center}
+.video-dots i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.video-stage{padding:24px;min-height:290px;display:grid;grid-template-columns:1fr 1.15fr;gap:22px;align-items:center;background:radial-gradient(circle at top right,#134e4a,#0b2530 70%)}
+.video-Mock{background:#fff;color:var(--ink);border-radius:12px;padding:16px;box-shadow:0 12px 30px rgba(0,0,0,.25);min-height:210px;display:flex;flex-direction:column;justify-content:center}
+.video-controls{padding:12px 18px;background:#081b24;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.step-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step-tab{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:#b7cdca;padding:7px 10px;border-radius:8px;font-size:11px;font-weight:700;text-align:left}
+.step-tab.active{background:var(--green2);color:#fff;border-color:var(--green2)}
+
+/* WHATSAPP PREVIEW */
+.wa-phone{background:#e5ddd5;border-radius:16px;overflow:hidden;border:6px solid #1f2937;max-width:420px;margin:0 auto;box-shadow:var(--shadow)}
+.wa-header{background:#075E54;color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.wa-avatar{width:36px;height:36px;border-radius:50%;background:var(--green2);display:grid;place-items:center;font-weight:900}
+.wa-body{padding:14px;display:grid;gap:10px;max-height:420px;overflow-y:auto}
+.wa-bubble{background:#fff;padding:11px 13px;border-radius:0 12px 12px 12px;font-size:12.5px;line-height:1.45;color:#111;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.wa-time{display:block;text-align:right;font-size:10px;color:#667781;margin-top:4px}
+
+/* MODAL Y NAVEGACIÓN MÓVIL MEJORADA */
+.modal{position:fixed;inset:0;background:rgba(5,24,31,.68);z-index:50;display:grid;place-items:center;padding:16px}
+.modal-card{background:#fff;width:min(720px,100%);max-height:92vh;overflow:auto;border-radius:17px;padding:22px;box-shadow:var(--shadow)}
+.modal-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.close{border:0;background:#edf2f0;border-radius:8px;width:34px;height:34px;font-size:18px;font-weight:700}
+
+.mobile-nav{display:none}
+.mobile-Demo-bar{display:none}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(15px);background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:60;font-weight:700;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:1080px){
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .hero,.wide,.video-stage{grid-template-columns:1fr}
+}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .mobile-Demo-bar{display:flex;background:var(--navy);color:#fff;padding:8px 15px;justify-content:space-between;align-items:center;gap:10px;font-size:12px}
+  .mobile-Demo-bar select{background:#102a37;color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:7px;padding:5px 8px;font-size:12px}
+  .mobile-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:var(--navy);z-index:35;padding:6px 8px;gap:6px;
+    overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(255,255,255,.12)
+  }
+  .mobile-nav::-webkit-scrollbar{display:none}
+  .mobile-nav button{
+    flex:0 0 auto;background:transparent;border:0;color:#b7cdca;
+    font-size:11px;padding:7px 11px;border-radius:8px;white-space:nowrap;
+    display:flex;align-items:center;gap:5px
+  }
+  .mobile-nav button.active{background:#116b5c;color:#fff;font-weight:700}
+  .content{padding:16px 14px 85px}
+  .top{padding:10px 14px}
+  .g3,.g2,.steps,.form-grid,.step-tabs{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .g4{grid-template-columns:1fr}
+  .hero{padding:20px}
+}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="modal-root"></div>
 <div id="toast" class="toast"></div>
-<script>
-const KEY='econometrica-pyme-v2';
 
-/* ==================== DEMOS MULTINEGOCIO ==================== */
+<script>
+const KEY = 'econometrica-pyme-v3';
+
+/* ==================== 5 RUBROS COMPLETOS CON HISTORIAL RICO ==================== */
 const DEMO_BUSINESSES = {
   ropa: {
-    business:{name:'Tienda Andina',sector:'Ropa y Accesorios',owner:'Ana Torres',email:'demo@econometrica.pe'},
+    business:{name:'Tienda Andina',sector:'Ropa y Accesorios',owner:'Ana Torres',email:'ana@tiendaandina.pe',whatsapp:'+51 987 654 321'},
     products:[
-      {id:1,name:'Polo básico',sku:'POL-001',cat:'Ropa',price:49,cost:25,stock:32,status:'Activo', elasticity: -2.0, baseSales: 300},
-      {id:2,name:'Jean clásico',sku:'JEA-002',cat:'Ropa',price:89,cost:48,stock:18,status:'Activo', elasticity: -0.5, baseSales: 150},
-      {id:3,name:'Casaca urbana',sku:'CAS-003',cat:'Ropa',price:149,cost:88,stock:11,status:'Activo', elasticity: -2.2, baseSales: 80},
-      {id:4,name:'Gorra',sku:'GOR-004',cat:'Accesorios',price:35,cost:14,stock:46,status:'Activo', elasticity: -1.6, baseSales: 130}
+      {id:1,name:'Polo básico algodón Pima',sku:'POL-001',cat:'Prendas',price:49,cost:24,stock:14,minStock:15,status:'Activo',elasticity:-1.9,baseSales:120,leadTime:5,seasonTag:'Alta Verano'},
+      {id:2,name:'Jean clásico corte recto',sku:'JEA-002',cat:'Pantalones',price:95,cost:48,stock:26,minStock:10,status:'Activo',elasticity:-0.6,baseSales:85,leadTime:7,seasonTag:'Constante'},
+      {id:3,name:'Casaca urbana impermeable',sku:'CAS-003',cat:'Abrigos',price:149,cost:82,stock:9,minStock:8,status:'Activo',elasticity:-2.2,baseSales:45,leadTime:10,seasonTag:'Alta Invierno'},
+      {id:4,name:'Gorra bordada unisex',sku:'GOR-004',cat:'Accesorios',price:35,cost:14,stock:42,minStock:12,status:'Activo',elasticity:-1.5,baseSales:95,leadTime:4,seasonTag:'Alta Verano'},
+      {id:5,name:'vestido casual temporada',sku:'VES-005',cat:'Prendas',price:115,cost:55,stock:11,minStock:10,status:'Activo',elasticity:-2.3,baseSales:60,leadTime:6,seasonTag:'Fiestas / Verano'},
+      {id:6,name:'Pack 3 medias tobilleras',sku:'MED-006',cat:'Accesorios',price:22,cost:8,stock:65,minStock:20,status:'Activo',elasticity:-0.4,baseSales:150,leadTime:3,seasonTag:'Constante'}
     ],
     expenses:[
-      {id:1,date:'2026-10-02',desc:'Alquiler del local',amount:1800,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
-      {id:2,date:'2026-10-05',desc:'Publicidad digital',amount:420,cat:'Marketing',type:'Operativo',freq:'Mensual',product:''},
-      {id:3,date:'2026-10-08',desc:'Transporte',amount:280,cat:'Transporte',type:'Variable',freq:'Recurrente',product:''},
-      {id:4,date:'2026-10-12',desc:'Servicios básicos',amount:310,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
+      {id:1,date:'2026-10-02',desc:'Alquiler de local comercial',amount:1650,cat:'Alquiler',type:'Fijo',freq:'Mensual'},
+      {id:2,date:'2026-10-05',desc:'Campaña Instagram y TikTok Ads',amount:420,cat:'Marketing',type:'Operativo',freq:'Mensual'},
+      {id:3,date:'2026-10-09',desc:'Envíos motorizados y empaques',amount:290,cat:'Transporte',type:'Variable',freq:'Recurrente'},
+      {id:4,date:'2026-10-14',desc:'Energía eléctrica, POS e internet',amount:310,cat:'Servicios',type:'Fijo',freq:'Mensual'}
     ]
   },
   ferreteria: {
-    business:{name:'Ferretería El Constructor',sector:'Ferretería',owner:'Carlos Mendoza',email:'demo.ferreteria@econometrica.pe'},
+    business:{name:'Ferretería El Constructor',sector:'Ferretería y Construcción',owner:'Carlos Mendoza',email:'carlos@elconstructor.pe',whatsapp:'+51 944 112 233'},
     products:[
-      {id:1,name:'Taladro percutor 650W',sku:'FER-001',cat:'Herramientas',price:219,cost:145,stock:9,status:'Activo', elasticity: -1.2, baseSales: 40},
-      {id:2,name:'Caja de tornillos 2"',sku:'FER-002',cat:'Fijaciones',price:18,cost:9,stock:75,status:'Activo', elasticity: -0.3, baseSales: 350},
-      {id:3,name:'Cemento 42.5 kg',sku:'FER-003',cat:'Materiales',price:32,cost:24,stock:60,status:'Activo', elasticity: -0.8, baseSales: 200},
-      {id:4,name:'Pintura látex 4 gal',sku:'FER-004',cat:'Pinturas',price:118,cost:79,stock:14,status:'Activo', elasticity: -1.5, baseSales: 60}
+      {id:1,name:'Taladro percutor 650W Pro',sku:'FER-001',cat:'Herramientas',price:219,cost:145,stock:8,minStock:6,status:'Activo',elasticity:-1.3,baseSales:38,leadTime:8,seasonTag:'Constante'},
+      {id:2,name:'Caja tornillos drywall 2" (x500)',sku:'FER-002',cat:'Fijaciones',price:24,cost:11,stock:55,minStock:20,status:'Activo',elasticity:-0.3,baseSales:160,leadTime:3,seasonTag:'Constante'},
+      {id:3,name:'Cemento Portland 42.5 kg',sku:'FER-003',cat:'Materiales',price:33,cost:25.5,stock:18,minStock:35,status:'Activo',elasticity:-0.9,baseSales:240,leadTime:2,seasonTag:'Obras / Seco'},
+      {id:4,name:'Pintura látex lavable 4 gal',sku:'FER-004',cat:'Pinturas',price:125,cost:82,stock:14,minStock:10,status:'Activo',elasticity:-1.6,baseSales:55,leadTime:5,seasonTag:'Fin de Año'},
+      {id:5,name:'Juego de llaves mixtas 12 pzs',sku:'FER-005',cat:'Herramientas',price:89,cost:52,stock:19,minStock:8,status:'Activo',elasticity:-1.1,baseSales:48,leadTime:6,seasonTag:'Constante'},
+      {id:6,name:'Tubo PVC Agua 1/2" x 5m',sku:'FER-006',cat:'Gasfitería',price:19,cost:11.5,stock:40,minStock:25,status:'Activo',elasticity:-0.4,baseSales:130,leadTime:4,seasonTag:'Constante'}
     ],
     expenses:[
-      {id:1,date:'2026-10-02',desc:'Alquiler Almacén',amount:1250,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
-      {id:2,date:'2026-10-07',desc:'Fletes y reparto',amount:410,cat:'Transporte',type:'Variable',freq:'Recurrente',product:''},
-      {id:3,date:'2026-10-14',desc:'Volantes',amount:160,cat:'Marketing',type:'Operativo',freq:'Único',product:''},
-      {id:4,date:'2026-10-20',desc:'Luz e internet',amount:290,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
+      {id:1,date:'2026-10-02',desc:'Alquiler de almacén y tienda',amount:1950,cat:'Alquiler',type:'Fijo',freq:'Mensual'},
+      {id:2,date:'2026-10-07',desc:'Combustible y flete de reparto',amount:520,cat:'Transporte',type:'Variable',freq:'Recurrente'},
+      {id:3,date:'2026-10-12',desc:'Ayudante de despacho y almacén',amount:1200,cat:'Sueldos',type:'Fijo',freq:'Mensual'},
+      {id:4,date:'2026-10-19',desc:'Servicios de luz trifásica e internet',amount:340,cat:'Servicios',type:'Fijo',freq:'Mensual'}
     ]
   },
   farmacia: {
-    business:{name:'Botica Salud y Vida',sector:'Farmacia',owner:'Luis Gómez',email:'demo.farmacia@econometrica.pe'},
+    business:{name:'Botica Salud y Vida',sector:'Salud y Farmacia',owner:'Dra. Elena Vargas',email:'contacto@saludyvida.pe',whatsapp:'+51 966 889 900'},
     products:[
-      {id:1,name:'Paracetamol 500mg (Caja)',sku:'FAR-001',cat:'Medicamentos',price:8,cost:3,stock:120,status:'Activo', elasticity: -0.2, baseSales: 400},
-      {id:2,name:'Vitamina C + Zinc',sku:'FAR-002',cat:'Suplementos',price:45,cost:22,stock:35,status:'Activo', elasticity: -1.8, baseSales: 90},
-      {id:3,name:'Pañales Adulto (Paquete)',sku:'FAR-003',cat:'Cuidado Personal',price:55,cost:38,stock:20,status:'Activo', elasticity: -0.4, baseSales: 60},
-      {id:4,name:'Bloqueador Solar 50 FPS',sku:'FAR-004',cat:'Dermatología',price:65,cost:35,stock:15,status:'Activo', elasticity: -2.1, baseSales: 45}
+      {id:1,name:'Paracetamol 500mg (Caja x100)',sku:'FAR-001',cat:'Analgésicos',price:12,cost:4.5,stock:45,minStock:30,status:'Activo',elasticity:-0.2,baseSales:260,leadTime:2,seasonTag:'Constante'},
+      {id:2,name:'Vitamina C + Zinc Efervescente',sku:'FAR-002',cat:'Vitaminas',price:38,cost:18,stock:11,minStock:15,status:'Activo',elasticity:-1.7,baseSales:95,leadTime:4,seasonTag:'Cambio de Clima'},
+      {id:3,name:'Pañales Adulto (Paquete x20)',sku:'FAR-003',cat:'Cuidado Personal',price:58,cost:39,stock:16,minStock:12,status:'Activo',elasticity:-0.4,baseSales:75,leadTime:3,seasonTag:'Constante'},
+      {id:4,name:'Bloqueador Solar Dermatológico',sku:'FAR-004',cat:'Dermocosmética',price:69,cost:36,stock:10,minStock:12,status:'Activo',elasticity:-2.0,baseSales:62,leadTime:5,seasonTag:'Alta Verano'},
+      {id:5,name:'Jarabe Antitusígeno Pediátrico',sku:'FAR-005',cat:'Respiratorio',price:26,cost:12,stock:22,minStock:15,status:'Activo',elasticity:-0.3,baseSales:110,leadTime:3,seasonTag:'Alta Invierno'},
+      {id:6,name:' Suero Rehidratante Oral 1L',sku:'FAR-006',cat:'Hidratación',price:9.5,cost:4.2,stock:38,minStock:25,status:'Activo',elasticity:-0.5,baseSales:145,leadTime:2,seasonTag:'Alta Verano'}
     ],
     expenses:[
-      {id:1,date:'2026-10-01',desc:'Alquiler Local',amount:1500,cat:'Alquiler',type:'Fijo',freq:'Mensual',product:''},
-      {id:2,date:'2026-10-05',desc:'Químico Farmacéutico',amount:2500,cat:'Sueldos',type:'Fijo',freq:'Mensual',product:''},
-      {id:3,date:'2026-10-10',desc:'Empaques',amount:120,cat:'Otros',type:'Variable',freq:'Recurrente',product:''},
-      {id:4,date:'2026-10-15',desc:'Servicios (Agua/Luz)',amount:350,cat:'Servicios',type:'Fijo',freq:'Mensual',product:''}
+      {id:1,date:'2026-10-01',desc:'Alquiler esquina comercial',amount:1700,cat:'Alquiler',type:'Fijo',freq:'Mensual'},
+      {id:2,date:'2026-10-05',desc:'Honorarios Químico Farmacéutico',amount:2400,cat:'Sueldos',type:'Fijo',freq:'Mensual'},
+      {id:3,date:'2026-10-10',desc:'Refrigeración médica y electricidad',amount:390,cat:'Servicios',type:'Fijo',freq:'Mensual'},
+      {id:4,date:'2026-10-16',desc:'Bolsas biodegradables y recetarios',amount:140,cat:'Otros',type:'Variable',freq:'Recurrente'}
+    ]
+  },
+  minimarket: {
+    business:{name:'Minimarket El Ahorro',sector:'Bodega y Abarrotes',owner:'Jorge Paredes',email:'jorge@elahorro.pe',whatsapp:'+51 955 223 344'},
+    products:[
+      {id:1,name:'Aceite Vegetal Premium 1L',sku:'MIN-001',cat:'Abarrotes',price:8.8,cost:6.7,stock:16,minStock:25,status:'Activo',elasticity:-1.8,baseSales:290,leadTime:2,seasonTag:'Quincena'},
+      {id:2,name:'Saco Arroz Extra 5kg',sku:'MIN-002',cat:'Abarrotes',price:21.5,cost:17.2,stock:28,minStock:20,status:'Activo',elasticity:-0.8,baseSales:140,leadTime:3,seasonTag:'Quincena'},
+      {id:3,name:'Gaseosa Familiar 1.5L',sku:'MIN-003',cat:'Bebidas',price:7.5,cost:4.8,stock:18,minStock:30,status:'Activo',elasticity:-0.5,baseSales:380,leadTime:2,seasonTag:'Fin de Semana'},
+      {id:4,name:'Six-Pack Cerveza Lata',sku:'MIN-004',cat:'Bebidas',price:23.9,cost:19.2,stock:24,minStock:20,status:'Activo',elasticity:-2.1,baseSales:165,leadTime:2,seasonTag:'Fin de Semana'},
+      {id:5,name:'Leche Evaporada Pack x6',sku:'MIN-005',cat:'Lácteos',price:23.5,cost:19.5,stock:35,minStock:18,status:'Activo',elasticity:-0.3,baseSales:210,leadTime:3,seasonTag:'Constante'},
+      {id:6,name:'Detergente Bioactivo 1kg',sku:'MIN-006',cat:'Limpieza',price:12.5,cost:8.9,stock:29,minStock:15,status:'Activo',elasticity:-1.4,baseSales:115,leadTime:4,seasonTag:'Constante'}
+    ],
+    expenses:[
+      {id:1,date:'2026-10-02',desc:'Alquiler de local',amount:1350,cat:'Alquiler',type:'Fijo',freq:'Mensual'},
+      {id:2,date:'2026-10-06',desc:'Electricidad (Cámaras conservadoras)',amount:580,cat:'Servicios',type:'Fijo',freq:'Mensual'},
+      {id:3,date:'2026-10-12',desc:'Transporte de mercadería mayorista',amount:240,cat:'Transporte',type:'Variable',freq:'Recurrente'},
+      {id:4,date:'2026-10-18',desc:'Personal de apoyo medio tiempo',amount:650,cat:'Sueldos',type:'Fijo',freq:'Mensual'}
+    ]
+  },
+  restaurante: {
+    business:{name:'Restaurante Sazón Norteña',sector:'Gastronomía y Menús',owner:'Lucía Chunga',email:'reservas@sazonnortena.pe',whatsapp:'+51 973 445 566'},
+    products:[
+      {id:1,name:'Menú Ejecutivo del Día',sku:'RES-001',cat:'Menú Diario',price:16,cost:7.8,stock:90,minStock:40,status:'Activo',elasticity:-2.4,baseSales:650,leadTime:1,seasonTag:'Lun a Vie'},
+      {id:2,name:'Ceviche de Pescado Clásico',sku:'RES-002',cat:'Carta Marina',price:34,cost:14.5,stock:35,minStock:20,status:'Activo',elasticity:-1.1,baseSales:220,leadTime:1,seasonTag:'Vie a Dom'},
+      {id:3,name:'Lomo Saltado Tradicional',sku:'RES-003',cat:'Criollos',price:36,cost:15.5,stock:40,minStock:20,status:'Activo',elasticity:-0.6,baseSales:240,leadTime:2,seasonTag:'Constante'},
+      {id:4,name:'Jarra de Chicha Morada 1L',sku:'RES-004',cat:'Bebidas',price:13,cost:3.2,stock:80,minStock:30,status:'Activo',elasticity:-0.4,baseSales:410,leadTime:1,seasonTag:'Alta Verano'},
+      {id:5,name:'Seco de Cabrito con Frejoles',sku:'RES-005',cat:'Especialidad',price:38,cost:16.8,stock:25,minStock:15,status:'Activo',elasticity:-0.8,baseSales:175,leadTime:2,seasonTag:'Domingos'},
+      {id:6,name:'Pisco Sour Catedral',sku:'RES-006',cat:'Bar',price:22,cost:6.5,stock:50,minStock:15,status:'Activo',elasticity:-1.9,baseSales:150,leadTime:4,seasonTag:'Vie y Sáb'}
+    ],
+    expenses:[
+      {id:1,date:'2026-10-01',desc:'Alquiler de salón restaurante',amount:2200,cat:'Alquiler',type:'Fijo',freq:'Mensual'},
+      {id:2,date:'2026-10-05',desc:'Cocinero y ayudantes de salón',amount:2800,cat:'Sueldos',type:'Fijo',freq:'Mensual'},
+      {id:3,date:'2026-10-11',desc:'Gas industrial, agua y electricidad',amount:690,cat:'Servicios',type:'Fijo',freq:'Mensual'},
+      {id:4,date:'2026-10-17',desc:'Envases descartables para delivery',amount:340,cat:'Materias primas',type:'Variable',freq:'Recurrente'}
     ]
   }
 };
 
-function demoSales(productIds, baseDate='2026-10-01') {
-  const rows=[];
-  const start=new Date(baseDate+'T12:00:00');
-  let id=1;
-  for(let i=0;i<26;i++){
-    const d=new Date(start); d.setDate(start.getDate()+(i*2));
-    const pid=productIds[i%productIds.length];
-    const qty=2+(i%4);
-    rows.push({
-      id:id++,
-      date:d.toISOString().slice(0,10),
-      productId:pid,
-      qty,
-      price:null,
-      discount:0,
-      channel:['Tienda','WhatsApp','Delivery'][i%3]
-    });
-  }
-  return rows;
+/* GENERADOR DE VENTAS CON AL MENOS 10 OBSERVACIONES POR PRODUCTO */
+function generateRichSales(products) {
+  const rows = [];
+  let id = 1;
+  const start = new Date('2026-08-18T12:00:00');
+  const channels = ['Tienda', 'WhatsApp', 'Delivery', 'Instagram'];
+  products.forEach((p, pIdx) => {
+    const baseQty = Math.max(2, Math.round((p.baseSales || 90) / 28));
+    for (let obs = 0; obs < 10; obs++) {
+      const d = new Date(start);
+      d.setDate(start.getDate() + obs * 6 + (pIdx % 3));
+      const seasonalBoost = (obs >= 6) ? Math.ceil(baseQty * 0.25) : 0;
+      const wave = (obs % 3 === 0) ? 2 : (obs % 2 === 0 ? 1 : 0);
+      const qty = Math.max(1, baseQty + seasonalBoost + wave);
+      const price = +(p.price - (obs % 4 === 0 ? +(p.price * 0.03).toFixed(1) : 0)).toFixed(2);
+      rows.push({
+        id: id++,
+        date: d.toISOString().slice(0, 10),
+        productId: p.id,
+        qty,
+        price,
+        discount: obs % 5 === 0 ? +(price * 0.05).toFixed(2) : 0,
+        channel: channels[(obs + pIdx) % channels.length],
+        customer: '',
+        notes: ''
+      });
+    }
+  });
+  return rows.sort((a, b) => a.date.localeCompare(b.date));
 }
 
-function buildDemoState(key){
-  const d=DEMO_BUSINESSES[key];
-  const sales=demoSales(d.products.map(p=>p.id));
-  sales.forEach(s=>{
-    const p=d.products.find(p=>p.id===s.productId);
-    s.price=p.price - (s.id%3===0?2:0); // variabilidad
-  });
+function buildDemoState(key) {
+  const d = DEMO_BUSINESSES[key] || DEMO_BUSINESSES.ropa;
+  const prods = d.products.map(x => ({ ...x }));
   return {
-    business:{...d.business},
-    products:d.products.map(x=>({...x})),
-    expenses:d.expenses.map(x=>({...x})),
-    sales,
-    settings:{currency:'PEN',region:'Perú',demo:true},
+    business: { ...d.business },
+    products: prods,
+    expenses: d.expenses.map(x => ({ ...x })),
+    sales: generateRichSales(prods),
+    settings: { currency: 'PEN', region: 'Perú', demo: true },
     demoKey: key
   };
 }
 
-let db = JSON.parse(localStorage.getItem(KEY));
-if(!db) {
+let db = null;
+try {
+  db = JSON.parse(localStorage.getItem(KEY));
+} catch (e) {}
+if (!db || !db.products || !db.sales || db.sales.length < 30) {
   db = buildDemoState('ropa');
-  localStorage.setItem(KEY,JSON.stringify(db));
+  localStorage.setItem(KEY, JSON.stringify(db));
 }
 
-let state={screen:'inicio',search:'',period:'mes',productId:db.products[0]?.id||1,priceDelta:0,report:null};
-let scenarioChart = null;
+let state = {
+  screen: 'inicio',
+  search: '',
+  period: 'mes',
+  productId: db.products[0]?.id || 1,
+  priceDelta: 0,
+  costDelta: 0,
+  compDelta: 0,
+  mktSpend: 0,
+  forecastHorizon: 30,
+  forecastSeason: 1.0,
+  videoStep: 0,
+  videoPlaying: false,
+  report: null
+};
 
-const nav=[
- ['inicio','Inicio'],['ventas','Ventas'],['productos','Productos'],['gastos','Costos y gastos'],['inventario','Inventario'],['rentabilidad','Rentabilidad'],['pronosticos','Pronósticos'],['escenarios','¿Qué pasaría si...?'],['reportes','Reportes'],['planes','Membresía'],['config','Configuración']
+let forecastChartInstance = null;
+let scenarioBarChartInstance = null;
+let scenarioCurveChartInstance = null;
+let videoTimer = null;
+
+const nav = [
+  ['inicio', 'Inicio'],
+  ['ventas', 'Ventas'],
+  ['productos', 'Productos'],
+  ['gastos', 'Costos y gastos'],
+  ['inventario', 'Inventario'],
+  ['rentabilidad', 'Rentabilidad'],
+  ['pronosticos', 'Pronósticos IA'],
+  ['escenarios', '¿Qué pasaría si...?'],
+  ['reportes', 'Reportes'],
+  ['planes', 'Membresía'],
+  ['config', 'Configuración']
 ];
-const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const money=n=>'S/ '+Number(n||0).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
-const num=n=>Number(n||0).toLocaleString('es-PE');
-const pct=n=>(Number(n||0)*100).toFixed(1)+' %';
-const save=()=>localStorage.setItem(KEY,JSON.stringify(db));
-const product=id=>db.products.find(p=>p.id==id);
-function totals(){
- const sales=db.sales.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0);
- const cogs=db.sales.reduce((a,s)=>a+s.qty*(product(s.productId)?.cost||0),0);
- const exp=db.expenses.reduce((a,e)=>a+e.amount,0);
- return {sales,cogs,exp,gross:sales-cogs,oper:sales-cogs-exp,margin:sales?(sales-cogs)/sales:0};
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const money = n => 'S/ ' + Number(n || 0).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const num = n => Number(n || 0).toLocaleString('es-PE', { maximumFractionDigits: 1 });
+const pct = n => (Number(n || 0) * 100).toFixed(1) + ' %';
+const save = () => localStorage.setItem(KEY, JSON.stringify(db));
+const product = id => db.products.find(p => p.id == id) || db.products[0];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function totals() {
+  const sales = db.sales.reduce((a, s) => a + s.qty * s.price - (s.discount || 0), 0);
+  const cogs = db.sales.reduce((a, s) => a + s.qty * (product(s.productId)?.cost || 0), 0);
+  const exp = db.expenses.reduce((a, e) => a + e.amount, 0);
+  return { sales, cogs, exp, gross: sales - cogs, oper: sales - cogs - exp, margin: sales ? (sales - cogs) / sales : 0 };
 }
-function periodSales(){
- const now=new Date('2026-10-23T12:00:00'); const start=new Date(now); start.setDate(now.getDate()-(state.period==='semana'?7:state.period==='trimestre'?90:30));
- return db.sales.filter(s=>new Date(s.date)>=start);
+
+function periodSales() {
+  const dates = db.sales.map(s => s.date).sort();
+  const latestStr = dates[dates.length - 1] || '2026-10-23';
+  const now = new Date(latestStr + 'T12:00:00');
+  const start = new Date(now);
+  start.setDate(now.getDate() - (state.period === 'semana' ? 7 : state.period === 'trimestre' ? 90 : 35));
+  return db.sales.filter(s => new Date(s.date + 'T12:00:00') >= start);
 }
-function navHTML(){return nav.map(([id,l])=>`<button class="${state.screen===id?'active':''}" data-nav="${id}"><span>${icon(id)}</span>${l}</button>`).join('')}
-function icon(id){const m={inicio:'⌂',ventas:'▣',productos:'◫',gastos:'↘',inventario:'▤',rentabilidad:'◔',pronosticos:'⌁',escenarios:'◇',reportes:'▤',planes:'★',config:'⚙'};return `<b style="width:18px;text-align:center">${m[id]||'•'}</b>`}
-function shell(){
- document.getElementById('app').innerHTML=`<div class="app">
- <aside class="sidebar">
-  <div class="logo"><div class="logo-mark">E</div><div>Econométrica<small>PYME</small></div></div>
-  <div class="demo-switcher">
-    <div class="demo-switcher-title">Cambiar Demo</div>
-    <select id="demo-selector" onchange="switchDemoBusiness(this.value)">
-      <option value="ropa" ${db.demoKey==='ropa'?'selected':''}>👗 Tienda de Ropa</option>
-      <option value="ferreteria" ${db.demoKey==='ferreteria'?'selected':''}>🛠️ Ferretería</option>
-      <option value="farmacia" ${db.demoKey==='farmacia'?'selected':''}>💊 Farmacia</option>
-    </select>
+
+function icon(id) {
+  const m = { inicio: '⌂', ventas: '▣', productos: '◫', gastos: '↘', inventario: '▤', rentabilidad: '◔', pronosticos: '📈', escenarios: '⚡', reportes: '📑', planes: '★', config: '⚙' };
+  return `<b style="width:18px;text-align:center;display:inline-block">${m[id] || '•'}</b>`;
+}
+
+function navHTML() {
+  return nav.map(([id, l]) => `<button class="${state.screen === id ? 'active' : ''}" data-nav="${id}">${icon(id)}<span>${l}</span></button>`).join('');
+}
+
+function demoOptionsHTML() {
+  const opts = [
+    ['ropa', '👗 Tienda de Ropa'],
+    ['ferreteria', '🛠️ Ferretería'],
+    ['farmacia', '💊 Farmacia / Botica'],
+    ['minimarket', '🛒 Minimarket / Bodega'],
+    ['restaurante', '🍽️ Restaurante']
+  ];
+  return opts.map(([k, label]) => `<option value="${k}" ${db.demoKey === k ? 'selected' : ''}>${label}</option>`).join('');
+}
+
+function shell() {
+  stopVideoTour();
+  document.getElementById('app').innerHTML = `
+  <div class="mobile-Demo-bar">
+    <span><b>EconoMétrica PYME</b> · Demo activa:</span>
+    <select onchange="switchDemoBusiness(this.value)">${demoOptionsHTML()}</select>
   </div>
-  <div class="biz"><small>Negocio</small><b>${esc(db.business.name)}</b><span class="muted" style="font-size:11px">${esc(db.business.sector)}</span></div>
-  <nav class="nav">${navHTML()}</nav>
-  <div class="side-bottom"><b>Datos de demostración</b><div style="font-size:12px;margin-top:3px">Puedes editar, importar y exportar información.</div><button data-action="landing">Ver propuesta</button></div>
- </aside>
- <main>
-  <header class="top"><div><div class="crumb">Econométrica PYME / ${nav.find(x=>x[0]===state.screen)?.[1]||'Inicio'}</div><h1>${nav.find(x=>x[0]===state.screen)?.[1]||'Inicio'}</h1></div>
-   <div class="top-actions">
-     <button class="btn" data-action="download-template">Plantilla CSV</button>
-     <button class="btn" data-action="import">Importar CSV</button>
-     <button class="btn primary" data-action="report">Generar reporte</button>
-   </div>
-  </header>
-  <div class="content"><div class="notice"><b>Datos de demostración.</b> La información es ficticia y se guarda solo en este navegador.</div><div id="screen"></div></div>
- </main>
- <nav class="mobile-nav">${nav.slice(0,5).map(([id,l])=>`<button class="${state.screen===id?'active':''}" data-nav="${id}">${icon(id)}<div>${l}</div></button>`).join('')}</nav>
- </div>`;
- render();
-}
-function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function render(){const el=$('#screen'); const f={inicio:home,ventas:sales,productos:products,gastos:expenses,inventario:inventory,rentabilidad:profit,pronosticos:forecast,escenarios:scenarios,reportes:reports,planes:plans,config:config}[state.screen]||home;el.innerHTML=f(); afterRender()}
-function home(){
- const t=totals(), ps=periodSales(), top=db.products.map(p=>{const a=ps.filter(s=>s.productId==p.id);const rev=a.reduce((x,s)=>x+s.qty*s.price,0);const u=a.reduce((x,s)=>x+s.qty,0);return{p,rev,u,con:u*(p.price-p.cost)}}).sort((a,b)=>b.con-a.con);
- return `<section class="screen">
- <div class="hero"><div><span class="pill" style="background:rgba(255,255,255,.12);color:#fff">Inteligencia comercial para PYMES peruanas</span><h2>Conoce tus números. Mejora tus decisiones. Impulsa tu rentabilidad.</h2><p>Analiza ventas, controla gastos, descubre qué productos aportan más y prueba escenarios antes de tomar decisiones.</p><div class="hero-actions"><button class="btn gold" data-nav="ventas">Registrar venta</button><button class="btn" data-nav="rentabilidad">Ver rentabilidad</button></div></div>
- <div class="hero-visual"><div class="mini-dash"><b>Vista ejecutiva</b><div class="mini-grid" style="margin-top:9px"><div class="mini-box"><small>Ventas</small><b>${money(t.sales)}</b></div><div class="mini-box"><small>Margen</small><b>${pct(t.margin)}</b></div><div class="mini-box"><small>Operativo</small><b>${money(t.oper)}</b></div></div><div style="margin-top:10px;height:95px;background:linear-gradient(180deg,#e9f6f1,#fff);border-radius:8px;position:relative;overflow:hidden"><svg viewBox="0 0 500 100" preserveAspectRatio="none" width="100%" height="100%"><polyline points="0,75 70,62 130,68 190,42 250,52 310,30 370,37 430,18 500,25" fill="none" stroke="#0b7a63" stroke-width="4"/></svg></div></div></div></div>
- <div class="grid g4">${kpi('Ventas netas',money(t.sales),'Periodo seleccionado',t.sales>=0)}${kpi('Costo de ventas',money(t.cogs),'Productos vendidos',true)}${kpi('Utilidad bruta',money(t.gross),`Margen ${pct(t.margin)}`,t.gross>=0)}${kpi('Resultado operativo',money(t.oper),'Ventas − costos − gastos',t.oper>=0)}</div>
- <div class="grid wide"><div class="card"><div class="card-head"><div><h3>Evolución de ventas</h3><span class="muted">Últimas operaciones registradas</span></div><select id="period"><option value="mes">Últimos 30 días</option><option value="semana">Últimos 7 días</option><option value="trimestre">Últimos 90 días</option></select></div>${svgSales()}</div>
- <div class="card"><div class="card-head"><div><h3>¿Dónde prestar atención?</h3><span class="muted">Hallazgos calculados</span></div></div>${insights(top,t)}</div></div>
- <div class="grid g2"><div class="card"><div class="card-head"><div><h3>Productos con mayor contribución</h3><span class="muted">Contribución = ventas netas − costos variables atribuibles</span></div></div><div class="bar-list">${top.map(x=>`<div class="bar-row"><span>${esc(x.p.name)}</span><div class="track"><div class="fill" style="width:${Math.min(100,x.con/(top[0]?.con||1)*100)}%"></div></div><b>${money(x.con)}</b></div>`).join('')}</div></div>
- <div class="card"><div class="card-head"><div><h3>Acciones rápidas</h3><span class="muted">Continúa trabajando con tus datos</span></div></div><div class="grid g2">${quick('Nueva venta','ventas')} ${quick('Registrar gasto','gastos')} ${quick('Analizar márgenes','rentabilidad')} ${quick('Probar un escenario','escenarios')}</div></div></div>
- </section>`
-}
-function kpi(a,b,c,good){return `<div class="card kpi"><span class="eyebrow">${a}</span><div class="value">${b}</div><div class="${good?'up':'down'} delta">${c}</div></div>`}
-function quick(t,n){return `<button class="btn" data-nav="${n}" style="padding:16px;text-align:left">${t}<br><span class="muted">Abrir módulo →</span></button>`}
-function svgSales(){const ps=periodSales(), days={};ps.forEach(s=>days[s.date]=(days[s.date]||0)+s.qty*s.price);const vals=Object.values(days);if(!vals.length)return `<div class="empty">Aún no hay ventas en este periodo.</div>`;const max=Math.max(...vals,1),w=700,h=210,p=25;const pts=Object.entries(days).map(([d,v],i)=>`${p+i*Math.max(1,(w-2*p)/(Object.keys(days).length-1||1))},${h-p-(v/max)*(h-2*p)}`).join(' ');return `<svg class="chart" viewBox="0 0 ${w} ${h}"><line x1="${p}" y1="${h-p}" x2="${w-p}" y2="${h-p}" stroke="#dbe5e2"/><polyline points="${pts}" fill="none" stroke="#0b7a63" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${Object.entries(days).map(([d,v],i)=>{const x=p+i*Math.max(1,(w-2*p)/(Object.keys(days).length-1||1));const y=h-p-(v/max)*(h-2*p);return `<circle cx="${x}" cy="${y}" r="4" fill="#f2b233"><title>${d}: ${money(v)}</title></circle>`}).join('')}</svg>`}
-function insights(top,t){let a=[];if(top[0])a.push(`"${esc(top[0].p.name)}" aporta aproximadamente ${money(top[0].con)} de contribución en el periodo visible.`);if(t.margin<.3)a.push(`El margen bruto calculado es ${pct(t.margin)}. Conviene revisar precios, costos unitarios y mezcla de productos.`);const big=db.expenses.slice().sort((a,b)=>b.amount-a.amount)[0];if(big)a.push(`El mayor egreso registrado es "${esc(big.desc)}" por ${money(big.amount)}. Un gasto elevado no se considera innecesario automáticamente.`);if(!db.sales.length)a.push('No hay ventas suficientes para generar hallazgos.');return a.map(x=>`<div class="insight" style="margin-bottom:8px">${x}</div>`).join('')}
-function sales(){
- const rows=db.sales.filter(s=>!state.search||product(s.productId)?.name.toLowerCase().includes(state.search.toLowerCase())||s.date.includes(state.search));
- return `<div class="grid wide"><div class="card"><div class="card-head"><div><h3>Registrar venta</h3><span class="muted">El importe se calcula automáticamente.</span></div></div>${saleForm()}</div><div class="card"><div class="card-head"><div><h3>Resumen</h3><span class="muted">${rows.length} operaciones visibles</span></div><button class="btn sm" data-action="export-sales">Exportar CSV</button></div><div class="grid g3"><div><span class="eyebrow">Ingresos</span><h2>${money(rows.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0))}</h2></div><div><span class="eyebrow">Unidades</span><h2>${num(rows.reduce((a,s)=>a+s.qty,0))}</h2></div><div><span class="eyebrow">Canal principal</span><h2>${channel(rows)}</h2></div></div></div></div>
- <div class="card"><div class="card-head"><div><h3>Operaciones</h3><span class="muted">Busca, revisa y elimina registros.</span></div><input id="sales-search" placeholder="Buscar producto o fecha" value="${esc(state.search)}"></div>${salesTable(rows)}</div>`
-}
-function saleForm(){return `<form id="sale-form" class="form-grid"><div class="field"><label>Fecha</label><input name="date" type="date" value="2026-10-23" required></div><div class="field"><label>Producto</label><select name="productId">${db.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><div class="field"><label>Cantidad</label><input name="qty" type="number" min="1" value="1" required></div><div class="field"><label>Precio unitario (S/)</label><input name="price" type="number" step=".01" min="0" value="${db.products[0]?.price||0}" required></div><div class="field"><label>Descuento (S/)</label><input name="discount" type="number" step=".01" min="0" value="0"></div><div class="field"><label>Canal</label><select name="channel"><option>Tienda</option><option>WhatsApp</option><option>Instagram</option><option>Marketplace</option><option>Otro</option></select></div><div class="field"><label>Cliente (opcional)</label><input name="customer"></div><div class="field"><label>Observaciones</label><input name="notes"></div><div class="field full"><button class="btn primary">Guardar venta</button></div></form>`}
-function salesTable(rows){if(!rows.length)return `<div class="empty">No hay registros que coincidan.</div>`;return `<div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Producto</th><th>Canal</th><th class="num">Cantidad</th><th class="num">Precio</th><th class="num">Importe</th><th></th></tr></thead><tbody>${rows.slice().reverse().map(s=>`<tr><td>${s.date}</td><td>${esc(product(s.productId)?.name||'—')}</td><td>${esc(s.channel)}</td><td class="num">${s.qty}</td><td class="num">${money(s.price)}</td><td class="num">${money(s.qty*s.price-(s.discount||0))}</td><td><button class="btn sm danger" data-delete-sale="${s.id}">Eliminar</button></td></tr>`).join('')}</tbody></table></div>`}
-function channel(rows){const c={};rows.forEach(s=>c[s.channel]=(c[s.channel]||0)+1);return Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—'}
-function products(){return `<div class="card"><div class="card-head"><div><h3>Catálogo de productos</h3><span class="muted">Precios, costos, stock y categorías.</span></div><button class="btn primary" data-action="new-product">Nuevo producto</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>SKU</th><th>Categoría</th><th class="num">Precio</th><th class="num">Costo</th><th class="num">Stock</th><th>Estado</th><th></th></tr></thead><tbody>${db.products.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${esc(p.sku)}</td><td>${esc(p.cat)}</td><td class="num">${money(p.price)}</td><td class="num">${money(p.cost)}</td><td class="num">${num(p.stock)}</td><td><span class="pill">${esc(p.status)}</span></td><td><button class="btn sm" data-edit-product="${p.id}">Editar</button></td></tr>`).join('')}</tbody></table></div></div>`}
-function expenses(){return `<div class="grid wide"><div class="card"><div class="card-head"><div><h3>Registrar costo o gasto</h3><span class="muted">La clasificación es editable según el negocio.</span></div></div><form id="expense-form" class="form-grid"><div class="field"><label>Fecha</label><input name="date" type="date" value="2026-10-23" required></div><div class="field"><label>Descripción</label><input name="desc" required></div><div class="field"><label>Importe (S/)</label><input name="amount" type="number" step=".01" min="0" required></div><div class="field"><label>Categoría</label><select name="cat"><option>Alquiler</option><option>Sueldos</option><option>Servicios</option><option>Transporte</option><option>Marketing</option><option>Comisiones</option><option>Mercadería</option><option>Materias primas</option><option>Mantenimiento</option><option>Impuestos</option><option>Otros</option></select></div><div class="field"><label>Tipo</label><select name="type"><option>Fijo</option><option>Variable</option><option>Directo</option><option>Operativo</option><option>Otro</option></select></div><div class="field"><label>Frecuencia</label><select name="freq"><option>Único</option><option>Mensual</option><option>Recurrente</option></select></div><div class="field full"><button class="btn primary">Guardar gasto</button></div></form></div><div class="card"><div class="card-head"><div><h3>Concentración de egresos</h3><span class="muted">No se interpreta automáticamente como gasto innecesario.</span></div></div>${expenseBars()}</div></div><div class="card"><div class="card-head"><div><h3>Registros</h3></div><button class="btn sm" data-action="export-expenses">Exportar CSV</button></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Tipo</th><th class="num">Importe</th><th></th></tr></thead><tbody>${db.expenses.slice().reverse().map(e=>`<tr><td>${e.date}</td><td>${esc(e.desc)}</td><td>${esc(e.cat)}</td><td>${esc(e.type)}</td><td class="num">${money(e.amount)}</td><td><button class="btn sm danger" data-delete-expense="${e.id}">Eliminar</button></td></tr>`).join('')}</tbody></table></div></div>`}
-function expenseBars(){const c={};db.expenses.forEach(e=>c[e.cat]=(c[e.cat]||0)+e.amount);const arr=Object.entries(c).sort((a,b)=>b[1]-a[1]);const mx=arr[0]?.[1]||1;return `<div class="bar-list">${arr.map(([k,v])=>`<div class="bar-row"><span>${esc(k)}</span><div class="track"><div class="fill" style="width:${v/mx*100}%"></div></div><b>${money(v)}</b></div>`).join('')}</div>`}
-function inventory(){const low=db.products.filter(p=>p.stock<=12);return `<div class="grid g3">${kpi('Unidades en stock',num(db.products.reduce((a,p)=>a+p.stock,0)),'Inventario actual',true)}${kpi('Productos con stock bajo',num(low.length),'Umbral demostrativo ≤ 12',low.length===0)}${kpi('Sin movimiento','0','Se requiere historial suficiente',true)}</div><div class="card"><div class="card-head"><div><h3>Inventario</h3><span class="muted">Vinculado a productos y ventas del prototipo.</span></div></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th>Categoría</th><th class="num">Stock</th><th class="num">Ventas unidades</th><th>Estado</th></tr></thead><tbody>${db.products.map(p=>{const u=db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0);return `<tr><td>${esc(p.name)}</td><td>${esc(p.cat)}</td><td class="num">${p.stock}</td><td class="num">${u}</td><td>${p.stock<=12?'<span class="pill" style="background:#fff3d8;color:#8a6100">Revisar</span>':'<span class="pill">Normal</span>'}</td></tr>`}).join('')}</tbody></table></div><div class="insight warn" style="margin-top:12px">Las alertas de reposición son orientativas: no se recomienda comprar solo con ventas históricas si no se conocen inventario real, tiempos de reposición y cambios en la demanda.</div></div>`}
-function profit(){const rows=db.products.map(p=>{const ss=db.sales.filter(s=>s.productId==p.id),units=ss.reduce((a,s)=>a+s.qty,0),rev=ss.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0),cost=units*p.cost,gross=rev-cost;return{p,units,rev,cost,gross,margin:rev?gross/rev:0,share:0}});const total=rows.reduce((a,x)=>a+x.rev,0);rows.forEach(x=>x.share=total?x.rev/total:0);return `<div class="card"><div class="card-head"><div><h3>Rentabilidad de mi negocio</h3><span class="muted">Los cálculos usan ventas y costos unitarios registrados.</span></div><button class="btn" data-nav="escenarios">Simular precio</button></div><div class="table-wrap"><table><thead><tr><th>Producto</th><th class="num">Unidades</th><th class="num">Ingresos</th><th class="num">Costos directos</th><th class="num">Margen bruto</th><th class="num">Margen %</th><th class="num">Participación</th></tr></thead><tbody>${rows.sort((a,b)=>b.gross-a.gross).map(x=>`<tr><td><b>${esc(x.p.name)}</b></td><td class="num">${num(x.units)}</td><td class="num">${money(x.rev)}</td><td class="num">${money(x.cost)}</td><td class="num">${money(x.gross)}</td><td class="num">${pct(x.margin)}</td><td class="num">${pct(x.share)}</td></tr>`).join('')}</tbody></table></div><div class="grid g2" style="margin-top:14px"><div class="insight"><b>Lectura:</b> la utilidad bruta es ingresos netos menos costo de productos vendidos. No equivale a utilidad neta porque aún pueden existir gastos operativos, impuestos y otros conceptos.</div><div class="insight warn"><b>Atención:</b> un producto puede tener ventas elevadas y una contribución reducida; revisa precio, costo y volumen conjuntamente.</div></div></div>`}
-function forecast(){const p=product(state.productId)||db.products[0];const ss=db.sales.filter(s=>s.productId==p.id).sort((a,b)=>a.date.localeCompare(b.date));const enough=ss.length>=8;const units=ss.reduce((a,s)=>a+s.qty,0);const avgU=ss.length?units/ss.length:0;let slope=0; if(enough){const ys=ss.map(s=>s.qty),xs=ys.map((_,i)=>i+1),mx=xs.reduce((a,b)=>a+b,0)/xs.length,my=avgU;let d=0,n=0;xs.forEach((x,i)=>{d+=(x-mx)**2;n+=(x-mx)*(ys[i]-my)});slope=d?n/d:0}const forecast=Math.max(0,avgU+slope*4);return `<div class="card"><div class="card-head"><div><h3>Pronóstico de demanda</h3><span class="muted">Método demostrativo de referencia; no es garantía de ventas.</span></div><select id="forecast-product">${db.products.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>${enough?`<div class="grid g3">${kpi('Observaciones',num(ss.length),'Ventas registradas',true)}${kpi('Promedio por operación',num(avgU),'Unidades',true)}${kpi('Referencia próxima',num(forecast),'Escenario de 4 operaciones',true)}</div><div class="insight warn">La referencia se obtiene de una tendencia lineal simple sobre las unidades por operación. Para un modelo econométrico fiable se necesita una estructura temporal adecuada, suficiente historial y variables explicativas; este prototipo no afirma causalidad ni precisión estadística.</div>`:`<div class="empty"><h3>Información insuficiente</h3><p>Se requieren al menos 8 observaciones del producto seleccionado para mostrar una referencia descriptiva. Con menos datos, el sistema evita inventar pronósticos.</p><button class="btn primary" data-nav="ventas">Registrar más ventas</button></div>`}</div>`}
-
-function scenarios(){
- const p=product(state.productId)||db.products[0];
- const d=Number(state.priceDelta||0);
- 
- // Lógica mejorada del simulador
- const currentPrice = p.price;
- const currentCost = p.cost;
- const baseUnits = p.baseSales || db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0) || 100;
- const elasticity = p.elasticity || -1.0;
- 
- const newPrice = currentPrice * (1 + d/100);
- const demandChange = (d/100) * elasticity;
- let simUnits = Math.round(baseUnits * (1 + demandChange));
- if(simUnits < 0) simUnits = 0;
- 
- const baseRev = baseUnits * currentPrice;
- const baseTotalCost = baseUnits * currentCost;
- const baseProfit = baseRev - baseTotalCost;
- 
- const simRev = simUnits * newPrice;
- const simTotalCost = simUnits * currentCost;
- const simProfit = simRev - simTotalCost;
- 
- const profitDiff = simProfit - baseProfit;
- const marginPct = simRev > 0 ? (simProfit/simRev)*100 : 0;
- 
- let alertHtml = '';
- if (simProfit < 0) {
-    alertHtml = `<div class="insight red"><b>🚨 Peligro de Pérdidas:</b> Estás vendiendo por debajo de tu costo total. Modifica el precio urgentemente.</div>`;
- } else if (profitDiff < 0) {
-    alertHtml = `<div class="insight warn"><b>⚠️ Alerta de Canibalización:</b> Vendes mercadería, pero estás perdiendo ${money(Math.abs(profitDiff))} en ganancias respecto al escenario base.</div>`;
- } else if (profitDiff > 0) {
-    alertHtml = `<div class="insight" style="background:#e6f4ea; border-color:#34a853"><b>✅ Estrategia Rentable:</b> Este escenario aumenta tus ganancias en ${money(profitDiff)}.</div>`;
- }
-
- return `<div class="grid wide">
-   <div class="card">
-     <div class="card-head">
-       <div>
-         <h3>Simulador Econométrico</h3>
-         <span class="muted">¿Qué pasaría si cambias tus precios? (Incluye Elasticidad)</span>
-       </div>
-       <select id="scenario-product">${db.products.map(x=>`<option value="${x.id}" ${x.id==p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>
-     </div>
-     <div class="field">
-       <label>Variación del precio de venta: <b id="delta-label" style="color:var(--green)">${d>0?'+':''}${d}%</b></label>
-       <input id="price-range" type="range" min="-30" max="30" step="1" value="${d}">
-       <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>-30%</span><span>Precio Actual</span><span>+30%</span></div>
-     </div>
-     
-     <div class="grid g2" style="margin-top:20px">
-        <div style="border:1px solid var(--line); padding:15px; border-radius:10px;">
-           <span class="eyebrow">Escenario Actual (Base)</span>
-           <div style="margin-top:10px; display:grid; gap:8px;">
-             <div style="display:flex; justify-content:space-between"><span>Precio:</span> <b>${money(currentPrice)}</b></div>
-             <div style="display:flex; justify-content:space-between"><span>Unidades (mes):</span> <b>${num(baseUnits)}</b></div>
-             <div style="display:flex; justify-content:space-between"><span>Ingresos:</span> <b>${money(baseRev)}</b></div>
-             <div style="display:flex; justify-content:space-between; color:var(--green); font-size:16px;"><span>Ganancia Neta:</span> <b>${money(baseProfit)}</b></div>
-           </div>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-mark">E</div>
+        <div>Econométrica<small>ANALISTA VIRTUAL PYME</small></div>
+      </div>
+      <div class="demo-switcher">
+        <div class="demo-switcher-title">🔄 Cambiar Giro de Negocio</div>
+        <select id="demo-selector" onchange="switchDemoBusiness(this.value)">
+          ${demoOptionsHTML()}
+        </select>
+      </div>
+      <div class="biz">
+        <small>Empresa activa</small>
+        <b>${esc(db.business.name)}</b>
+        <span class="muted" style="font-size:11px">${esc(db.business.sector)} · ${db.products.length} productos</span>
+      </div>
+      <nav class="nav">${navHTML()}</nav>
+      <div class="side-bottom">
+        <b>Vista Presentación & Pitch</b>
+        <div>Conoce el video interactivo y los planes de suscripción.</div>
+        <button data-action="landing">Ver Portada & Video Demo</button>
+      </div>
+    </aside>
+    <main>
+      <header class="top">
+        <div>
+          <div class="crumb">Econométrica PYME / ${esc(db.business.name)} / ${nav.find(x => x[0] === state.screen)?.[1] || 'Inicio'}</div>
+          <h1>${nav.find(x => x[0] === state.screen)?.[1] || 'Inicio'}</h1>
         </div>
-        <div style="border:1px solid ${profitDiff<0?'var(--red)':'var(--green)'}; padding:15px; border-radius:10px; background:${profitDiff<0?'#fff0ed':'#f3f8f6'}">
-           <span class="eyebrow">Escenario Simulado</span>
-           <div style="margin-top:10px; display:grid; gap:8px;">
-             <div style="display:flex; justify-content:space-between"><span>Nuevo Precio:</span> <b>${money(newPrice)}</b></div>
-             <div style="display:flex; justify-content:space-between"><span>Unidades est.:</span> <b>${num(simUnits)}</b></div>
-             <div style="display:flex; justify-content:space-between"><span>Nuevos Ingresos:</span> <b>${money(simRev)}</b></div>
-             <div style="display:flex; justify-content:space-between; color:${profitDiff<0?'var(--red)':'var(--green)'}; font-size:16px;"><span>Ganancia Neta:</span> <b>${money(simProfit)}</b></div>
-           </div>
+        <div class="top-actions">
+          <button class="btn" data-action="download-template">⬇️ Plantilla CSV</button>
+          <button class="btn" data-action="import">📂 Subir CSV</button>
+          <button class="btn whatsapp" data-action="whatsapp-preview">📱 Alerta WhatsApp</button>
+          <button class="btn primary" data-action="report">📑 Generar reporte</button>
         </div>
-     </div>
-     <div style="margin-top:15px">${alertHtml}</div>
-   </div>
-   <div class="card">
-     <h3>Impacto en Ganancias y Ventas</h3>
-     <div class="chart-container">
-        <canvas id="scenarioChart"></canvas>
-     </div>
-   </div>
- </div>`;
+      </header>
+      <div class="content">
+        <div class="notice">
+          <span><b>Modo Simulación Activo (${esc(db.business.name)}):</b> Todos los cálculos econométricos, pronósticos y elasticidades operan en tiempo real con tus datos.</span>
+          <button class="btn sm" data-action="landing">🎬 Ver Video Cómo Funciona</button>
+        </div>
+        <div id="screen"></div>
+      </div>
+    </main>
+    <nav class="mobile-nav">
+      ${nav.map(([id, l]) => `<button class="${state.screen === id ? 'active' : ''}" data-nav="${id}">${icon(id)}<span>${l}</span></button>`).join('')}
+    </nav>
+  </div>`;
+  render();
 }
 
-function reports(){return `<div class="card"><div class="card-head"><div><h3>Reporte empresarial</h3><span class="muted">Resumen de ventas, costos, gastos, rentabilidad y alertas.</span></div><div class="toolbar"><button class="btn primary" data-action="generate-report">Generar</button><button class="btn" data-action="print-report">Imprimir / PDF</button></div></div>${state.report?`<div class="report-output">${state.report.map(x=>`<div class="insight" style="margin-bottom:9px">${x}</div>`).join('')}</div>`:`<div class="empty">Genera un reporte para convertir tus datos en un resumen ejecutivo. Las recomendaciones se basan en cálculos visibles.</div>`}</div>`}
-function plans(){const plans=[['Inicial','0',['Productos','Ventas y gastos manuales','Dashboard básico','Reportes limitados']],['Crecimiento','49',['Todo lo anterior','Importación CSV','Rentabilidad por producto','Reportes descargables','Escenarios básicos']],['Inteligencia','99',['Todo lo anterior','Pronósticos sujetos a datos','Sensibilidad de precios','Escenarios avanzados','Indicadores de calidad']]];return `<div class="grid g3">${plans.map((p,i)=>`<div class="card" style="${i===1?'border:2px solid var(--green)':''}"><span class="pill">${i===1?'Más elegido':'Plan'}</span><h2 style="margin:8px 0">${p[0]}</h2><div style="font-size:32px;font-weight:900">S/ ${p[1]}<small style="font-size:12px;color:var(--muted)"> / mes</small></div><ul>${p[2].map(x=>`<li>${x}</li>`).join('')}</ul><button class="btn ${i===1?'primary':''}" data-plan="${p[0]}">Elegir ${p[0]}</button></div>`).join('')}</div><div class="card"><h3>Facturación</h3><p class="muted">Los precios son propuestas iniciales del prototipo, no precios de mercado validados.</p></div>`}
-function config(){return `<div class="grid g2"><div class="card"><div class="card-head"><div><h3>Negocio</h3><span class="muted">Configuración básica del perfil.</span></div></div><form id="config-form" class="form-grid"><div class="field"><label>Nombre del negocio</label><input name="name" value="${esc(db.business.name)}"></div><div class="field"><label>Sector</label><input name="sector" value="${esc(db.business.sector)}"></div><div class="field"><label>Responsable</label><input name="owner" value="${esc(db.business.owner)}"></div><div class="field"><label>Correo</label><input name="email" type="email" value="${esc(db.business.email)}"></div><div class="field"><label>Moneda</label><select name="currency"><option selected>PEN — S/</option></select></div><div class="field"><label>Región</label><select name="region"><option selected>Perú</option></select></div><div class="field full"><button class="btn primary">Guardar configuración</button></div></form></div><div class="card"><h3>Privacidad y datos</h3><p class="muted">Este archivo usa localStorage para persistir el prototipo en el navegador. No implementa autenticación, separación multiempresa en servidor, backend, pasarela de pagos ni almacenamiento cloud.</p><div class="toolbar" style="margin-top:14px"><button class="btn" data-action="export-json">Exportar datos JSON</button><button class="btn danger" data-action="reset">Restablecer demo</button></div></div></div>`}
-function landing(){document.getElementById('app').innerHTML=`<div class="content landing" style="max-width:1200px;margin:auto"><div class="logo" style="color:var(--navy)"><div class="logo-mark">E</div><div>Econométrica<small style="color:var(--green)">PYME</small></div></div><div class="hero"><div><span class="pill" style="background:rgba(255,255,255,.12);color:#fff">SaaS B2B · Perú</span><h2>Convierte los datos de tu negocio en decisiones más rentables.</h2><p>Ventas, costos, gastos, rentabilidad, escenarios y análisis de demanda en una sola plataforma.</p><div class="hero-actions"><button class="btn gold" data-action="enter">Explorar demo</button><button class="btn" data-action="modal-register">Crear cuenta</button></div></div><div class="hero-visual"><div class="mini-dash"><b>Panel ejecutivo</b><div class="mini-grid" style="margin-top:9px"><div class="mini-box"><small>Ventas</small><b>${money(totals().sales)}</b></div><div class="mini-box"><small>Margen bruto</small><b>${pct(totals().margin)}</b></div><div class="mini-box"><small>Productos</small><b>${db.products.length}</b></div></div></div></div></div><div class="grid g3">${['Analiza tus ventas','Descubre tus productos más rentables','Prueba escenarios de precio'].map((x,i)=>`<div class="card feature"><span class="pill">0${i+1}</span><b>${x}</b><span class="muted">${['Visualiza ingresos y evolución por periodo, producto y canal.','Compara ingresos, costos, márgenes y contribución.','Modifica precio, costo y volumen con supuestos visibles.'][i]}</span></div>`).join('')}</div><div class="steps">${['Registra tus datos','Importa o ingresa información','Analiza indicadores y gráficos','Toma decisiones con evidencia'].map((x,i)=>`<div class="step"><span>${i+1}</span><b>${x}</b><p class="muted">Flujo simple para una PYME.</p></div>`).join('')}</div></div>`}
-function openModal(title,body){$('#modal-root').innerHTML=`<div class="modal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow">Econométrica PYME</span><h2>${title}</h2></div><button class="close" data-action="close">×</button></div><div style="margin-top:16px">${body}</div></div></div>`}
-
-function afterRender(){
- $('#period')?.addEventListener('change',e=>{state.period=e.target.value;render()});
- $('#sales-search')?.addEventListener('input',e=>{state.search=e.target.value;render()});
- $('#sale-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.sales.push({id:Date.now(),date:f.get('date'),productId:+f.get('productId'),qty:+f.get('qty'),price:+f.get('price'),discount:+f.get('discount'),channel:f.get('channel'),customer:f.get('customer'),notes:f.get('notes')});save();toast('Venta registrada');render()});
- $('#expense-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.expenses.push({id:Date.now(),date:f.get('date'),desc:f.get('desc'),amount:+f.get('amount'),cat:f.get('cat'),type:f.get('type'),freq:f.get('freq'),product:''});save();toast('Gasto registrado');render()});
- $('#config-form')?.addEventListener('submit',e=>{e.preventDefault();const f=new FormData(e.target);db.business={name:f.get('name'),sector:f.get('sector'),owner:f.get('owner'),email:f.get('email')};save();toast('Configuración guardada');shell()});
- $('#forecast-product')?.addEventListener('change',e=>{state.productId=+e.target.value;render()});
- $('#scenario-product')?.addEventListener('change',e=>{
-    state.productId=+e.target.value;
-    state.priceDelta=0; // reset delta when changing product
-    render();
- });
- 
- $('#price-range')?.addEventListener('input',e=>{
-    state.priceDelta=+e.target.value;
-    render(); // Re-render to update calculations and charts
- });
- 
- if(state.screen === 'escenarios'){
-    drawScenarioChart();
- }
+function render() {
+  const el = $('#screen');
+  if (!el) return;
+  const views = {
+    inicio: home,
+    ventas: sales,
+    productos: products,
+    gastos: expenses,
+    inventario: inventory,
+    rentabilidad: profit,
+    pronosticos: forecast,
+    escenarios: scenarios,
+    reportes: reports,
+    planes: plans,
+    config: config
+  };
+  el.innerHTML = (views[state.screen] || home)();
+  afterRender();
 }
 
-function drawScenarioChart(){
-    const ctx = document.getElementById('scenarioChart');
-    if(!ctx) return;
-    
-    const p=product(state.productId)||db.products[0];
-    const currentPrice = p.price;
-    const currentCost = p.cost;
-    const baseUnits = p.baseSales || db.sales.filter(s=>s.productId==p.id).reduce((a,s)=>a+s.qty,0) || 100;
-    const elasticity = p.elasticity || -1.0;
-    
-    const d = Number(state.priceDelta||0);
-    const newPrice = currentPrice * (1 + d/100);
-    const demandChange = (d/100) * elasticity;
-    let simUnits = Math.round(baseUnits * (1 + demandChange));
-    if(simUnits < 0) simUnits = 0;
-    
-    const baseProfit = (currentPrice - currentCost) * baseUnits;
-    const simProfit = (newPrice - currentCost) * simUnits;
-    
-    if(scenarioChart) {
-        scenarioChart.destroy();
+/* ==================== COMPONENTE DE VIDEO INTERACTIVO Y PLANES ==================== */
+function interactiveVideoHTML() {
+  const steps = [
+    {
+      title: '1. Sube tu Excel o CSV sin cambiar tu caja',
+      desc: 'El emprendedor descarga nuestra plantilla o sube el reporte de su POS. El sistema reconoce productos nuevos, cantidades, costos y canales en menos de 3 segundos.',
+      badge: 'Ingesta sin fricción',
+      mock: `
+        <div style="border:2px dashed #14a37f;background:#f0fdf4;border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:28px">📊 ➡️ ☁️</div>
+          <b style="color:#0b2530;display:block;margin-top:4px">Archivo detectado: ventas_${db.demoKey}.csv</b>
+          <span class="muted" style="font-size:12px">${db.sales.length} transacciones validadas · ${db.products.length} productos activos</span>
+          <div style="margin-top:10px;height:8px;background:#d1fae5;border-radius:99px;overflow:hidden">
+            <div style="width:100%;height:100%;background:#10b981"></div>
+          </div>
+        </div>`
+    },
+    {
+      title: '2. Motor Econométrico (Series de Tiempo + Elasticidad)',
+      desc: 'Nuestra "Caja Negra" calcula automáticamente la sensibilidad al precio de cada producto (elástico vs. inelástico) y proyecta la demanda de los próximos 30 días.',
+      badge: 'Ciencia de datos automatizada',
+      mock: `
+        <div style="display:grid;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#f8fafc;border-radius:8px;border-left:4px solid #0b7a63">
+            <div><b>${esc(db.products[0]?.name)}</b><div class="muted" style="font-size:11px">Elasticidad: ${db.products[0]?.elasticity} (Sensible)</div></div>
+            <span class="pill">Demanda +14%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#f8fafc;border-radius:8px;border-left:4px solid #f2b233">
+            <div><b>${esc(db.products[1]?.name)}</b><div class="muted" style="font-size:11px">Elasticidad: ${db.products[1]?.elasticity} (Inelástico)</div></div>
+            <span class="pill warn">Soporta +5% precio</span>
+          </div>
+        </div>`
+    },
+    {
+      title: '3. Simulador Predictivo "¿Qué pasaría si...?"',
+      desc: 'Antes de lanzar una promoción o subir precios por inflación de proveedores, simula el impacto exacto y descubre el Precio Óptimo que maximiza tu utilidad neta.',
+      badge: 'Decisiones sin adivinar',
+      mock: `
+        <div style="background:#f3f8f6;padding:12px;border-radius:10px;border:1px solid #cbe4dc">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+            <span>🎯 <b>Precio Óptimo Sugerido:</b></span>
+            <b style="color:#0b7a63">${money((db.products[0]?.price || 50) * 0.95)} (-5%)</b>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:12px">
+            <span>💰 <b>Efecto en Utilidad Neta:</b></span>
+            <b style="color:#0b7a63">+12.4% ganancia libre</b>
+          </div>
+          <div class="muted" style="font-size:11px;margin-top:6px">Evita descuentos agresivos de -25% que canibalizan tu margen.</div>
+        </div>`
+    },
+    {
+      title: '4. Alertas Prescriptivas cada lunes en tu WhatsApp',
+      desc: 'Sin entrar a dashboards complicados: cada lunes a las 8:00 AM recibes en lenguaje sencillo qué stock reponer y qué precio ajustar esa semana.',
+      badge: 'Lenguaje 100% claro',
+      mock: `
+        <div style="background:#dcf8c6;padding:12px;border-radius:10px;font-size:12px;color:#111;border:1px solid #b7e49c">
+          <b>📱 EconoMétrica Bot (Lunes 08:00 AM):</b><br>
+          "¡Hola ${esc(db.business.owner.split(' ')[0])}! 🚨 Compra hoy <b>25 unid. de ${esc(db.products[0]?.name)}</b> para no quebrar stock el fin de semana. 💡 En <b>${esc(db.products[1]?.name)}</b> puedes ajustar +4% el precio sin perder clientes."
+        </div>`
     }
-    
-    scenarioChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Base', 'Simulado'],
-            datasets: [
-                {
-                    label: 'Ganancia Neta (S/)',
-                    data: [baseProfit, simProfit],
-                    backgroundColor: ['#dbe5e2', simProfit < 0 ? '#c74735' : (simProfit > baseProfit ? '#14a37f' : '#f2b233')],
-                    borderRadius: 4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
-        }
-    });
+  ];
+  const cur = steps[state.videoStep] || steps[0];
+  return `
+  <div class="video-player" id="interactive-tour">
+    <div class="video-top">
+      <div class="video-dots">
+        <i style="background:#ef4444"></i><i style="background:#f59e0b"></i><i style="background:#10b981"></i>
+        <span style="font-size:12px;font-weight:700;margin-left:6px">🎬 Demo Interactiva: ¿Cómo funciona EconoMétrica PYME en 4 pasos?</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn sm gold" data-action="toggle-video">${state.videoPlaying ? '⏸ Pausar tour' : '▶ Reproducir automático'}</button>
+        <button class="btn sm" data-action="whatsapp-preview">Ver ejemplo WhatsApp</button>
+      </div>
+    </div>
+    <div class="video-stage">
+      <div>
+        <span class="pill" style="background:rgba(20,163,127,.25);color:#6ee7b7;margin-bottom:10px">${cur.badge}</span>
+        <h3 style="font-size:22px;margin:4px 0 10px;color:#fff">${cur.title}</h3>
+        <p style="color:#cbd5e1;font-size:14px;margin:0 0 16px">${cur.desc}</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn sm primary" data-video-step="${(state.videoStep + 1) % 4}">Siguiente paso →</button>
+          <button class="btn sm" data-nav="escenarios">Probar Simulador en vivo</button>
+        </div>
+      </div>
+      <div class="video-Mock">
+        ${cur.mock}
+      </div>
+    </div>
+    <div class="video-controls">
+      <div class="step-tabs" style="grid-column:1/-1">
+        ${steps.map((s, idx) => `<button class="step-tab ${state.videoStep === idx ? 'active' : ''}" data-video-step="${idx}">${s.title.split(' ').slice(0, 3).join(' ')}...</button>`).join('')}
+      </div>
+    </div>
+  </div>`;
 }
 
-document.addEventListener('click',e=>{
- const n=e.target.closest('[data-nav]');if(n){state.screen=n.dataset.nav;state.search='';shell();return}
- const del=e.target.closest('[data-delete-sale]');if(del){db.sales=db.sales.filter(x=>x.id!=del.dataset.deleteSale);save();render();toast('Venta eliminada');return}
- const de=e.target.closest('[data-delete-expense]');if(de){db.expenses=db.expenses.filter(x=>x.id!=de.dataset.deleteExpense);save();render();toast('Gasto eliminado');return}
- const edit=e.target.closest('[data-edit-product]');if(edit){const p=product(edit.dataset.editProduct);openModal('Editar producto',productForm(p));return}
- if(e.target.closest('[data-action="new-product"]')){openModal('Nuevo producto',productForm());return}
- if(e.target.closest('[data-action="import"]')){openModal('Importar CSV',`<p class="muted">Carga un CSV de ventas. La importación es local al navegador.</p><input id="csv-file" type="file" accept=".csv" style="margin:12px 0"><button class="btn primary" data-action="do-import">Validar e importar</button>`);return}
- if(e.target.closest('[data-action="do-import"]')){$('#csv-file')?.click();return}
- if(e.target.closest('[data-action="report"]')){state.screen='reportes';shell();setTimeout(()=>generateReport(),0);return}
- if(e.target.closest('[data-action="generate-report"]')){generateReport();return}
- if(e.target.closest('[data-action="print-report"]')){window.print();return}
- if(e.target.closest('[data-action="export-sales"]')){downloadCSV(db.sales.map(s=>({fecha:s.date,producto:product(s.productId)?.name||'',cantidad:s.qty,precio:s.price,descuento:s.discount,canal:s.channel})),'ventas.csv');return}
- if(e.target.closest('[data-action="export-expenses"]')){downloadCSV(db.expenses.map(x=>({fecha:x.date,descripcion:x.desc,importe:x.amount,categoria:x.cat,tipo:x.type,frecuencia:x.freq})),'gastos.csv');return}
- if(e.target.closest('[data-action="export-json"]')){downloadText(JSON.stringify(db,null,2),'econometrica-datos.json','application/json');return}
- if(e.target.closest('[data-action="download-template"]')){
-     const csvContent = "Fecha,Producto,Cantidad,Precio,Descuento,Canal\n2026-10-01,Producto Ejemplo,2,50.00,0,Tienda";
-     downloadText(csvContent, 'Plantilla_Ventas_Econometrica.csv', 'text/csv');
-     toast('Plantilla descargada');
-     return;
- }
- if(e.target.closest('[data-action="reset"]')){if(confirm('¿Restablecer los datos de demostración?')){localStorage.removeItem(KEY);location.reload()}return}
- if(e.target.closest('[data-action="landing"]')){landing();return}
- if(e.target.closest('[data-action="enter"]')){state.screen='inicio';shell();return}
- if(e.target.closest('[data-action="modal-register"]')){openModal('Crear cuenta',`<form id="register-form" class="form-grid"><div class="field"><label>Nombre del negocio</label><input name="name" required></div><div class="field"><label>Sector</label><select name="sector"><option>Comercio minorista</option><option>Restaurantes y alimentos</option><option>Ropa y accesorios</option><option>Distribución</option><option>Manufactura</option><option>Servicios</option><option>Otros</option></select></div><div class="field"><label>Responsable</label><input name="owner" required></div><div class="field"><label>Correo</label><input name="email" type="email" required></div><div class="field full"><button class="btn primary">Crear cuenta de demostración</button></div></form>`);return}
- if(e.target.closest('[data-action="close"]')){$('#modal-root').innerHTML='';return}
- const plan=e.target.closest('[data-plan]');if(plan){toast('Selección simulada: '+plan.dataset.plan);return}
-});
-document.addEventListener('submit',e=>{
- if(e.target.id==='register-form'){e.preventDefault();const f=new FormData(e.target);db.business={name:f.get('name'),sector:f.get('sector'),owner:f.get('owner'),email:f.get('email')};db.settings={demo:true};save();$('#modal-root').innerHTML='';state.screen='inicio';shell();toast('Cuenta de demostración creada')}
- if(e.target.id==='product-form'){e.preventDefault();const f=new FormData(e.target);const id=+f.get('id')||Date.now();const p={id,name:f.get('name'),sku:f.get('sku'),cat:f.get('cat'),price:+f.get('price'),cost:+f.get('cost'),stock:+f.get('stock'),status:f.get('status')};const i=db.products.findIndex(x=>x.id===id);if(i>=0)db.products[i]=p;else db.products.push(p);save();$('#modal-root').innerHTML='';render();toast('Producto guardado')}
-});
-document.addEventListener('change',e=>{
- if(e.target.id==='csv-file'&&e.target.files[0]) importCSV(e.target.files[0]);
-});
-function productForm(p={}){return `<form id="product-form" class="form-grid"><input type="hidden" name="id" value="${p.id||''}"><div class="field"><label>Nombre</label><input name="name" value="${esc(p.name||'')}" required></div><div class="field"><label>SKU</label><input name="sku" value="${esc(p.sku||'')}"></div><div class="field"><label>Categoría</label><input name="cat" value="${esc(p.cat||'Ropa')}" required></div><div class="field"><label>Precio de venta (S/)</label><input name="price" type="number" step=".01" value="${p.price||0}" required></div><div class="field"><label>Costo unitario (S/)</label><input name="cost" type="number" step=".01" value="${p.cost||0}" required></div><div class="field"><label>Stock</label><input name="stock" type="number" value="${p.stock||0}" required></div><div class="field"><label>Estado</label><select name="status"><option ${p.status==='Activo'?'selected':''}>Activo</option><option ${p.status==='Inactivo'?'selected':''}>Inactivo</option></select></div><div class="field full"><button class="btn primary">Guardar producto</button></div></form>`}
-function generateReport(){const t=totals(), top=db.products.map(p=>{const ss=db.sales.filter(s=>s.productId==p.id),u=ss.reduce((a,s)=>a+s.qty,0),r=ss.reduce((a,s)=>a+s.qty*s.price-(s.discount||0),0),g=r-u*p.cost;return{p,u,r,g}}).sort((a,b)=>b.g-a.g);state.report=[`Resumen ejecutivo: ventas netas ${money(t.sales)}, costos de productos ${money(t.cogs)}, gastos registrados ${money(t.exp)} y utilidad bruta ${money(t.gross)}.`,top[0]?`Producto con mayor contribución bruta estimada: ${esc(top[0].p.name)} con ${money(top[0].g)}.`:'No hay productos con ventas suficientes para comparar.',t.margin<.3?`El margen bruto calculado es ${pct(t.margin)}; conviene revisar precios y costos unitarios.`:`El margen bruto calculado es ${pct(t.margin)}.`,db.expenses.length?`La categoría de gasto con mayor concentración es ${Object.entries(db.expenses.reduce((a,e)=>(a[e.cat]=(a[e.cat]||0)+e.amount,a),{})).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—'}.`:'No hay gastos registrados.',`Nota metodológica: estos cálculos distinguen utilidad bruta de resultado operativo y no constituyen una predicción ni una garantía.`];render()}
-function importCSV(file){const r=new FileReader();r.onload=()=>{const lines=r.result.split(/\r?\n/).filter(Boolean);if(lines.length<2){toast('CSV vacío o inválido');return}const h=lines[0].split(',').map(x=>x.trim().toLowerCase());let ok=0;for(const line of lines.slice(1)){const c=line.split(',');const o={};h.forEach((k,i)=>o[k]=c[i]?.trim()||'');const p=db.products.find(x=>x.name.toLowerCase()===o.producto?.toLowerCase());if(!p||!o.fecha||!o.cantidad||!o.precio)continue;db.sales.push({id:Date.now()+ok,date:o.fecha,productId:p.id,qty:+o.cantidad,price:+o.precio,discount:+o.descuento||0,channel:o.canal||'Otro',customer:'',notes:''});ok++}save();$('#modal-root').innerHTML='';render();toast(`${ok} registros importados`) };r.readAsText(file)}
-function downloadCSV(rows,name){const h=Object.keys(rows[0]||{});const csv=[h.join(','),...rows.map(r=>h.map(k=>`"${String(r[k]??'').replaceAll('"','""')}"`).join(','))].join('\n');downloadText(csv,name,'text/csv')}
-function downloadText(txt,name,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function toast(t){const x=$('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2200)}
+function plansCardsHTML() {
+  const pl = [
+    ['Inicial (Freemium)', '0', 'Para negocios que inician su orden digital', [
+      'Hasta 10 productos en catálogo',
+      'Carga manual y plantilla CSV estándar',
+      'Dashboard descriptivo de ventas y gastos',
+      '1 simulación básica al mes'
+    ]],
+    ['Crecimiento Pro', '49', 'El analista virtual completo para tu PYME', [
+      'Productos y cargas CSV ilimitadas',
+      'Pronósticos IA con bandas de confianza',
+      'Simulador "¿Qué pasaría si...?" + Precio Óptimo',
+      'Alertas prescriptivas cada lunes por WhatsApp',
+      'Reportes ejecutivos descargables en PDF'
+    ]],
+    ['Inteligencia Multilocal', '99', 'Para negocios con varias sedes o alto volumen', [
+      'Todo lo incluido en el plan Crecimiento Pro',
+      'Consolidación de hasta 5 sucursales',
+      'Elasticidad cruzada y alertas de sobrestock',
+      'Integración directa con sistemas POS',
+      'Soporte prioritario y acompañamiento'
+    ]]
+  ];
+  return `<div class="grid g3">${pl.map((p, i) => `
+    <div class="card" style="${i === 1 ? 'border:2px solid var(--green);position:relative;box-shadow:var(--shadow)' : ''}">
+      <span class="pill ${i === 1 ? '' : 'blue'}">${i === 1 ? '⭐ Más elegido por PYMEs' : 'Plan SaaS'}</span>
+      <h2 style="margin:8px 0 4px">${p[0]}</h2>
+      <div class="muted" style="font-size:12px;margin-bottom:10px">${p[2]}</div>
+      <div style="font-size:32px;font-weight:900;color:var(--navy)">S/ ${p[1]}<small style="font-size:12px;color:var(--muted);font-weight:500"> / mes</small></div>
+      <ul style="padding-left:18px;margin:14px 0;display:grid;gap:6px;font-size:13px">${p[3].map(x => `<li>${x}</li>`).join('')}</ul>
+      <button class="btn ${i === 1 ? 'primary' : ''}" style="width:100%;justify-content:center" data-plan="${p[0]}">Elegir ${p[0]}</button>
+    </div>`).join('')}</div>`;
+}
 
-function switchDemoBusiness(key){
-  if(!DEMO_BUSINESSES[key]) return;
+/* ==================== PANTALLA 1: INICIO ==================== */
+function home() {
+  const t = totals(), ps = periodSales();
+  const top = db.products.map(p => {
+    const a = ps.filter(s => s.productId == p.id);
+    const rev = a.reduce((x, s) => x + s.qty * s.price - (s.discount || 0), 0);
+    const u = a.reduce((x, s) => x + s.qty, 0);
+    return { p, rev, u, con: rev - u * p.cost };
+  }).sort((a, b) => b.con - a.con);
+
+  return `<section class="screen">
+    <div class="hero">
+      <div>
+        <span class="pill" style="background:rgba(255,255,255,.15);color:#fff">Analista Financiero Virtual · Rubro: ${esc(db.business.sector)}</span>
+        <h2>Tus hojas de cálculo convertidas en decisiones rentables.</h2>
+        <p>Procesamos tus ventas, costos e inventario con modelos econométricos para decirte en lenguaje sencillo cuánto stock comprar y qué precio fijar.</p>
+        <div class="hero-actions">
+          <button class="btn gold" data-nav="pronosticos">📈 Ver Pronósticos IA</button>
+          <button class="btn primary" data-nav="escenarios">⚡ Simular Precios</button>
+          <button class="btn" data-action="download-template">⬇️ Descargar Plantilla CSV</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="mini-dash">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <b>Resumen Ejecutivo · ${esc(db.business.name)}</b>
+            <span class="pill">Activo</span>
+          </div>
+          <div class="mini-grid" style="margin-top:9px">
+            <div class="mini-box"><small>Ventas netas</small><b>${money(t.sales)}</b></div>
+            <div class="mini-box"><small>Margen bruto</small><b>${pct(t.margin)}</b></div>
+            <div class="mini-box"><small>Utilidad op.</small><b>${money(t.oper)}</b></div>
+          </div>
+          <div style="margin-top:10px;padding:10px;background:#f0fdf4;border-radius:8px;border-left:3px solid #10b981;font-size:12px">
+            <b>💡 Recomendación inmediata:</b> "${esc(top[0]?.p.name)}" genera ${money(top[0]?.con)} de contribución. Revisa su precio óptimo en el simulador.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g4">
+      ${kpi('Ventas netas acumuladas', money(t.sales), `${db.sales.length} transacciones procesadas`, t.sales >= 0)}
+      ${kpi('Costo de mercadería (COGS)', money(t.cogs), 'Costo directo de unidades vendidas', true)}
+      ${kpi('Utilidad bruta', money(t.gross), `Margen bruto: ${pct(t.margin)}`, t.gross >= 0)}
+      ${kpi('Resultado operativo neto', money(t.oper), 'Ventas − Costos − Gastos fijos/op.', t.oper >= 0)}
+    </div>
+
+    <div class="grid wide">
+      <div class="card">
+        <div class="card-head">
+          <div><h3>Evolución temporal de ingresos</h3><span class="muted">Historial registrado de operaciones</span></div>
+          <select id="period">
+            <option value="mes" ${state.period === 'mes' ? 'selected' : ''}>Últimos 35 días</option>
+            <option value="semana" ${state.period === 'semana' ? 'selected' : ''}>Últimos 7 días</option>
+            <option value="trimestre" ${state.period === 'trimestre' ? 'selected' : ''}>Últimos 90 días</option>
+          </select>
+        </div>
+        ${svgSales()}
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Hallazgos del Analista Virtual</h3><span class="muted">Diagnóstico automático en lenguaje simple</span></div></div>
+        ${insights(top, t)}
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <div class="card-head"><div><h3>Contribución neta por producto</h3><span class="muted">Ingresos netos menos costo directo</span></div></div>
+        <div class="bar-list">
+          ${top.map(x => `<div class="bar-row"><span style="overflow:hidden;text-overflow:ellipsis">${esc(x.p.name)}</span><div class="track"><div class="fill" style="width:${Math.max(4, Math.min(100, x.con / (top[0]?.con || 1) * 100))}%"></div></div><b style="text-align:right">${money(x.con)}</b></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Accesos directos de gestión</h3><span class="muted">Explora todas las herramientas</span></div></div>
+        <div class="grid g2">
+          ${quick('📈 Pronósticos de demanda', 'pronosticos')}
+          ${quick('⚡ Simulador ¿Qué pasaría si...?', 'escenarios')}
+          ${quick('📂 Subir archivo CSV / Excel', 'ventas')}
+          ${quick('📱 Ver alerta en WhatsApp', 'reportes')}
+        </div>
+      </div>
+    </div>
+
+    ${interactiveVideoHTML()}
+
+    <div class="card">
+      <div class="card-head">
+        <div><h3>Planes y Membresías SaaS</h3><span class="muted">Invierte menos de lo que cuesta un solo quiebre de inventario</span></div>
+      </div>
+      ${plansCardsHTML()}
+    </div>
+  </section>`;
+}
+
+function kpi(a, b, c, good) {
+  return `<div class="card kpi"><span class="eyebrow">${a}</span><div class="value">${b}</div><div class="${good ? 'up' : 'down'} delta">${c}</div></div>`;
+}
+function quick(t, n) {
+  return `<button class="btn" data-nav="${n}" style="padding:14px;text-align:left;display:block"><b>${t}</b><br><span class="muted" style="font-size:12px">Abrir módulo →</span></button>`;
+}
+
+function svgSales() {
+  const ps = periodSales(), days = {};
+  ps.forEach(s => days[s.date] = (days[s.date] || 0) + s.qty * s.price - (s.discount || 0));
+  const entries = Object.entries(days).sort((a, b) => a[0].localeCompare(b[0]));
+  if (!entries.length) return `<div class="empty">Aún no hay ventas en este rango.</div>`;
+  const vals = entries.map(e => e[1]);
+  const max = Math.max(...vals, 1), w = 700, h = 210, p = 28;
+  const pts = entries.map(([d, v], i) => `${p + i * Math.max(1, (w - 2 * p) / (entries.length - 1 || 1))},${h - p - (v / max) * (h - 2 * p)}`).join(' ');
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}">
+    <line x1="${p}" y1="${h - p}" x2="${w - p}" y2="${h - p}" stroke="#dbe5e2"/>
+    <polyline points="${pts}" fill="none" stroke="#0b7a63" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    ${entries.map(([d, v], i) => {
+      const x = p + i * Math.max(1, (w - 2 * p) / (entries.length - 1 || 1));
+      const y = h - p - (v / max) * (h - 2 * p);
+      return `<circle cx="${x}" cy="${y}" r="4.5" fill="#f2b233"><title>${d}: ${money(v)}</title></circle>`;
+    }).join('')}
+  </svg>`;
+}
+
+function insights(top, t) {
+  const a = [];
+  if (top[0]) a.push(`<b>Producto Estrella:</b> "${esc(top[0].p.name)}" genera ${money(top[0].con)} de ganancia bruta en este periodo.`);
+  const lowStock = db.products.filter(p => p.stock <= (p.minStock || 12));
+  if (lowStock.length) a.push(`<b>Alerta de Stock:</b> Tienes ${lowStock.length} producto(s) cerca al quiebre (${lowStock.map(p => esc(p.name)).slice(0, 2).join(', ')}). Revisa el módulo <i>Pronósticos IA</i>.`);
+  const inel = db.products.find(p => Math.abs(p.elasticity || -1) <= 0.6);
+  if (inel) a.push(`<b>Oportunidad de Margen:</b> "${esc(inel.name)}" tiene demanda inelástica (${inel.elasticity}). Podrías ajustar su precio +5% sin perder clientela.`);
+  const big = db.expenses.slice().sort((x, y) => y.amount - x.amount)[0];
+  if (big) a.push(`<b>Control de Gastos:</b> Tu mayor costo fijo/operativo es "${esc(big.desc)}" (${money(big.amount)}).`);
+  return a.map((x, i) => `<div class="insight ${i === 1 ? 'warn' : ''}" style="margin-bottom:8px">${x}</div>`).join('');
+}
+
+/* ==================== PANTALLA 2: VENTAS ==================== */
+function sales() {
+  const rows = db.sales.filter(s => !state.search || product(s.productId)?.name.toLowerCase().includes(state.search.toLowerCase()) || s.date.includes(state.search));
+  return `<div class="grid wide">
+    <div class="card">
+      <div class="card-head">
+        <div><h3>Registrar nueva venta</h3><span class="muted">Actualiza automáticamente el inventario y las proyecciones</span></div>
+        <button class="btn sm" data-action="import">📂 Importar lote CSV</button>
+      </div>
+      ${saleForm()}
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><h3>Resumen de transacciones</h3><span class="muted">${rows.length} registros activos</span></div>
+        <button class="btn sm" data-action="export-sales">⬇️ Exportar ventas CSV</button>
+      </div>
+      <div class="grid g3">
+        <div><span class="eyebrow">Ingresos netos</span><h2>${money(rows.reduce((a, s) => a + s.qty * s.price - (s.discount || 0), 0))}</h2></div>
+        <div><span class="eyebrow">Unidades</span><h2>${num(rows.reduce((a, s) => a + s.qty, 0))}</h2></div>
+        <div><span class="eyebrow">Canal líder</span><h2>${channel(rows)}</h2></div>
+      </div>
+      <div class="insight" style="margin-top:16px">
+        <b>Tip CSV:</b> Puedes descargar nuestra <b>Plantilla CSV</b> en el botón superior, llenarla en Excel y subirla. Si incluyes productos nuevos, el sistema los creará automáticamente.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div><h3>Historial detallado de ventas</h3><span class="muted">Filtra por nombre de producto o fecha</span></div>
+      <input id="sales-search" placeholder="Buscar producto o fecha..." value="${esc(state.search)}">
+    </div>
+    ${salesTable(rows)}
+  </div>`;
+}
+
+function saleForm() {
+  return `<form id="sale-form" class="form-grid">
+    <div class="field"><label>Fecha</label><input name="date" type="date" value="2026-10-24" required></div>
+    <div class="field"><label>Producto</label><select name="productId" id="sale-prod-select">${db.products.map(p => `<option value="${p.id}" data-price="${p.price}">${esc(p.name)} (${money(p.price)})</option>`).join('')}</select></div>
+    <div class="field"><label>Cantidad</label><input name="qty" type="number" min="1" value="2" required></div>
+    <div class="field"><label>Precio unitario (S/)</label><input name="price" id="sale-price-input" type="number" step=".01" min="0" value="${db.products[0]?.price || 0}" required></div>
+    <div class="field"><label>Descuento total (S/)</label><input name="discount" type="number" step=".01" min="0" value="0"></div>
+    <div class="field"><label>Canal de venta</label><select name="channel"><option>Tienda</option><option>WhatsApp</option><option>Delivery</option><option>Instagram</option><option>Marketplace</option></select></div>
+    <div class="field full"><button class="btn primary">Guardar venta</button></div>
+  </form>`;
+}
+
+function salesTable(rows) {
+  if (!rows.length) return `<div class="empty">No hay registros que coincidan con tu búsqueda.</div>`;
+  return `<div class="table-wrap"><table>
+    <thead><tr><th>Fecha</th><th>Producto</th><th>Canal</th><th class="num">Cant.</th><th class="num">Precio</th><th class="num">Desc.</th><th class="num">Importe Neto</th><th></th></tr></thead>
+    <tbody>${rows.slice().reverse().map(s => `<tr>
+      <td>${s.date}</td>
+      <td><b>${esc(product(s.productId)?.name || '—')}</b></td>
+      <td><span class="pill blue">${esc(s.channel)}</span></td>
+      <td class="num">${s.qty}</td>
+      <td class="num">${money(s.price)}</td>
+      <td class="num">${money(s.discount || 0)}</td>
+      <td class="num"><b>${money(s.qty * s.price - (s.discount || 0))}</b></td>
+      <td><button class="btn sm danger" data-delete-sale="${s.id}">Eliminar</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+
+function channel(rows) {
+  const c = {};
+  rows.forEach(s => c[s.channel] = (c[s.channel] || 0) + 1);
+  return Object.entries(c).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
+}
+
+/* ==================== PANTALLA 3: PRODUCTOS ==================== */
+function products() {
+  return `<div class="card">
+    <div class="card-head">
+      <div><h3>Catálogo maestro de productos y parámetros econométricos</h3><span class="muted">Incluye precio, costo unitario, elasticidad precio de la demanda y estacionalidad</span></div>
+      <button class="btn primary" data-action="new-product">+ Nuevo producto</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Producto</th><th>SKU</th><th>Categoría</th><th class="num">Precio</th><th class="num">Costo</th><th class="num">Margen Unit.</th><th class="num">Stock</th><th>Elasticidad (Sensibilidad)</th><th>Estacionalidad</th><th></th></tr></thead>
+      <tbody>${db.products.map(p => {
+        const m = p.price ? ((p.price - p.cost) / p.price) : 0;
+        const el = Number(p.elasticity || -1.0);
+        const elLabel = Math.abs(el) > 1.3 ? `<span class="pill red">Elástico (${el})</span>` : (Math.abs(el) < 0.7 ? `<span class="pill">Inelástico (${el})</span>` : `<span class="pill warn">Media (${el})</span>`);
+        return `<tr>
+          <td><b>${esc(p.name)}</b></td>
+          <td>${esc(p.sku)}</td>
+          <td>${esc(p.cat)}</td>
+          <td class="num">${money(p.price)}</td>
+          <td class="num">${money(p.cost)}</td>
+          <td class="num"><b>${pct(m)}</b></td>
+          <td class="num">${num(p.stock)}</td>
+          <td>${elLabel}</td>
+          <td><span class="pill blue">${esc(p.seasonTag || 'Constante')}</span></td>
+          <td><button class="btn sm" data-edit-product="${p.id}">Editar</button></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+/* ==================== PANTALLA 4: GASTOS ==================== */
+function expenses() {
+  return `<div class="grid wide">
+    <div class="card">
+      <div class="card-head"><div><h3>Registrar costo o gasto operativo</h3><span class="muted">Impacta directamente en el cálculo de tu utilidad operativa neta</span></div></div>
+      <form id="expense-form" class="form-grid">
+        <div class="field"><label>Fecha</label><input name="date" type="date" value="2026-10-24" required></div>
+        <div class="field"><label>Descripción</label><input name="desc" placeholder="Ej. Pago de luz, flete..." required></div>
+        <div class="field"><label>Importe (S/)</label><input name="amount" type="number" step=".01" min="0" required></div>
+        <div class="field"><label>Categoría</label><select name="cat"><option>Alquiler</option><option>Sueldos</option><option>Servicios</option><option>Transporte</option><option>Marketing</option><option>Materias primas</option><option>Mantenimiento</option><option>Impuestos</option><option>Otros</option></select></div>
+        <div class="field"><label>Tipo de costo</label><select name="type"><option>Fijo</option><option>Variable</option><option>Operativo</option></select></div>
+        <div class="field"><label>Frecuencia</label><select name="freq"><option>Mensual</option><option>Recurrente</option><option>Único</option></select></div>
+        <div class="field full"><button class="btn primary">Guardar gasto</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h3>Distribución de egresos</h3><span class="muted">Estructura de gastos fijos y operativos</span></div></div>
+      ${expenseBars()}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><h3>Historial de egresos</h3></div><button class="btn sm" data-action="export-expenses">⬇️ Exportar CSV</button></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Tipo</th><th>Frecuencia</th><th class="num">Importe</th><th></th></tr></thead>
+      <tbody>${db.expenses.slice().reverse().map(e => `<tr>
+        <td>${e.date}</td><td><b>${esc(e.desc)}</b></td><td>${esc(e.cat)}</td><td>${esc(e.type)}</td><td>${esc(e.freq)}</td><td class="num">${money(e.amount)}</td>
+        <td><button class="btn sm danger" data-delete-expense="${e.id}">Eliminar</button></td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+function expenseBars() {
+  const c = {};
+  db.expenses.forEach(e => c[e.cat] = (c[e.cat] || 0) + e.amount);
+  const arr = Object.entries(c).sort((a, b) => b[1] - a[1]);
+  const mx = arr[0]?.[1] || 1;
+  return `<div class="bar-list">${arr.map(([k, v]) => `<div class="bar-row"><span>${esc(k)}</span><div class="track"><div class="fill" style="width:${v / mx * 100}%"></div></div><b>${money(v)}</b></div>`).join('')}</div>`;
+}
+
+/* ==================== PANTALLA 5: INVENTARIO ==================== */
+function inventory() {
+  const rows = db.products.map(p => {
+    const sold = db.sales.filter(s => s.productId == p.id).reduce((a, s) => a + s.qty, 0);
+    const dailyRate = Math.max(0.3, sold / 60);
+    const daysLeft = Math.round(p.stock / dailyRate);
+    const minS = p.minStock || 12;
+    const reorderQty = Math.max(0, Math.ceil(dailyRate * 30 + minS - p.stock));
+    return { p, sold, dailyRate, daysLeft, minS, reorderQty };
+  });
+  const critical = rows.filter(r => r.p.stock <= r.minS || r.daysLeft <= 10);
+
+  return `<div class="grid g3">
+    ${kpi('Unidades totales en almacén', num(db.products.reduce((a, p) => a + p.stock, 0)), `${db.products.length} referencias activas`, true)}
+    ${kpi('Valorizado de inventario (Costo)', money(db.products.reduce((a, p) => a + p.stock * p.cost, 0)), 'Capital de trabajo en stock', true)}
+    ${kpi('Alertas de reposición', num(critical.length), critical.length ? 'Productos requieren compra hoy' : 'Stock saludable', critical.length === 0)}
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <div><h3>Control inteligente de inventario y cobertura</h3><span class="muted">Cálculo automático de días de cobertura y pedido sugerido al proveedor</span></div>
+      <button class="btn primary" data-nav="pronosticos">Ver pronóstico de demanda →</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Producto</th><th class="num">Stock Actual</th><th class="num">Stock Mínimo</th><th class="num">Rotación (Unid/día)</th><th class="num">Cobertura Estimada</th><th class="num">Compra Sugerida (30d)</th><th>Estado</th></tr></thead>
+      <tbody>${rows.map(r => {
+        const isLow = r.p.stock <= r.minS || r.daysLeft <= 10;
+        return `<tr>
+          <td><b>${esc(r.p.name)}</b></td>
+          <td class="num"><b>${num(r.p.stock)}</b></td>
+          <td class="num">${num(r.minS)}</td>
+          <td class="num">${r.dailyRate.toFixed(1)} / día</td>
+          <td class="num">${r.daysLeft} días</td>
+          <td class="num"><b>${r.reorderQty > 0 ? `+${r.reorderQty} unid.` : '—'}</b></td>
+          <td>${isLow ? `<span class="pill warn">🚨 Reponer pronto</span>` : `<span class="pill">Óptimo</span>`}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+/* ==================== PANTALLA 6: RENTABILIDAD ==================== */
+function profit() {
+  const rows = db.products.map(p => {
+    const ss = db.sales.filter(s => s.productId == p.id);
+    const units = ss.reduce((a, s) => a + s.qty, 0);
+    const rev = ss.reduce((a, s) => a + s.qty * s.price - (s.discount || 0), 0);
+    const cost = units * p.cost;
+    const gross = rev - cost;
+    return { p, units, rev, cost, gross, margin: rev ? gross / rev : 0, share: 0 };
+  });
+  const totalRev = rows.reduce((a, x) => a + x.rev, 0);
+  rows.forEach(x => x.share = totalRev ? x.rev / totalRev : 0);
+
+  return `<div class="card">
+    <div class="card-head">
+      <div><h3>Matriz de Rentabilidad y Contribución por Producto</h3><span class="muted">Identifica qué productos sostienen las ganancias reales de tu negocio</span></div>
+      <button class="btn primary" data-nav="escenarios">⚡ Optimizar precios en el Simulador</button>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Producto</th><th class="num">Unidades Vendidas</th><th class="num">Ingresos Netos</th><th class="num">Costo Directo Total</th><th class="num">Ganancia Bruta</th><th class="num">Margen %</th><th class="num">Peso en Ventas</th><th>Acción</th></tr></thead>
+      <tbody>${rows.sort((a, b) => b.gross - a.gross).map(x => `<tr>
+        <td><b>${esc(x.p.name)}</b></td>
+        <td class="num">${num(x.units)}</td>
+        <td class="num">${money(x.rev)}</td>
+        <td class="num">${money(x.cost)}</td>
+        <td class="num"><b style="color:var(--green)">${money(x.gross)}</b></td>
+        <td class="num"><span class="pill ${x.margin < 0.28 ? 'warn' : ''}">${pct(x.margin)}</span></td>
+        <td class="num">${pct(x.share)}</td>
+        <td><button class="btn sm" data-sim-prod="${x.p.id}">Simular precio →</button></td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+/* ==================== PANTALLA 7: PRONÓSTICOS IA AVANZADOS ==================== */
+function computeForecastData(p, horizonDays, seasonMult) {
+  const ss = db.sales.filter(s => s.productId == p.id).sort((a, b) => a.date.localeCompare(b.date));
+  const ys = ss.map(s => s.qty);
+  const n = ys.length || 1;
+  const avgObs = ys.reduce((a, b) => a + b, 0) / n;
+
+  // Regresión lineal simple sobre serie temporal de observaciones
+  let slope = 0;
+  if (n >= 2) {
+    const xs = ys.map((_, i) => i + 1);
+    const mx = xs.reduce((a, b) => a + b, 0) / n;
+    let numS = 0, denS = 0;
+    xs.forEach((x, i) => { numS += (x - mx) * (ys[i] - avgObs); denS += (x - mx) ** 2; });
+    slope = denS ? numS / denS : 0;
+  }
+
+  // Desviación estándar para bandas de confianza (80% / 95%)
+  const variance = ys.reduce((a, y) => a + (y - avgObs) ** 2, 0) / Math.max(1, n - 1);
+  const stdDev = Math.sqrt(variance) || avgObs * 0.15;
+
+  // Proyección en bloques de 5 días hasta cubrir el horizonte (14, 30 o 60 días)
+  const stepsCount = Math.round(horizonDays / 5);
+  const futureLabels = [];
+  const expectedSeries = [];
+  const upperSeries = [];
+  const lowerSeries = [];
+
+  for (let k = 1; k <= stepsCount; k++) {
+    futureLabels.push(`+${k * 5}d`);
+    const rawProj = Math.max(1, (avgObs + slope * (n + k)) * seasonMult);
+    const expVal = Math.round(rawProj);
+    const band = Math.max(1, Math.round(1.28 * stdDev * Math.sqrt(1 + k * 0.12)));
+    expectedSeries.push(expVal);
+    upperSeries.push(expVal + band);
+    lowerSeries.push(Math.max(0, expVal - band));
+  }
+
+  const totalExpectedUnits = expectedSeries.reduce((a, b) => a + b, 0);
+  const totalOptimisticUnits = upperSeries.reduce((a, b) => a + b, 0);
+  const totalConservativeUnits = lowerSeries.reduce((a, b) => a + b, 0);
+  const dailyDemand = totalExpectedUnits / horizonDays;
+  const safetyStock = Math.ceil(1.65 * stdDev);
+  const daysUntilStockout = dailyDemand > 0 ? Math.max(0, Math.floor(p.stock / dailyDemand)) : 99;
+  const recommendedPurchase = Math.max(0, Math.ceil(totalExpectedUnits + safetyStock - p.stock));
+
+  return {
+    ss, ys, avgObs, slope, stdDev, futureLabels, expectedSeries, upperSeries, lowerSeries,
+    totalExpectedUnits, totalOptimisticUnits, totalConservativeUnits,
+    dailyDemand, safetyStock, daysUntilStockout, recommendedPurchase
+  };
+}
+
+function forecast() {
+  const p = product(state.productId);
+  const horizon = Number(state.forecastHorizon || 30);
+  const seasonMult = Number(state.forecastSeason || 1.0);
+  const fc = computeForecastData(p, horizon, seasonMult);
+  const projectedRevenue = fc.totalExpectedUnits * p.price;
+  const projectedProfit = fc.totalExpectedUnits * (p.price - p.cost);
+
+  return `<div class="screen">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <span class="pill">Series de Tiempo + Bandas de Confianza</span>
+          <h3 style="margin-top:6px">Pronóstico Inteligente de Demanda y Abastecimiento</h3>
+          <span class="muted">Proyección econométrica basada en el historial real del producto y factores estacionales</span>
+        </div>
+        <div class="toolbar">
+          <select id="forecast-product">
+            ${db.products.map(x => `<option value="${x.id}" ${x.id == p.id ? 'selected' : ''}>📦 ${esc(x.name)}</option>`).join('')}
+          </select>
+          <select id="forecast-horizon">
+            <option value="15" ${horizon === 15 ? 'selected' : ''}>Horizonte: Próximos 15 días</option>
+            <option value="30" ${horizon === 30 ? 'selected' : ''}>Horizonte: Próximos 30 días</option>
+            <option value="60" ${horizon === 60 ? 'selected' : ''}>Horizonte: Próximos 60 días</option>
+          </select>
+          <select id="forecast-season">
+            <option value="1" ${seasonMult === 1 ? 'selected' : ''}>Clima/Fecha: Normal (x1.0)</option>
+            <option value="1.2" ${seasonMult === 1.2 ? 'selected' : ''}>Quincena / Campaña (+20%)</option>
+            <option value="1.4" ${seasonMult === 1.4 ? 'selected' : ''}>Temporada Alta (+40%)</option>
+            <option value="0.8" ${seasonMult === 0.8 ? 'selected' : ''}>Temporada Baja (-20%)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid g4" style="margin-bottom:16px">
+        ${kpi(`Demanda proyectada (${horizon}d)`, `${num(fc.totalExpectedUnits)} unid.`, `Rango: ${num(fc.totalConservativeUnits)} a ${num(fc.totalOptimisticUnits)} unid.`, true)}
+        ${kpi('Ingresos proyectados', money(projectedRevenue), `Utilidad bruta est.: ${money(projectedProfit)}`, true)}
+        ${kpi('Cobertura de tu stock actual', `${fc.daysUntilStockout} días`, `Stock hoy: ${p.stock} unid. (Seguridad: ${fc.safetyStock})`, fc.daysUntilStockout > (p.leadTime || 5))}
+        ${kpi('Orden de compra sugerida', `${num(fc.recommendedPurchase)} unid.`, `Inversión en compra: ${money(fc.recommendedPurchase * p.cost)}`, fc.recommendedPurchase === 0)}
+      </div>
+
+      <div class="grid wide">
+        <div style="border:1px solid var(--line);border-radius:12px;padding:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+            <b>Curva Histórica + Proyección con Bandas de Confianza (Optimista / Conservador)</b>
+            <span class="pill blue">Estacionalidad: ${esc(p.seasonTag || 'Constante')}</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="forecastChart"></canvas>
+          </div>
+        </div>
+        <div style="display:grid;gap:10px;align-content:start">
+          <div class="insight ${fc.recommendedPurchase > 0 ? 'warn' : ''}">
+            <b>📋 Recomendación Prescriptiva de Compra:</b><br>
+            ${fc.recommendedPurchase > 0
+              ? `Para cubrir la demanda de los próximos <b>${horizon} días</b> sin sufrir quiebres de inventario, pide <b>${fc.recommendedPurchase} unidades</b> de "${esc(p.name)}" a tu proveedor (Tiempo de entrega estimado: ${p.leadTime || 4} días).`
+              : `Tu stock actual (${p.stock} unid.) es suficiente para cubrir los próximos ${horizon} días. No inmovilices efectivo comprando de más.`}
+          </div>
+          <div class="insight">
+            <b>📈 Tendencia estadística detectada:</b><br>
+            La velocidad de venta es de <b>${fc.dailyDemand.toFixed(1)} unidades/día</b> con una pendiente ${fc.slope >= 0 ? 'positiva en crecimiento' : 'de desaceleración'} (${fc.slope >= 0 ? '+' : ''}${fc.slope.toFixed(2)} por ciclo).
+          </div>
+          <div class="insight">
+            <b>🛡️ Stock de Seguridad Matemático:</b><br>
+            Considerando la variabilidad de tus ventas (±${fc.stdDev.toFixed(1)} unid.), mantén siempre al menos <b>${fc.safetyStock} unidades</b> de reserva para absorber picos inesperados.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ==================== PANTALLA 8: SIMULADOR ¿QUÉ PASARÍA SI...? MEJORADO ==================== */
+function computeScenarioMath(p, priceDelta, costDelta, compDelta, mktSpend) {
+  const basePrice = p.price;
+  const baseCost = p.cost;
+  const baseUnits = p.baseSales || db.sales.filter(s => s.productId == p.id).reduce((a, s) => a + s.qty, 0) || 100;
+  const elasticity = Number(p.elasticity || -1.2);
+
+  const newPrice = +(basePrice * (1 + priceDelta / 100)).toFixed(2);
+  const newCost = +(baseCost * (1 + costDelta / 100)).toFixed(2);
+
+  // Efecto precio propio + elasticidad cruzada de competencia + impulso de marketing
+  const priceEffect = (priceDelta / 100) * elasticity;
+  const crossElasticity = Math.abs(elasticity) * 0.35;
+  const compEffect = (compDelta / 100) * crossElasticity;
+  const mktEffect = mktSpend > 0 ? Math.log10(mktSpend + 1) * 0.055 : 0;
+
+  const simUnits = Math.max(0, Math.round(baseUnits * (1 + priceEffect + compEffect + mktEffect)));
+
+  const baseRev = baseUnits * basePrice;
+  const baseTotalCost = baseUnits * baseCost;
+  const baseProfit = baseRev - baseTotalCost;
+
+  const simRev = simUnits * newPrice;
+  const simTotalCost = simUnits * newCost + mktSpend;
+  const simProfit = simRev - simTotalCost;
+  const profitDiff = simProfit - baseProfit;
+
+  // Buscador de Precio Óptimo (barre de -30% a +30% con los costos/competencia actuales)
+  let bestDelta = 0;
+  let maxProfit = -Infinity;
+  const curveLabels = [];
+  const curveProfits = [];
+
+  for (let d = -30; d <= 30; d += 5) {
+    const testP = basePrice * (1 + d / 100);
+    const testU = Math.max(0, Math.round(baseUnits * (1 + (d / 100) * elasticity + compEffect + mktEffect)));
+    const testProf = testU * (testP - newCost) - mktSpend;
+    curveLabels.push(`${d > 0 ? '+' : ''}${d}%`);
+    curveProfits.push(Math.round(testProf));
+    if (testProf > maxProfit) {
+      maxProfit = testProf;
+      bestDelta = d;
+    }
+  }
+  const optimalPrice = +(basePrice * (1 + bestDelta / 100)).toFixed(2);
+
+  return {
+    basePrice, baseCost, baseUnits, elasticity,
+    newPrice, newCost, simUnits,
+    baseRev, baseTotalCost, baseProfit,
+    simRev, simTotalCost, simProfit, profitDiff,
+    bestDelta, optimalPrice, maxProfit, curveLabels, curveProfits
+  };
+}
+
+function scenarios() {
+  const p = product(state.productId);
+  const elAbs = Math.abs(p.elasticity || -1);
+  const elExplain = elAbs > 1.3
+    ? `<b>Alta sensibilidad (Elástico = ${p.elasticity}):</b> Por cada 10% que subas el precio, las unidades vendidas caen ~${(elAbs * 10).toFixed(0)}%. Conviene competir por volumen o combos.`
+    : (elAbs < 0.7
+      ? `<b>Baja sensibilidad (Inelástico = ${p.elasticity}):</b> Tus clientes son leales o es un producto de urgencia. Puedes trasladar aumentos de costo al precio final sin perder casi ventas.`
+      : `<b>Sensibilidad moderada (Elasticidad = ${p.elasticity}):</b> Los clientes comparan precios pero toleran ajustes moderados si mantienes calidad.`);
+
+  return `<div class="screen">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <span class="pill">Motor de Elasticidad Precio y Cruzada</span>
+          <h3 style="margin-top:6px">Simulador Predictivo "¿Qué pasaría si...?" y Optimizador de Precios</h3>
+          <span class="muted">Mueve los deslizadores para simular cambios de precios, inflación de costos de proveedores, competencia y promociones</span>
+        </div>
+        <div class="toolbar">
+          <select id="scenario-product">
+            ${db.products.map(x => `<option value="${x.id}" ${x.id == p.id ? 'selected' : ''}>🎯 ${esc(x.name)} (${money(x.price)})</option>`).join('')}
+          </select>
+          <button class="btn gold sm" data-action="apply-optimal">✨ Aplicar Precio Óptimo IA</button>
+          <button class="btn sm" data-action="reset-scenario">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="insight" style="margin-bottom:16px">${elExplain}</div>
+
+      <div class="grid wide">
+        <!-- CONTROLES INTERACTIVOS (NO PIERDEN EL FOCO AL ARRASTRAR) -->
+        <div style="border:1px solid var(--line);border-radius:13px;padding:16px;background:#fafcfb;display:grid;gap:14px;align-content:start">
+          <div class="field">
+            <label>1. Variación de tu Precio de Venta: <b id="lbl-price-delta" class="pill">${state.priceDelta > 0 ? '+' : ''}${state.priceDelta}%</b></label>
+            <input id="price-range" type="range" min="-30" max="30" step="1" value="${state.priceDelta}">
+            <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>-30% (Liquidación)</span><span>0% (Actual)</span><span>+30% (Premium)</span></div>
+          </div>
+
+          <div class="field">
+            <label>2. Variación del Costo del Proveedor: <b id="lbl-cost-delta" class="pill warn">${state.costDelta > 0 ? '+' : ''}${state.costDelta}%</b></label>
+            <input id="cost-range" type="range" min="-20" max="50" step="1" value="${state.costDelta}">
+            <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>-20% (Descuento prov.)</span><span>0%</span><span>+50% (Inflación insumo)</span></div>
+          </div>
+
+          <div class="field">
+            <label>3. Precio de tu Competencia Directa: <b id="lbl-comp-delta" class="pill blue">${state.compDelta > 0 ? '+' : ''}${state.compDelta}%</b></label>
+            <input id="comp-range" type="range" min="-25" max="25" step="1" value="${state.compDelta}">
+            <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>-25% (Guerra precios)</span><span>0%</span><span>+25% (Competencia cara)</span></div>
+          </div>
+
+          <div class="field">
+            <label>4. Presupuesto en Publicidad / Promo: <b id="lbl-mkt-spend" class="pill">S/ ${state.mktSpend}</b></label>
+            <input id="mkt-range" type="range" min="0" max="800" step="50" value="${state.mktSpend}">
+            <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px"><span>S/ 0</span><span>S/ 400</span><span>S/ 800</span></div>
+          </div>
+        </div>
+
+        <!-- PANEL DINÁMICO DE RESULTADOS Y ALARMAS -->
+        <div id="scenario-dynamic-panel"></div>
+      </div>
+
+      <!-- GRÁFICOS DUALES -->
+      <div class="grid g2" style="margin-top:18px">
+        <div style="border:1px solid var(--line);border-radius:13px;padding:14px">
+          <b>Comparativa Financiera: Base vs. Simulación (S/)</b>
+          <div class="chart-container"><canvas id="scenarioBarChart"></canvas></div>
+        </div>
+        <div style="border:1px solid var(--line);border-radius:13px;padding:14px">
+          <b>Curva de Optimización: Ganancia Neta según % de Precio</b>
+          <div class="chart-container"><canvas id="scenarioCurveChart"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateScenarioViewOnly() {
+  const panel = $('#scenario-dynamic-panel');
+  if (!panel) return;
+  const p = product(state.productId);
+  const res = computeScenarioMath(p, state.priceDelta, state.costDelta, state.compDelta, state.mktSpend);
+
+  $('#lbl-price-delta').textContent = `${state.priceDelta > 0 ? '+' : ''}${state.priceDelta}% (${money(res.newPrice)})`;
+  $('#lbl-cost-delta').textContent = `${state.costDelta > 0 ? '+' : ''}${state.costDelta}% (${money(res.newCost)})`;
+  $('#lbl-comp-delta').textContent = `${state.compDelta > 0 ? '+' : ''}${state.compDelta}%`;
+  $('#lbl-mkt-spend').textContent = `S/ ${state.mktSpend}`;
+
+  // Alarmas inteligentes
+  const alarms = [];
+  if (res.newPrice <= res.newCost) {
+    alarms.push(`<div class="insight red"><b>🚨 ALERTA CRÍTICA DE PÉRDIDA UNITARIA:</b> Tu precio simulado (${money(res.newPrice)}) es menor o igual al costo unitario (${money(res.newCost)}). Pierdes dinero en cada unidad vendida.</div>`);
+  } else if (res.simProfit < 0) {
+    alarms.push(`<div class="insight red"><b>🚨 PELIGRO DE PÉRDIDA NETA:</b> Los ingresos no alcanzan a cubrir el costo del producto más el gasto de marketing.</div>`);
+  }
+  if (res.simUnits > res.baseUnits && res.profitDiff < 0) {
+    alarms.push(`<div class="insight warn"><b>⚠️ ALERTA DE CANIBALIZACIÓN (Ilusión de Volumen):</b> Vendes +${num(res.simUnits - res.baseUnits)} unidades más, pero tu ganancia neta cae en <b>${money(Math.abs(res.profitDiff))}</b> porque el descuento destruye tu margen.</div>`);
+  }
+  const unitDropPct = res.baseUnits ? ((res.simUnits - res.baseUnits) / res.baseUnits) * 100 : 0;
+  if (unitDropPct <= -25) {
+    alarms.push(`<div class="insight warn"><b>⚠️ RIESGO DE FUGA DE CLIENTES:</b> El alza de precio provoca una caída estimada del <b>${Math.abs(unitDropPct).toFixed(1)}%</b> en las unidades vendidas.</div>`);
+  }
+  if (res.profitDiff > 0) {
+    alarms.push(`<div class="insight"><b>✅ ESTRATEGIA RENTABLE:</b> Este escenario genera <b>+${money(res.profitDiff)} adicionales</b> de ganancia libre al mes respecto a tu situación actual.</div>`);
+  }
+  if (!alarms.length) {
+    alarms.push(`<div class="insight"><b>ℹ️ Escenario Neutro:</b> Modifica los deslizadores de la izquierda o haz clic en <b>"Aplicar Precio Óptimo IA"</b> para maximizar tu utilidad.</div>`);
+  }
+
+  panel.innerHTML = `
+    <div class="grid g2">
+      <div style="border:1px solid var(--line);padding:14px;border-radius:12px;background:#fff">
+        <span class="eyebrow">Escenario Base Actual</span>
+        <div style="margin-top:10px;display:grid;gap:7px;font-size:13px">
+          <div style="display:flex;justify-content:space-between"><span>Precio / Costo unit.:</span><b>${money(res.basePrice)} / ${money(res.baseCost)}</b></div>
+          <div style="display:flex;justify-content:space-between"><span>Demanda mensual:</span><b>${num(res.baseUnits)} unid.</b></div>
+          <div style="display:flex;justify-content:space-between"><span>Facturación bruta:</span><b>${money(res.baseRev)}</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:15px;color:var(--navy);border-top:1px solid var(--line);padding-top:6px"><span>Ganancia Neta Base:</span><b>${money(res.baseProfit)}</b></div>
+        </div>
+      </div>
+
+      <div style="border:2px solid ${res.profitDiff < 0 ? 'var(--red)' : 'var(--green)'};padding:14px;border-radius:12px;background:${res.profitDiff < 0 ? '#fff5f3' : '#f2fbf8'}">
+        <span class="eyebrow">Resultado Simulado (${res.profitDiff >= 0 ? 'Ganancia ↑' : 'Ganancia ↓'})</span>
+        <div style="margin-top:10px;display:grid;gap:7px;font-size:13px">
+          <div style="display:flex;justify-content:space-between"><span>Nuevo Precio / Costo:</span><b>${money(res.newPrice)} / ${money(res.newCost)}</b></div>
+          <div style="display:flex;justify-content:space-between"><span>Demanda proyectada:</span><b>${num(res.simUnits)} unid. (${unitDropPct >= 0 ? '+' : ''}${unitDropPct.toFixed(1)}%)</b></div>
+          <div style="display:flex;justify-content:space-between"><span>Facturación simulada:</span><b>${money(res.simRev)}</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:15px;color:${res.profitDiff < 0 ? 'var(--red)' : 'var(--green)'};border-top:1px solid var(--line);padding-top:6px">
+            <span>Ganancia Neta Sim.:</span><b>${money(res.simProfit)}</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;padding:11px 14px;background:#eef6ff;border-radius:10px;border:1px solid #bfdbfe;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:13px">
+      <span>🎯 <b>Precio Óptimo Matemático detectado:</b> <b>${money(res.optimalPrice)}</b> (${res.bestDelta > 0 ? '+' : ''}${res.bestDelta}%) → Utilidad máxima de <b>${money(res.maxProfit)}</b></span>
+      <button class="btn sm primary" data-action="apply-optimal">Aplicar ${res.bestDelta > 0 ? '+' : ''}${res.bestDelta}%</button>
+    </div>
+
+    <div style="margin-top:12px;display:grid;gap:8px">${alarms.join('')}</div>
+  `;
+
+  drawScenarioCharts(res);
+}
+
+/* ==================== PANTALLA 9: REPORTES ==================== */
+function reports() {
+  if (!state.report) generateReportDataOnly();
+  return `<div class="card">
+    <div class="card-head">
+      <div><h3>Reporte Ejecutivo Prescriptivo</h3><span class="muted">Traduce todos los modelos matemáticos de ${esc(db.business.name)} en acciones concretas para esta semana</span></div>
+      <div class="toolbar">
+        <button class="btn whatsapp" data-action="whatsapp-preview">📱 Ver Resumen en WhatsApp</button>
+        <button class="btn primary" data-action="generate-report">🔄 Actualizar análisis</button>
+        <button class="btn" data-action="print-report">🖨️ Imprimir / Guardar PDF</button>
+      </div>
+    </div>
+    <div class="report-output" style="display:grid;gap:10px">
+      ${(state.report || []).map(x => `<div class="insight">${x}</div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function generateReportDataOnly() {
+  const t = totals();
+  const top = db.products.map(p => {
+    const ss = db.sales.filter(s => s.productId == p.id);
+    const u = ss.reduce((a, s) => a + s.qty, 0);
+    const r = ss.reduce((a, s) => a + s.qty * s.price - (s.discount || 0), 0);
+    const g = r - u * p.cost;
+    const fc = computeForecastData(p, 30, 1.0);
+    const opt = computeScenarioMath(p, 0, 0, 0, 0);
+    return { p, u, r, g, fc, opt };
+  }).sort((a, b) => b.g - a.g);
+
+  const needRestock = top.filter(x => x.fc.recommendedPurchase > 0);
+  const priceOpps = top.filter(x => x.opt.bestDelta !== 0);
+
+  state.report = [
+    `<b>1. Diagnóstico Financiero General (${esc(db.business.name)}):</b> Se procesaron <b>${db.sales.length} transacciones</b> con ventas netas de <b>${money(t.sales)}</b>, costo de mercadería de <b>${money(t.cogs)}</b> (Margen Bruto: <b>${pct(t.margin)}</b>) y gastos operativos de <b>${money(t.exp)}</b>, dejando una Utilidad Operativa Neta de <b>${money(t.oper)}</b>.`,
+    top[0] ? `<b>2. Producto Líder en Contribución:</b> "${esc(top[0].p.name)}" genera <b>${money(top[0].g)}</b> de ganancia bruta con ${num(top[0].u)} unidades vendidas. Su demanda proyectada para los próximos 30 días es de <b>${num(top[0].fc.totalExpectedUnits)} unidades</b>.` : '',
+    needRestock.length
+      ? `<b>3. Acción Inmediata de Abastecimiento (Evitar Quiebre de Stock):</b> Reponer prioritariamente: ${needRestock.slice(0, 3).map(x => `<b>${esc(x.p.name)}</b> (pedir +${x.fc.recommendedPurchase} unid., cobertura actual de ${x.fc.daysUntilStockout} días)`).join('; ')}.`
+      : `<b>3. Estado de Inventario:</b> Todas las referencias cuentan con stock suficiente para los próximos 30 días.`,
+    priceOpps.length
+      ? `<b>4. Optimización Econométrica de Precios (Elasticidad):</b> En <b>"${esc(priceOpps[0].p.name)}"</b> (Elasticidad ${priceOpps[0].p.elasticity}), ajustar el precio a <b>${money(priceOpps[0].opt.optimalPrice)} (${priceOpps[0].opt.bestDelta > 0 ? '+' : ''}${priceOpps[0].opt.bestDelta}%)</b> elevaría la ganancia mensual del producto a <b>${money(priceOpps[0].opt.maxProfit)}</b>.`
+      : `<b>4. Fijación de Precios:</b> Tus precios actuales se encuentran en el punto de equilibrio óptimo.`,
+    `<b>5. Control de Liquidez y Gastos:</b> El gasto fijo/operativo representa el <b>${pct(t.sales ? t.exp / t.sales : 0)}</b> de los ingresos totales. Evita promociones generalizadas mayores al 15% en productos inelásticos para no erosionar tu flujo de caja.`
+  ].filter(Boolean);
+}
+
+/* ==================== PANTALLA 10: PLANES ==================== */
+function plans() {
+  return `<div class="screen">
+    ${plansCardsHTML()}
+    <div class="card">
+      <h3>Preguntas frecuentes sobre la suscripción</h3>
+      <div class="grid g2" style="margin-top:12px">
+        <div class="insight"><b>¿Necesito cambiar mi sistema de facturación actual?</b><br>No. EconoMétrica PYME lee el Excel o CSV que exportas de cualquier caja o tu propio registro en plantilla.</div>
+        <div class="insight"><b>¿Cómo funcionan las alertas por WhatsApp?</b><br>Cada lunes a las 8:00 AM nuestro motor envía un resumen de 3 puntos con qué comprar y qué precios ajustar.</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ==================== PANTALLA 11: CONFIGURACIÓN ==================== */
+function config() {
+  return `<div class="grid g2">
+    <div class="card">
+      <div class="card-head"><div><h3>Perfil del Negocio y WhatsApp de Alertas</h3><span class="muted">Personaliza los datos de la empresa activa</span></div></div>
+      <form id="config-form" class="form-grid">
+        <div class="field"><label>Nombre comercial</label><input name="name" value="${esc(db.business.name)}" required></div>
+        <div class="field"><label>Giro / Sector</label><input name="sector" value="${esc(db.business.sector)}" required></div>
+        <div class="field"><label>Encargado / Dueño</label><input name="owner" value="${esc(db.business.owner)}" required></div>
+        <div class="field"><label>WhatsApp para reportes (Lunes 8 AM)</label><input name="whatsapp" value="${esc(db.business.whatsapp || '+51 999 888 777')}" required></div>
+        <div class="field"><label>Correo electrónico</label><input name="email" type="email" value="${esc(db.business.email)}"></div>
+        <div class="field"><label>Moneda oficial</label><select name="currency"><option selected>PEN — Soles (S/)</option></select></div>
+        <div class="field full"><button class="btn primary">Guardar cambios</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <h3>Respaldo de Base de Datos y Reinicio</h3>
+      <p class="muted">Puedes descargar toda tu base de datos en JSON, exportar la plantilla CSV oficial o restablecer los 5 negocios de demostración de fábrica.</p>
+      <div class="toolbar" style="margin-top:14px">
+        <button class="btn" data-action="download-template">⬇️ Plantilla CSV</button>
+        <button class="btn" data-action="export-json">📦 Exportar Backup JSON</button>
+        <button class="btn danger" data-action="reset">🔄 Restablecer datos de fábrica</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ==================== PORTADA / LANDING CON VIDEO Y PLANES ==================== */
+function landing() {
+  const t = totals();
+  document.getElementById('app').innerHTML = `
+  <div class="content landing" style="max-width:1260px;margin:auto;padding-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div class="logo" style="color:var(--navy)">
+        <div class="logo-mark">E</div>
+        <div>Econométrica<small style="color:var(--green)">ANALISTA FINANCIERO VIRTUAL PYME</small></div>
+      </div>
+      <div class="toolbar">
+        <select onchange="switchDemoBusiness(this.value)" style="font-weight:700;border-color:var(--green)">${demoOptionsHTML()}</select>
+        <button class="btn" data-action="whatsapp-preview">📱 Ver Alerta WhatsApp</button>
+        <button class="btn primary" data-action="enter">Entrar al Software →</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <span class="pill" style="background:rgba(255,255,255,.15);color:#fff">Plataforma SaaS B2B · Democratizando la Econometría</span>
+        <h2>El analista financiero virtual que traduce tu Excel en ganancias reales.</h2>
+        <p>Predice la demanda futura para evitar quiebres de stock y calcula la elasticidad de tus precios para saber exactamente cuánto cobrar sin perder clientes.</p>
+        <div class="hero-actions">
+          <button class="btn gold" data-action="enter">🚀 Probar Demo Interactiva (${esc(db.business.name)})</button>
+          <button class="btn" data-action="download-template">⬇️ Descargar Plantilla CSV</button>
+          <button class="btn" data-action="modal-register">Crear cuenta PYME</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="mini-dash">
+          <b>Vista en vivo · ${esc(db.business.name)}</b>
+          <div class="mini-grid" style="margin-top:9px">
+            <div class="mini-box"><small>Ventas</small><b>${money(t.sales)}</b></div>
+            <div class="mini-box"><small>Margen bruto</small><b>${pct(t.margin)}</b></div>
+            <div class="mini-box"><small>Catálogo</small><b>${db.products.length} ítems</b></div>
+          </div>
+          <div style="margin-top:10px;padding:10px;background:#e7f5f0;border-radius:8px;font-size:12px;color:#0b2530">
+            <b>🎯 Diferencial Prescriptivo:</b> No te damos gráficos mudos; te decimos <i>"Compra 25 unidades hoy"</i> o <i>"Ajusta +5% el precio sin perder margen"</i>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO INTERACTIVO EN LA PANTALLA DE INICIO -->
+    ${interactiveVideoHTML()}
+
+    <!-- SELECTOR RÁPIDO DE LOS 5 RUBROS -->
+    <div class="card">
+      <div class="card-head">
+        <div><h3>Versatilidad comprobada en 5 giros de negocio</h3><span class="muted">Haz clic en cualquier rubro para cargar su catálogo, historial de ventas y elasticidades reales</span></div>
+      </div>
+      <div class="grid g3">
+        ${Object.entries(DEMO_BUSINESSES).map(([k, v]) => `
+          <div class="demo-card ${db.demoKey === k ? 'active' : ''}" onclick="switchDemoBusiness('${k}')">
+            <span class="pill">${esc(v.business.sector)}</span>
+            <h4 style="margin-top:8px">${esc(v.business.name)}</h4>
+            <p>${v.products.length} productos configurados (${v.products.slice(0, 2).map(p => esc(p.name)).join(', ')}...)</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- PLANES EN LA PANTALLA DE INICIO -->
+    <div class="card">
+      <div class="card-head">
+        <div><h3>Planes y Suscripciones Transparentes</h3><span class="muted">Sin costos de instalación ni personal técnico</span></div>
+      </div>
+      ${plansCardsHTML()}
+    </div>
+  </div>`;
+}
+
+/* ==================== GRÁFICOS (CHART.JS) ==================== */
+function drawForecastChart() {
+  const ctx = document.getElementById('forecastChart');
+  if (!ctx) return;
+  const p = product(state.productId);
+  const horizon = Number(state.forecastHorizon || 30);
+  const seasonMult = Number(state.forecastSeason || 1.0);
+  const fc = computeForecastData(p, horizon, seasonMult);
+
+  if (forecastChartInstance) forecastChartInstance.destroy();
+
+  const histLabels = fc.ss.map(s => s.date.slice(5));
+  const allLabels = [...histLabels, ...fc.futureLabels];
+  const histData = [...fc.ys, ...fc.futureLabels.map(() => null)];
+  const expData = [...fc.ys.map((_, i) => i === fc.ys.length - 1 ? fc.ys[i] : null), ...fc.expectedSeries];
+  const upData = [...fc.ys.map((_, i) => i === fc.ys.length - 1 ? fc.ys[i] : null), ...fc.upperSeries];
+  const lowData = [...fc.ys.map((_, i) => i === fc.ys.length - 1 ? fc.ys[i] : null), ...fc.lowerSeries];
+
+  forecastChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: allLabels,
+      datasets: [
+        { label: 'Ventas Históricas (Unid.)', data: histData, borderColor: '#0b2530', backgroundColor: '#0b2530', borderWidth: 2.5, tension: 0.25, pointRadius: 3 },
+        { label: 'Pronóstico Esperado IA', data: expData, borderColor: '#0b7a63', backgroundColor: '#0b7a63', borderDash: [6, 4], borderWidth: 3, tension: 0.25, pointRadius: 4 },
+        { label: 'Banda Optimista (+)', data: upData, borderColor: 'rgba(20,163,127,0.35)', backgroundColor: 'rgba(20,163,127,0.12)', fill: '+1', borderWidth: 1, pointRadius: 0, tension: 0.25 },
+        { label: 'Banda Conservadora (-)', data: lowData, borderColor: 'rgba(242,178,51,0.5)', backgroundColor: 'transparent', borderWidth: 1, pointRadius: 0, tension: 0.25 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+}
+
+function drawScenarioCharts(res) {
+  const ctxBar = document.getElementById('scenarioBarChart');
+  const ctxCurve = document.getElementById('scenarioCurveChart');
+  if (ctxBar) {
+    if (scenarioBarChartInstance) scenarioBarChartInstance.destroy();
+    scenarioBarChartInstance = new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels: ['Ingresos Brutos', 'Costos + Marketing', 'Ganancia Neta Libre'],
+        datasets: [
+          { label: 'Escenario Base', data: [res.baseRev, res.baseTotalCost, res.baseProfit], backgroundColor: '#94a3b8', borderRadius: 6 },
+          { label: 'Escenario Simulado', data: [res.simRev, res.simTotalCost, res.simProfit], backgroundColor: ['#0b2530', '#c74735', res.simProfit >= res.baseProfit ? '#14a37f' : '#f2b233'], borderRadius: 6 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+    });
+  }
+  if (ctxCurve) {
+    if (scenarioCurveChartInstance) scenarioCurveChartInstance.destroy();
+    scenarioCurveChartInstance = new Chart(ctxCurve, {
+      type: 'line',
+      data: {
+        labels: res.curveLabels,
+        datasets: [{
+          label: 'Ganancia Neta Mensual (S/) según variación de precio',
+          data: res.curveProfits,
+          borderColor: '#0b7a63',
+          backgroundColor: 'rgba(20,163,127,0.14)',
+          fill: true,
+          tension: 0.35,
+          borderWidth: 3,
+          pointRadius: res.curveLabels.map(l => l === `${res.bestDelta > 0 ? '+' : ''}${res.bestDelta}%` ? 7 : 3),
+          pointBackgroundColor: res.curveLabels.map(l => l === `${res.bestDelta > 0 ? '+' : ''}${res.bestDelta}%` ? '#f2b233' : '#0b7a63')
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+    });
+  }
+}
+
+/* ==================== IMPORTADOR CSV INTELIGENTE Y PLANTILLA FUNCIONAL ==================== */
+function generateTemplateCSVContent() {
+  const p1 = db.products[0] || { name: 'Producto Ejemplo A', price: 45, cost: 25 };
+  const p2 = db.products[1] || { name: 'Producto Ejemplo B', price: 80, cost: 48 };
+  return [
+    'Fecha,Producto,Cantidad,Precio,Costo_Unitario,Descuento,Canal',
+    `2026-10-25,"${p1.name}",5,${p1.price},${p1.cost},0,Tienda`,
+    `2026-10-26,"${p2.name}",3,${p2.price},${p2.cost},5,WhatsApp`,
+    `2026-10-27,"Producto Nuevo CSV",6,35.00,19.00,0,Delivery`,
+    `2026-10-28,"${p1.name}",8,${p1.price},${p1.cost},0,Instagram`
+  ].join('\n');
+}
+
+function parseCSVLine(line, delimiter) {
+  const result = [];
+  let cur = '', inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') { inQuotes = !inQuotes; continue; }
+    if (ch === delimiter && !inQuotes) { result.push(cur.trim()); cur = ''; }
+    else { cur += ch; }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function importCSVText(rawText) {
+  const clean = rawText.replace(/^\uFEFF/, '').trim();
+  const lines = clean.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if (lines.length < 2) { toast('El archivo CSV está vacío'); return; }
+
+  const delimiter = lines[0].includes(';') && !lines[0].includes(',') ? ';' : ',';
+  const headers = parseCSVLine(lines[0], delimiter).map(h => h.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+
+  let imported = 0, createdProducts = 0;
+  for (const line of lines.slice(1)) {
+    const cols = parseCSVLine(line, delimiter);
+    if (cols.length < 3) continue;
+    const row = {};
+    headers.forEach((h, i) => row[h] = cols[i] ?? '');
+
+    const prodName = (row.producto || row.nombre_producto || row.nombre || row.item || cols[1] || '').trim();
+    const dateRaw = (row.fecha || row.date || cols[0] || '2026-10-25').trim();
+    const qty = Math.max(1, parseFloat(row.cantidad || row.cantidad_vendida || row.unidades || cols[2] || '1') || 1);
+    const price = Math.max(0, parseFloat(row.precio || row.precio_unitario_venta || row.precio_venta || cols[3] || '0') || 0);
+    const costInCsv = parseFloat(row.costo_unitario || row.costo || row.costo_unitario_insumo || '0');
+    const discount = Math.max(0, parseFloat(row.descuento || '0') || 0);
+    const channelName = (row.canal || 'Tienda').trim();
+
+    if (!prodName || price <= 0) continue;
+
+    // Busca el producto o lo crea automáticamente si no existe
+    let p = db.products.find(x => x.name.toLowerCase() === prodName.toLowerCase());
+    if (!p) {
+      const newId = db.products.reduce((m, x) => Math.max(m, x.id), 0) + 1;
+      const estCost = costInCsv > 0 ? costInCsv : +(price * 0.62).toFixed(2);
+      p = {
+        id: newId,
+        name: prodName,
+        sku: `CSV-00${newId}`,
+        cat: row.categoria || 'General',
+        price: price,
+        cost: estCost,
+        stock: 35,
+        minStock: 10,
+        status: 'Activo',
+        elasticity: -1.2,
+        baseSales: qty * 18,
+        leadTime: 4,
+        seasonTag: 'Importado CSV'
+      };
+      db.products.push(p);
+      createdProducts++;
+    }
+
+    db.sales.push({
+      id: Date.now() + imported,
+      date: /^\d{4}-\d{2}-\d{2}$/.test(dateRaw) ? dateRaw : '2026-10-25',
+      productId: p.id,
+      qty,
+      price,
+      discount,
+      channel: channelName,
+      customer: '',
+      notes: 'Importado vía CSV'
+    });
+    p.stock = Math.max(0, (p.stock || 0) - qty);
+    imported++;
+  }
+
+  save();
+  $('#modal-root').innerHTML = '';
+  shell();
+  toast(`✅ ${imported} ventas importadas (${createdProducts} productos nuevos creados)`);
+}
+
+/* ==================== MODAL DE ALERTA DE WHATSAPP ==================== */
+function openWhatsAppModal() {
+  generateReportDataOnly();
+  const p0 = db.products[0];
+  const fc0 = computeForecastData(p0, 15, 1.0);
+  const opt0 = computeScenarioMath(p0, 0, 0, 0, 0);
+
+  openModal('Vista Previa: Alerta Semanal en WhatsApp', `
+    <p class="muted" style="margin-top:0">Así recibe el emprendedor sus recomendaciones cada lunes a las 8:00 AM sin tener que entrar a hojas de cálculo:</p>
+    <div class="wa-phone">
+      <div class="wa-header">
+        <div class="wa-avatar">E</div>
+        <div>
+          <b style="display:block;font-size:14px">EconoMétrica PYME Bot ✅</b>
+          <span style="font-size:11px;opacity:.85">En línea · Analista Financiero Virtual</span>
+        </div>
+      </div>
+      <div class="wa-body">
+        <div class="wa-bubble">
+          👋 <b>¡Buen lunes, ${esc(db.business.owner)}!</b><br>
+          Analicé las <b>${db.sales.length} ventas</b> de <b>${esc(db.business.name)}</b>. Aquí tienes tus 3 decisiones clave para ganar más dinero esta semana:
+          <span class="wa-time">08:00 AM ✓✓</span>
+        </div>
+        <div class="wa-bubble">
+          🚨 <b>1. Alerta de Stock (Pronóstico 15 días):</b><br>
+          En <b>${esc(p0.name)}</b> te quedan ${p0.stock} unidades (${fc0.daysUntilStockout} días de cobertura). <b>Pide hoy ${Math.max(15, fc0.recommendedPurchase)} unidades</b> a tu proveedor para evitar quiebres este fin de semana.
+          <span class="wa-time">08:00 AM ✓✓</span>
+        </div>
+        <div class="wa-bubble">
+          💡 <b>2. Oportunidad de Precio (Elasticidad ${p0.elasticity}):</b><br>
+          El precio óptimo calculado para <b>${esc(p0.name)}</b> es <b>${money(opt0.optimalPrice)} (${opt0.bestDelta > 0 ? '+' : ''}${opt0.bestDelta}%)</b>, proyectando una utilidad neta mensual de <b>${money(opt0.maxProfit)}</b>.
+          <span class="wa-time">08:01 AM ✓✓</span>
+        </div>
+        <div class="wa-bubble">
+          📊 <b>3. Resumen de Liquidez:</b><br>
+          Margen bruto actual: <b>${pct(totals().margin)}</b> · Utilidad operativa libre: <b>${money(totals().oper)}</b>.
+          <span class="wa-time">08:01 AM ✓✓</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <span class="muted" style="font-size:12px">Destino configurado: <b>${esc(db.business.whatsapp || '+51 987 654 321')}</b></span>
+      <button class="btn whatsapp" onclick="toast('Alerta de prueba enviada a WhatsApp');document.getElementById('modal-root').innerHTML=''">📲 Simular envío ahora</button>
+    </div>
+  `);
+}
+
+function openModal(title, body) {
+  $('#modal-root').innerHTML = `<div class="modal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow">Econométrica PYME</span><h2>${title}</h2></div><button class="close" data-action="close">×</button></div><div style="margin-top:14px">${body}</div></div></div>`;
+}
+
+function productForm(p = {}) {
+  return `<form id="product-form" class="form-grid">
+    <input type="hidden" name="id" value="${p.id || ''}">
+    <div class="field"><label>Nombre del producto</label><input name="name" value="${esc(p.name || '')}" required></div>
+    <div class="field"><label>Código SKU</label><input name="sku" value="${esc(p.sku || 'PROD-009')}"></div>
+    <div class="field"><label>Categoría</label><input name="cat" value="${esc(p.cat || 'General')}" required></div>
+    <div class="field"><label>Precio de venta (S/)</label><input name="price" type="number" step=".01" value="${p.price || 35}" required></div>
+    <div class="field"><label>Costo unitario (S/)</label><input name="cost" type="number" step=".01" value="${p.cost || 20}" required></div>
+    <div class="field"><label>Stock disponible</label><input name="stock" type="number" value="${p.stock ?? 25}" required></div>
+    <div class="field"><label>Elasticidad precio (ej. -1.8 elástico, -0.4 inelástico)</label><input name="elasticity" type="number" step=".1" value="${p.elasticity ?? -1.2}" required></div>
+    <div class="field"><label>Estacionalidad</label><input name="seasonTag" value="${esc(p.seasonTag || 'Constante')}"></div>
+    <div class="field full"><button class="btn primary">Guardar producto</button></div>
+  </form>`;
+}
+
+/* ==================== EVENTOS Y CICLO DE VIDA ==================== */
+function afterRender() {
+  $('#period')?.addEventListener('change', e => { state.period = e.target.value; render(); });
+  $('#sales-search')?.addEventListener('input', e => { state.search = e.target.value; render(); });
+  $('#sale-prod-select')?.addEventListener('change', e => {
+    const p = product(+e.target.value);
+    const inp = $('#sale-price-input');
+    if (p && inp) inp.value = p.price;
+  });
+
+  $('#sale-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const pid = +f.get('productId'), qty = +f.get('qty');
+    db.sales.push({ id: Date.now(), date: f.get('date'), productId: pid, qty, price: +f.get('price'), discount: +f.get('discount'), channel: f.get('channel'), customer: '', notes: '' });
+    const p = product(pid);
+    if (p) p.stock = Math.max(0, p.stock - qty);
+    save(); toast('✅ Venta registrada e inventario actualizado'); render();
+  });
+
+  $('#expense-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    db.expenses.push({ id: Date.now(), date: f.get('date'), desc: f.get('desc'), amount: +f.get('amount'), cat: f.get('cat'), type: f.get('type'), freq: f.get('freq') });
+    save(); toast('✅ Gasto registrado'); render();
+  });
+
+  $('#config-form')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    db.business = { name: f.get('name'), sector: f.get('sector'), owner: f.get('owner'), whatsapp: f.get('whatsapp'), email: f.get('email') };
+    save(); toast('✅ Configuración guardada'); shell();
+  });
+
+  // Eventos de Pronósticos
+  $('#forecast-product')?.addEventListener('change', e => { state.productId = +e.target.value; render(); });
+  $('#forecast-horizon')?.addEventListener('change', e => { state.forecastHorizon = +e.target.value; render(); });
+  $('#forecast-season')?.addEventListener('change', e => { state.forecastSeason = +e.target.value; render(); });
+  if (state.screen === 'pronosticos') drawForecastChart();
+
+  // Eventos del Simulador (sin re-renderizar los sliders para no perder foco al arrastrar)
+  $('#scenario-product')?.addEventListener('change', e => {
+    state.productId = +e.target.value;
+    state.priceDelta = 0; state.costDelta = 0; state.compDelta = 0; state.mktSpend = 0;
+    render();
+  });
+  $('#price-range')?.addEventListener('input', e => { state.priceDelta = +e.target.value; updateScenarioViewOnly(); });
+  $('#cost-range')?.addEventListener('input', e => { state.costDelta = +e.target.value; updateScenarioViewOnly(); });
+  $('#comp-range')?.addEventListener('input', e => { state.compDelta = +e.target.value; updateScenarioViewOnly(); });
+  $('#mkt-range')?.addEventListener('input', e => { state.mktSpend = +e.target.value; updateScenarioViewOnly(); });
+  if (state.screen === 'escenarios') updateScenarioViewOnly();
+}
+
+function startVideoTour() {
+  stopVideoTour();
+  state.videoPlaying = true;
+  videoTimer = setInterval(() => {
+    state.videoStep = (state.videoStep + 1) % 4;
+    const container = $('#interactive-tour');
+    if (container) container.outerHTML = interactiveVideoHTML();
+    else stopVideoTour();
+  }, 3200);
+}
+function stopVideoTour() {
+  state.videoPlaying = false;
+  if (videoTimer) { clearInterval(videoTimer); videoTimer = null; }
+}
+
+document.addEventListener('click', e => {
+  const n = e.target.closest('[data-nav]');
+  if (n) { state.screen = n.dataset.nav; state.search = ''; shell(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
+  const simBtn = e.target.closest('[data-sim-prod]');
+  if (simBtn) { state.productId = +simBtn.dataset.simProd; state.screen = 'escenarios'; shell(); return; }
+
+  const vStep = e.target.closest('[data-video-step]');
+  if (vStep) {
+    stopVideoTour();
+    state.videoStep = +vStep.dataset.videoStep;
+    const c = $('#interactive-tour');
+    if (c) c.outerHTML = interactiveVideoHTML();
+    return;
+  }
+
+  if (e.target.closest('[data-action="toggle-video"]')) {
+    if (state.videoPlaying) stopVideoTour(); else startVideoTour();
+    const c = $('#interactive-tour');
+    if (c) c.outerHTML = interactiveVideoHTML();
+    return;
+  }
+
+  if (e.target.closest('[data-action="apply-optimal"]')) {
+    const p = product(state.productId);
+    const res = computeScenarioMath(p, state.priceDelta, state.costDelta, state.compDelta, state.mktSpend);
+    state.priceDelta = res.bestDelta;
+    const slider = $('#price-range');
+    if (slider) slider.value = res.bestDelta;
+    updateScenarioViewOnly();
+    toast(`🎯 Precio óptimo aplicado (${res.bestDelta > 0 ? '+' : ''}${res.bestDelta}%)`);
+    return;
+  }
+
+  if (e.target.closest('[data-action="reset-scenario"]')) {
+    state.priceDelta = 0; state.costDelta = 0; state.compDelta = 0; state.mktSpend = 0;
+    render();
+    return;
+  }
+
+  const del = e.target.closest('[data-delete-sale]');
+  if (del) { db.sales = db.sales.filter(x => x.id != del.dataset.deleteSale); save(); render(); toast('Venta eliminada'); return; }
+
+  const de = e.target.closest('[data-delete-expense]');
+  if (de) { db.expenses = db.expenses.filter(x => x.id != de.dataset.deleteExpense); save(); render(); toast('Gasto eliminado'); return; }
+
+  const edit = e.target.closest('[data-edit-product]');
+  if (edit) { openModal('Editar parámetros del producto', productForm(product(edit.dataset.editProduct))); return; }
+
+  if (e.target.closest('[data-action="new-product"]')) { openModal('Nuevo producto', productForm()); return; }
+
+  if (e.target.closest('[data-action="import"]')) {
+    openModal('Importar archivo CSV de Ventas', `
+      <p class="muted" style="margin-top:0">Sube tu archivo CSV (separado por comas <code>,</code> o punto y coma <code>;</code>). Si el archivo incluye productos nuevos, EconoMétrica los agregará automáticamente a tu catálogo.</p>
+      <div style="border:2px dashed var(--green);background:#f3f8f6;padding:18px;border-radius:12px;text-align:center;margin:12px 0">
+        <input id="csv-file" type="file" accept=".csv,.txt" style="max-width:100%">
+      </div>
+      <div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;margin-top:14px">
+        <button class="btn" data-action="download-template">⬇️ Descargar Plantilla CSV de ejemplo</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn gold" data-action="instant-csv-demo">⚡ Simular subida de plantilla ahora</button>
+          <button class="btn primary" data-action="process-csv">Validar e importar archivo</button>
+        </div>
+      </div>
+    `);
+    return;
+  }
+
+  if (e.target.closest('[data-action="process-csv"]')) {
+    const fileInput = $('#csv-file');
+    if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+      toast('⚠️ Primero selecciona un archivo .CSV de tu dispositivo');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => importCSVText(reader.result);
+    reader.readAsText(fileInput.files[0]);
+    return;
+  }
+
+  if (e.target.closest('[data-action="instant-csv-demo"]')) {
+    importCSVText(generateTemplateCSVContent());
+    return;
+  }
+
+  if (e.target.closest('[data-action="whatsapp-preview"]')) { openWhatsAppModal(); return; }
+  if (e.target.closest('[data-action="report"]')) { generateReportDataOnly(); state.screen = 'reportes'; shell(); return; }
+  if (e.target.closest('[data-action="generate-report"]')) { generateReportDataOnly(); render(); toast('Reporte actualizado'); return; }
+  if (e.target.closest('[data-action="print-report"]')) { window.print(); return; }
+
+  if (e.target.closest('[data-action="export-sales"]')) {
+    downloadCSV(db.sales.map(s => ({ Fecha: s.date, Producto: product(s.productId)?.name || '', Cantidad: s.qty, Precio: s.price, Costo_Unitario: product(s.productId)?.cost || 0, Descuento: s.discount || 0, Canal: s.channel })), `ventas_${db.demoKey}.csv`);
+    return;
+  }
+  if (e.target.closest('[data-action="export-expenses"]')) {
+    downloadCSV(db.expenses.map(x => ({ Fecha: x.date, Descripcion: x.desc, Importe: x.amount, Categoria: x.cat, Tipo: x.type, Frecuencia: x.freq })), `gastos_${db.demoKey}.csv`);
+    return;
+  }
+  if (e.target.closest('[data-action="export-json"]')) {
+    downloadText(JSON.stringify(db, null, 2), 'econometrica-backup.json', 'application/json');
+    return;
+  }
+  if (e.target.closest('[data-action="download-template"]')) {
+    downloadText('\uFEFF' + generateTemplateCSVContent(), `Plantilla_EconoMetrica_${db.demoKey}.csv`, 'text/csv;charset=utf-8');
+    toast('⬇️ Plantilla CSV lista para usar descargada');
+    return;
+  }
+  if (e.target.closest('[data-action="reset"]')) {
+    localStorage.removeItem(KEY);
+    location.reload();
+    return;
+  }
+  if (e.target.closest('[data-action="landing"]')) { stopVideoTour(); landing(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  if (e.target.closest('[data-action="enter"]')) { stopVideoTour(); state.screen = 'inicio'; shell(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+
+  if (e.target.closest('[data-action="modal-register"]')) {
+    openModal('Configurar cuenta PYME', `<form id="register-form" class="form-grid">
+      <div class="field"><label>Nombre del negocio</label><input name="name" placeholder="Ej. Bodega San Martín" required></div>
+      <div class="field"><label>Sector</label><select name="sector"><option>Comercio minorista / Bodega</option><option>Restaurantes y gastronomía</option><option>Ropa y calzado</option><option>Ferretería y construcción</option><option>Farmacia y salud</option></select></div>
+      <div class="field"><label>Responsable</label><input name="owner" required></div>
+      <div class="field"><label>WhatsApp de alertas</label><input name="whatsapp" value="+51 999 888 777" required></div>
+      <div class="field full"><button class="btn primary">Crear espacio de trabajo</button></div>
+    </form>`);
+    return;
+  }
+
+  if (e.target.closest('[data-action="close"]')) { $('#modal-root').innerHTML = ''; return; }
+  const plan = e.target.closest('[data-plan]');
+  if (plan) { toast('✨ Plan seleccionado en demo: ' + plan.dataset.plan); return; }
+});
+
+document.addEventListener('submit', e => {
+  if (e.target.id === 'register-form') {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    db.business = { name: f.get('name'), sector: f.get('sector'), owner: f.get('owner'), whatsapp: f.get('whatsapp'), email: 'contacto@pyme.pe' };
+    save(); $('#modal-root').innerHTML = ''; state.screen = 'inicio'; shell(); toast('🎉 Espacio creado para ' + db.business.name);
+  }
+  if (e.target.id === 'product-form') {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const id = +f.get('id') || (db.products.reduce((m, x) => Math.max(m, x.id), 0) + 1);
+    const existing = db.products.find(x => x.id === id);
+    const p = {
+      id,
+      name: f.get('name'),
+      sku: f.get('sku'),
+      cat: f.get('cat'),
+      price: +f.get('price'),
+      cost: +f.get('cost'),
+      stock: +f.get('stock'),
+      minStock: existing?.minStock || 10,
+      status: 'Activo',
+      elasticity: +f.get('elasticity') || -1.2,
+      baseSales: existing?.baseSales || 90,
+      leadTime: existing?.leadTime || 4,
+      seasonTag: f.get('seasonTag') || 'Constante'
+    };
+    const i = db.products.findIndex(x => x.id === id);
+    if (i >= 0) db.products[i] = p; else db.products.push(p);
+    save(); $('#modal-root').innerHTML = ''; render(); toast('✅ Producto guardado');
+  }
+});
+
+function downloadCSV(rows, name) {
+  const h = Object.keys(rows[0] || {});
+  const csv = '\uFEFF' + [h.join(','), ...rows.map(r => h.map(k => `"${String(r[k] ?? '').replaceAll('"', '""')}"`).join(','))].join('\n');
+  downloadText(csv, name, 'text/csv;charset=utf-8');
+}
+function downloadText(txt, name, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([txt], { type }));
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function toast(t) {
+  const x = $('#toast');
+  if (!x) return;
+  x.textContent = t;
+  x.classList.add('show');
+  setTimeout(() => x.classList.remove('show'), 2600);
+}
+
+function switchDemoBusiness(key) {
+  if (!DEMO_BUSINESSES[key]) return;
   db = buildDemoState(key);
   save();
   state.productId = db.products[0]?.id || 1;
-  state.priceDelta = 0;
-  shell();
-  toast('Demo cargada: '+DEMO_BUSINESSES[key].business.name);
-  window.scrollTo({top:0,behavior:'smooth'});
+  state.priceDelta = 0; state.costDelta = 0; state.compDelta = 0; state.mktSpend = 0;
+  state.report = null;
+  if ($('.sidebar')) shell(); else landing();
+  toast('🔄 Negocio cargado: ' + DEMO_BUSINESSES[key].business.name);
 }
 
 landing();
